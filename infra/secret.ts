@@ -2,5 +2,5 @@
 
 // not yet used
 export const secret = {
-    authSecret: new sst.Secret("AuthSecret"),
+    nextAuthSecret: new sst.Secret("NextAuthSecret"),
 };

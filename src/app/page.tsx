@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import Image from "next/image";
 import Button from "@/components/button";
 import Link from "next/link";
-import { GetStarted } from "@/components/authentication/auth-components";
+import { GetStarted } from "@/features/authentication/auth-components";
 
 export default async function Home() {
     const session = await auth();

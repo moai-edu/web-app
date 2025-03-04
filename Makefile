@@ -6,7 +6,9 @@ STAGE?=dev
 # 如果不指定stage，则stage=dev
 # 自动使用.env
 deploy:
+	sst secret --stage $(STAGE) set NextAuthSecret $(NEXT_AUTH_SECRET)
 	npx sst deploy --stage $(STAGE)
 
 teardown:
 	npx sst remove --stage $(STAGE)
+	sst secret remove NextAuthSecret --stage $(STAGE)
