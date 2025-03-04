@@ -5,7 +5,7 @@ import { authUrl, portalDomain, userPool, webClient } from "./auth";
 import { secret } from "./secret";
 
 const webConfig = {
-    // link: [userPool, webClient, table],
+    link: [userPool, webClient, table],
     domain: portalDomain,
     environment: {
         AUTH_SECRET: secret.nextAuthSecret.value, //next-auth 使用这个环境变量设置secret: https://authjs.dev/reference/core/errors#missingsecret
