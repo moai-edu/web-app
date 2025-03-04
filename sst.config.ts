@@ -10,7 +10,7 @@
 export default $config({
     app(input) {
         return {
-            name: "docs-site",
+            name: "portal-site",
             home: "aws",
             removal: input?.stage === "prod" ? "retain" : "remove",
         };
