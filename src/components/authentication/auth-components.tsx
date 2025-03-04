@@ -16,9 +16,8 @@ export function GetStarted() {
 }
 
 export function SignOut({
-    provider,
     ...props
-}: { provider?: string } & React.ComponentPropsWithRef<typeof Button>) {
+}: React.ComponentPropsWithRef<typeof Button>) {
     return (
         <form
             action={async () => {
