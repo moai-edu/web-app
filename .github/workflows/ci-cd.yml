@@ -33,8 +33,13 @@ jobs:
                     echo "Deploying to Production environment..."
                     STAGE="prod" make deploy  # 生产环境部署
                   elif [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
-                    echo "Deploying to Development environment..."
-                    STAGE="dev" make deploy  # 开发环境部署
+                    if [ -f "TEARDOWN" ]; then
+                      echo "Tearing down the Development environment..."
+                      STAGE="dev" make teardown  # 开发环境拆除
+                    else
+                      echo "Deploying to Development environment..."
+                      STAGE="dev" make deploy  # 开发环境部署
+                    fi
                   fi
             - name: Always check the content of sst-env.d.ts
               if: always() # 确保该步骤无论成功或失败都会执行
