@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { auth } from "@/auth";
 import DarkModeDropDown from "./dark-mode-dropdown";
+import { Button } from "@/components/ui/button";
 
 const Header = async () => {
     const session = await auth();
@@ -23,6 +24,7 @@ const Header = async () => {
                 SST ion Next auth
             </Link>
             <div className="flex items-center gap-4">
+                {!session && <Button>Login</Button>}
                 <DarkModeDropDown />
             </div>
         </div>
