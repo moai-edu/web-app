@@ -2,10 +2,13 @@
 STAGE?=dev
 SECRET_NAME:=NextAuthSecret
 
-.PHONY: deploy teardown
+.PHONY: dev deploy teardown
 
 # 如果不指定stage，则stage=dev
 # 自动使用.env
+dev:
+	npx sst dev --stage dev
+
 deploy:
 	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(NEXT_AUTH_SECRET)
 	npx sst deploy --stage $(STAGE)

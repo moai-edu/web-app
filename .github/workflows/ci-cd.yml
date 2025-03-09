@@ -46,4 +46,3 @@ jobs:
               run: |
                   echo "Checking content of sst-env.d.ts:"
                   cat ./sst-env.d.ts  # 输出 sst-env.d.ts 文件的内容
-                  cat .sst/platform/config.d.ts  # 输出 .sst/platform/config.d.ts 文件的内容
