@@ -3,3 +3,4 @@
 export * from "./secret";
 export * from "./auth";
 export * from "./web";
+export * from "./bucket";

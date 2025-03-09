@@ -1,3 +1,4 @@
+sst-env.d.ts
 .sst/
 *.drawio.*
 .next/

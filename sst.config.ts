@@ -19,6 +19,7 @@ export default $config({
         const infra = await import("./infra");
         return {
             webUrl: infra.web.url,
+            dataBucketName: infra.dataBucket.name,
             // clientId: infra.webClient.id,
             // authUrl: infra.authUrl,
             // static_site_url: infra.static_site.url,

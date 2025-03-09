@@ -1,6 +1,6 @@
 import React from "react";
-import Button from "@/components/button";
 import { signIn, signOut } from "@/auth";
+import { Button } from "@/components/ui/button";
 
 export function GetStarted() {
     return (
