@@ -5,11 +5,7 @@ import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import s3Client from "@/utils/s3Client"; // 导入 S3Client
 
-export default async function ViewImage({
-    params,
-}: {
-    params: { name: string };
-}) {
+export default async function ViewImage({ params }) {
     // https://nextjs.org/docs/messages/sync-dynamic-apis
     const { name } = await params;
 
