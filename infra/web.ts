@@ -15,6 +15,7 @@ const webConfig = {
         COGNITO_USER_POOL_ID: userPool.id,
         COGNITO_WEB_CLIENT_ID: webClient.id,
         COGNITO_WEB_CLIENT_SECRET: webClient.secret,
+        DATA_BUCKET_NAME: dataBucket.name,
     },
 };
 

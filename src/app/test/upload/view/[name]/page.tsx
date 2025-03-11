@@ -1,28 +1,29 @@
 export const dynamic = "force-dynamic";
 
-import { Resource } from "sst";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+// import { Resource } from "sst";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import s3Client from "@/utils/s3Client"; // 导入 S3Client
 
 export default async function ViewImage({
     params,
 }: {
     params: { name: string };
 }) {
-    // 创建 S3 客户端
-    const s3Client = new S3Client({});
+    // https://nextjs.org/docs/messages/sync-dynamic-apis
+    const { name } = await params;
 
     // 获取图片的签名 URL
     const command = new GetObjectCommand({
-        Bucket: Resource.DataBucket.name,
-        Key: params.name,
+        Bucket: process.env.DATA_BUCKET_NAME,
+        Key: name,
     });
     const url = await getSignedUrl(s3Client, command);
 
     return (
         <div>
-            <h1>View Image: {params.name}</h1>
-            <img src={url} alt={params.name} style={{ maxWidth: "100%" }} />
+            <h1>View Image: {name}</h1>
+            <img src={url} alt={name} style={{ width: "300px" }} />
         </div>
     );
 }

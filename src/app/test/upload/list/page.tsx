@@ -1,19 +1,18 @@
 // src/app/upload/list/page.tsx
-import { Resource } from "sst";
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+// import { Resource } from "sst";
+import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 import Link from "next/link";
+import s3Client from "@/utils/s3Client"; // 导入 S3Client
 
 export const dynamic = "force-dynamic";
 
 export default async function ListImages() {
-    // 创建 S3 客户端
-    const s3Client = new S3Client({});
-
     // 列出 S3 存储桶中的所有对象
     const command = new ListObjectsV2Command({
-        Bucket: Resource.DataBucket.name,
+        Bucket: process.env.DATA_BUCKET_NAME,
     });
     const response = await s3Client.send(command);
+    console.log(response);
 
     // 获取所有图片文件的 Key
     const imageFiles =
