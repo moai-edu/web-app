@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Home() {
     return (
         <div>
@@ -45,6 +47,7 @@ export default function Home() {
                 />
                 <button type="submit">Upload</button>
             </form>
+            <Link href="/test/upload/list">List</Link>
         </div>
     );
 }

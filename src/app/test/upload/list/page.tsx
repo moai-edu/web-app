@@ -9,6 +9,7 @@ export default async function ListImages() {
     const resFiles = await s3DataClient.listFiles("test/");
     return (
         <div>
+            <Link href="/test/upload">Upload</Link>
             <h1>Uploaded Files</h1>
             <ul>
                 {resFiles.map((file) =>
