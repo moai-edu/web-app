@@ -14,6 +14,7 @@ export default function Home() {
                         alert("Please select a file to upload.");
                         return;
                     }
+                    console.log(file);
 
                     try {
                         // 创建 FormData 对象
@@ -37,7 +38,11 @@ export default function Home() {
                     }
                 }}
             >
-                <input name="file" type="file" accept="image/png, image/jpeg" />
+                <input
+                    name="file"
+                    type="file"
+                    accept="image/png, image/jpeg, text/markdown, .md"
+                />
                 <button type="submit">Upload</button>
             </form>
         </div>

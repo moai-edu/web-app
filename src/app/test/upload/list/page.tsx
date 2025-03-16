@@ -1,36 +1,31 @@
 // src/app/upload/list/page.tsx
 // import { Resource } from "sst";
-import { ListObjectsV2Command } from "@aws-sdk/client-s3";
+import s3DataClient from "@/utils/s3_data_client";
 import Link from "next/link";
-import s3Client from "@/utils/s3Client"; // 导入 S3Client
 
 export const dynamic = "force-dynamic";
 
 export default async function ListImages() {
-    // 列出 S3 存储桶中的所有对象
-    const command = new ListObjectsV2Command({
-        Bucket: process.env.DATA_BUCKET_NAME,
-    });
-    const response = await s3Client.send(command);
-    console.log(response);
-
-    // 获取所有图片文件的 Key
-    const imageFiles =
-        response.Contents?.filter((file) =>
-            file.Key?.match(/\.(jpg|jpeg|png)$/i)
-        ) || [];
-
+    const resFiles = await s3DataClient.listFiles("test/");
     return (
         <div>
-            <h1>Uploaded Images</h1>
+            <h1>Uploaded Files</h1>
             <ul>
-                {imageFiles.map((file) => (
-                    <li key={file.Key}>
-                        <Link href={`/test/upload/view/${file.Key}`}>
-                            {file.Key}
-                        </Link>
-                    </li>
-                ))}
+                {resFiles.map((file) =>
+                    file.endsWith(".md") ? (
+                        <li key={file}>
+                            <Link href={`/test/upload/view/md/${file}`}>
+                                {file}
+                            </Link>
+                        </li>
+                    ) : (
+                        <li key={file}>
+                            <Link href={`/test/upload/view/res/${file}`}>
+                                {file}
+                            </Link>
+                        </li>
+                    )
+                )}
             </ul>
         </div>
     );

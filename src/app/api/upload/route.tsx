@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import s3Client from "@/utils/s3Client"; // 导入 S3Client
-// import { Resource } from "sst";
+import s3DataClient from "@/utils/s3_data_client";
 
 export async function POST(request: Request) {
     try {
@@ -16,18 +14,10 @@ export async function POST(request: Request) {
             );
         }
 
-        // 将文件转换为 Buffer
-        const buffer = Buffer.from(await file.arrayBuffer());
-
         // 上传文件到 S3
-        const command = new PutObjectCommand({
-            Bucket: process.env.DATA_BUCKET_NAME, // S3 存储桶名称
-            Key: file.name, // 使用文件名作为 S3 对象的 Key
-            Body: buffer, // 文件内容
-            ContentType: file.type, // 文件类型
-        });
-        await s3Client.send(command);
+        s3DataClient.uploadFile(file, `test/${file.name}`);
 
+        // 返回成功响应
         return NextResponse.json({ message: "File uploaded successfully!" });
     } catch (error) {
         console.error("Error uploading file:", error);
