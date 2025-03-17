@@ -3,6 +3,8 @@
 .next/
 .open-next/
 .terraform/
+.terraform.lock.hcl
+terraform.tfstate
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
