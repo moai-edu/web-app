@@ -10,9 +10,9 @@ const webConfig = {
     link: [userPool, webClient, dataBucket, table],
     domain: portalDomain,
     environment: {
-        AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-        AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-        AWS_REGION: process.env.AWS_REGION,
+        // AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID!,
+        // AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
+        // AWS_REGION: process.env.AWS_REGION!,
         AUTH_SECRET: secret.nextAuthSecret.value, //next-auth 使用这个环境变量设置secret: https://authjs.dev/reference/core/errors#missingsecret
         AUTH_TABLE_NAME: nextAuthTable.name,
         NEXT_PUBLIC_REGION: aws.getRegionOutput().name,

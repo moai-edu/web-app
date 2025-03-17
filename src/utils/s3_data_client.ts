@@ -36,6 +36,7 @@ export class S3DataClient {
                 forcePathStyle: true, // 使用路径样式访问
             };
         } else {
+            //ci环境下使用环境变量
             conf = {};
         }
 
