@@ -4,12 +4,14 @@ import { table } from "console";
 import { authUrl, portalDomain, userPool, webClient } from "./auth";
 import { secret } from "./secret";
 import { dataBucket } from "./bucket";
+import { nextAuthTable } from "./dynamodb";
 
 const webConfig = {
     link: [userPool, webClient, dataBucket, table],
     domain: portalDomain,
     environment: {
         AUTH_SECRET: secret.nextAuthSecret.value, //next-auth 使用这个环境变量设置secret: https://authjs.dev/reference/core/errors#missingsecret
+        AUTH_TABLE_NAME: nextAuthTable.name,
         NEXT_PUBLIC_REGION: aws.getRegionOutput().name,
         NEXT_PUBLIC_USER_POOL_DOMAIN: authUrl,
         COGNITO_USER_POOL_ID: userPool.id,
