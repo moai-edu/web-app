@@ -9,7 +9,7 @@ awslocal:=aws --profile localstack
 # 自动使用.env
 dev:
 	npx sst dev --stage dev
-	
+
 deploy:
 	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(NEXT_AUTH_SECRET)
 	npx sst deploy --stage $(STAGE)
