@@ -2,33 +2,35 @@
 /* tslint:disable */
 /* eslint-disable */
 /* deno-fmt-ignore-file */
-
 declare module "sst" {
-  export interface Resource {
-    "DataBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
+    export interface Resource {
+        DataBucket: {
+            name: string;
+            type: "sst.aws.Bucket";
+        };
+        NextAuthSecret: {
+            type: "sst.sst.Secret";
+            value: string;
+        };
+        NextAuthTable: {
+            name: string;
+            type: "sst.aws.Dynamo";
+        };
+        UserPool: {
+            id: string;
+            type: "sst.aws.CognitoUserPool";
+        };
+        Web: {
+            type: "sst.aws.Nextjs";
+            url: string;
+        };
+        WebClient: {
+            id: string;
+            secret: string;
+            type: "sst.aws.CognitoUserPoolClient";
+        };
     }
-    "NextAuthSecret": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "UserPool": {
-      "id": string
-      "type": "sst.aws.CognitoUserPool"
-    }
-    "Web": {
-      "type": "sst.aws.Nextjs"
-      "url": string
-    }
-    "WebClient": {
-      "id": string
-      "secret": string
-      "type": "sst.aws.CognitoUserPoolClient"
-    }
-  }
 }
 /// <reference path="sst-env.d.ts" />
-
-import "sst"
-export {}
+import "sst";
+export {};
