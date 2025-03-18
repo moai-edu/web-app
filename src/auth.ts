@@ -16,7 +16,7 @@ const authDbConf: DynamoDBClientConfig =
               },
               region: process.env.AWS_REGION!,
           }
-        : {};
+        : { region: process.env.AWS_REGION! };
 
 const authDbClient = DynamoDBDocument.from(new DynamoDB(authDbConf), {
     marshallOptions: {
