@@ -1,14 +1,14 @@
 /// <reference path="../.sst/platform/config.d.ts" />
 
-sst.Linkable.wrap(sst.aws.Dynamo, (table) => ({
-    properties: { name: table.name },
-    include: [
-        sst.aws.permission({
-            actions: ["dynamodb:*"],
-            resources: [table.arn],
-        }),
-    ],
-}));
+// sst.Linkable.wrap(sst.aws.Dynamo, (table) => ({
+//     properties: { name: table.name },
+//     include: [
+//         sst.aws.permission({
+//             actions: ["dynamodb:*"],
+//             resources: [table.arn],
+//         }),
+//     ],
+// }));
 
 export const nextAuthDynamo = new sst.aws.Dynamo("NextAuthDynamo", {
     fields: {

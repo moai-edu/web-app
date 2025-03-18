@@ -6,16 +6,17 @@ import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@auth/dynamodb-adapter";
 
-const authDbConf: DynamoDBClientConfig = {
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
-    region: process.env.AWS_REGION!,
-};
-if (process.env.NODE_ENV === "development") {
-    authDbConf["endpoint"] = process.env.AWS_ENDPOINT_URL!; // LocalStack 的地址
-}
+const authDbConf: DynamoDBClientConfig =
+    process.env.NODE_ENV === "development"
+        ? {
+              endpoint: process.env.AWS_ENDPOINT_URL!, // LocalStack 的地址
+              credentials: {
+                  accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+                  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+              },
+              region: process.env.AWS_REGION!,
+          }
+        : {};
 
 const authDbClient = DynamoDBDocument.from(new DynamoDB(authDbConf), {
     marshallOptions: {
