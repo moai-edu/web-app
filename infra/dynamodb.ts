@@ -1,6 +1,6 @@
 /// <reference path="../.sst/platform/config.d.ts" />
 
-export const nextAuthTable = new sst.aws.Dynamo("NextAuth", {
+export const nextAuthDynamo = new sst.aws.Dynamo("NextAuthDynamo", {
     fields: {
         pk: "string", // 分区键
         sk: "string", // 排序键

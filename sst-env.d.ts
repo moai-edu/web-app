@@ -12,7 +12,7 @@ declare module "sst" {
             type: "sst.sst.Secret";
             value: string;
         };
-        NextAuthTable: {
+        NextAuthDynamo: {
             name: string;
             type: "sst.aws.Dynamo";
         };

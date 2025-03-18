@@ -48,7 +48,7 @@ const cognitoOptions =
 const authDbTableName =
     process.env.NODE_ENV === "development"
         ? process.env.AUTH_TABLE_NAME
-        : Resource.NextAuthTable.name;
+        : Resource.NextAuthDynamo.name;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     // read here https://authjs.dev/getting-started/deployment#auth_trust_host
