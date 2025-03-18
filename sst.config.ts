@@ -20,7 +20,7 @@ export default $config({
         return {
             webUrl: infra.web.url,
             dataBucketName: infra.dataBucket.name,
-            nextAuthTableName: infra.nextAuthTable.name,
+            nextAuthDynamoName: infra.nextAuthDynamo.name,
             // clientId: infra.webClient.id,
             // authUrl: infra.authUrl,
             // static_site_url: infra.static_site.url,
