@@ -6,16 +6,25 @@ import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@auth/dynamodb-adapter";
 
-const conf: DynamoDBClientConfig = {
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
-    region: process.env.AWS_REGION,
-};
+let conf: DynamoDBClientConfig = {};
 
 if (process.env.NODE_ENV === "development") {
-    conf["endpoint"] = process.env.AWS_ENDPOINT_URL;
+    conf = {
+        endpoint: process.env.AWS_ENDPOINT_URL, // LocalStack 的地址
+        region: process.env.AWS_REGION, // 区域
+        credentials: {
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID!, // 访问密钥
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!, // 秘密密钥
+        },
+    };
+} else {
+    conf = {
+        // credentials: {
+        //     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        //     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+        // },
+        // region: process.env.AWS_REGION,
+    };
 }
 
 const client = DynamoDBDocument.from(new DynamoDB(conf), {
