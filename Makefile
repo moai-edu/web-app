@@ -12,6 +12,7 @@ dev:
 
 deploy:
 	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(NEXT_AUTH_SECRET)
+	-npx sst unlock --stage $(STAGE)
 	npx sst deploy --stage $(STAGE)
 
 teardown:
