@@ -15,6 +15,7 @@
         "@auth/dynamodb-adapter": "^2.8.0",
         "@aws-sdk/client-dynamodb": "^3.767.0",
         "@aws-sdk/client-s3": "^3.758.0",
+        "@aws-sdk/credential-providers": "^3.768.0",
         "@aws-sdk/lib-dynamodb": "^3.767.0",
         "@aws-sdk/s3-request-presigner": "^3.758.0",
         "@radix-ui/react-dropdown-menu": "^2.1.6",

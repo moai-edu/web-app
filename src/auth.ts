@@ -5,6 +5,7 @@ import { Resource } from "sst";
 import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@auth/dynamodb-adapter";
+import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
 
 const authDbConf: DynamoDBClientConfig =
     process.env.NODE_ENV === "development"
@@ -16,7 +17,10 @@ const authDbConf: DynamoDBClientConfig =
               },
               region: process.env.AWS_REGION!,
           }
-        : { region: process.env.AWS_REGION! };
+        : {
+              credentials: fromNodeProviderChain(),
+              region: process.env.AWS_REGION!,
+          };
 
 const authDbClient = DynamoDBDocument.from(new DynamoDB(authDbConf), {
     marshallOptions: {
@@ -25,6 +29,8 @@ const authDbClient = DynamoDBDocument.from(new DynamoDB(authDbConf), {
         convertClassInstanceToMap: true,
     },
 });
+
+console.log(`authDbConf=${JSON.stringify(authDbConf)}`);
 
 const cognitoOptions =
     process.env.NODE_ENV === "development"
