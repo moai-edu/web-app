@@ -6,6 +6,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import path from "path";
+import { Resource } from "sst";
 
 const RES_FILE_EXTS: Set<string> = new Set([
     "pdf",
@@ -20,7 +21,10 @@ const RES_FILE_EXTS: Set<string> = new Set([
 
 export class S3DataClient {
     s3Client: S3Client;
-    readonly DATA_BUCKET_NAME = process.env.DATA_BUCKET_NAME;
+    readonly DATA_BUCKET_NAME =
+        process.env.NODE_ENV === "development"
+            ? process.env.DATA_BUCKET_NAME
+            : Resource.DataBucket.name;
 
     constructor() {
         let conf: S3ClientConfig = {};
