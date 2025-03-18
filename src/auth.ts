@@ -3,10 +3,7 @@ import Cognito from "next-auth/providers/cognito";
 // import { Resource } from "sst";
 
 import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
-import {
-    DynamoDBDocument,
-    DynamoDBDocumentClient,
-} from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@auth/dynamodb-adapter";
 
 let conf: DynamoDBClientConfig = {};

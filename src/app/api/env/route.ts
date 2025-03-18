@@ -6,6 +6,7 @@ export async function GET() {
 
     // 过滤掉值为 undefined 的环境变量（防止 JSON.stringify 出错）
     const filteredEnvVars = Object.fromEntries(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         Object.entries(envVars).filter(([_, value]) => value !== undefined)
     );
 
