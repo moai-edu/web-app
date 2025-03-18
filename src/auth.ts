@@ -16,6 +16,11 @@ const authDbConf: DynamoDBClientConfig = {
 if (process.env.NODE_ENV === "development") {
     authDbConf["endpoint"] = process.env.AWS_ENDPOINT_URL!; // LocalStack 的地址
 }
+
+console.log("##################");
+console.log(`authDbConf: ${JSON.stringify(authDbConf)}`);
+console.log("##################");
+
 const authDbClient = DynamoDBDocument.from(new DynamoDB(authDbConf), {
     marshallOptions: {
         convertEmptyValues: true,
