@@ -18,7 +18,7 @@ const authDbConf: DynamoDBClientConfig =
               region: process.env.AWS_REGION!,
           }
         : {
-              credentials: fromNodeProviderChain(),
+              credentials: fromNodeProviderChain(), // 这里会自动获取 IAM Role 的凭证
               region: process.env.AWS_REGION!,
           };
 
@@ -78,6 +78,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             if (trigger === "update") token.name = session.user.email;
             return token;
         },
+    },
+    session: {
+        // force to db
+        strategy: "database",
+        // Seconds - How long until an idle session expires and is no longer valid.
+        maxAge: 30 * 24 * 60 * 60, // 30 days
     },
     adapter: DynamoDBAdapter(authDbClient, {
         tableName: authDbTableName,
