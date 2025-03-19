@@ -78,6 +78,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             if (trigger === "update") token.name = session.user.email;
             return token;
         },
+        session({ session, user }) {
+            session.user.name = user.email.split("@")[0];
+            return session;
+        },
     },
     session: {
         // force to db

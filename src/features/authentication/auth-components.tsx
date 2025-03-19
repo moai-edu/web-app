@@ -1,6 +1,7 @@
 import React from "react";
 import { signIn, signOut } from "@/auth";
-import { Button } from "@/components/ui/button";
+import { Button } from "@radix-ui/themes";
+// import { Button } from "@/components/ui/button";
 
 export function GetStarted() {
     return (
@@ -10,7 +11,7 @@ export function GetStarted() {
                 await signIn("cognito");
             }}
         >
-            <Button>Get started</Button>
+            <Button>登录</Button>
         </form>
     );
 }
@@ -26,7 +27,7 @@ export function SignOut({
             }}
             className="w-full"
         >
-            <Button {...props}>Logout</Button>
+            <Button {...props}>注销</Button>
         </form>
     );
 }

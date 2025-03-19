@@ -1,10 +1,21 @@
 import Link from "next/link";
+import { Flex, Text, Button } from "@radix-ui/themes";
+import { auth } from "@/auth";
+import { GetStarted, SignOut } from "@/features/authentication/auth-components";
 
-export default function SamplePage() {
+export default async function SamplePage() {
+    const session = await auth();
     return (
         <div>
-            <h1>Home</h1>
-            <Link href="/about">About</Link>
+            <div className="flex flex-row gap-5">
+                {session && (
+                    <Button asChild>
+                        <Link href="/protected-page/session">Session </Link>
+                    </Button>
+                )}
+                {session && <SignOut />}
+                {!session && <GetStarted />}
+            </div>
         </div>
     );
 }
