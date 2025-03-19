@@ -74,6 +74,8 @@ export default function Page() {
             {/* 一个Image组件，alt属性为空字符串，src属性为一个图片链接 */}
             <Image
                 alt="剪贴板图片"
+                width={500}
+                height={400}
                 src={imageData?.src || "/placeholder.svg"}
             />
         </div>
