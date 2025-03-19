@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Flex, Text, Button } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import { auth } from "@/auth";
 import { GetStarted, SignOut } from "@/features/authentication/auth-components";
 
