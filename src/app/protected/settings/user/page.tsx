@@ -1,25 +1,18 @@
 'use client'
 
-import { Flex, Spinner } from '@radix-ui/themes'
-import { useEffect, useState } from 'react'
+import { Flex } from '@radix-ui/themes'
+import { useState } from 'react'
 import ViewUserDataList from './view_user_data_list'
 import EditUserForm from './edit_user_form'
-import { BizUser } from '@/app/domain/types'
+import { useSession } from 'next-auth/react'
+import { User } from 'next-auth'
 
 export default function Page() {
-    const [user, setUser] = useState<BizUser | null>(null)
-    const [isEditing, setIsEditing] = useState(false)
+    const [isEditing, setIsEditing] = useState<boolean>(false)
+    const { data: session, status } = useSession()
+    const user = session?.user
 
-    useEffect(() => {
-        async function fetchUserProfile() {
-            const res = await fetch('/api/protected/user')
-            const data = await res.json()
-            setUser(data)
-        }
-        fetchUserProfile()
-    }, [])
-
-    async function handleSave(user: BizUser) {
+    async function handleSave(user: User) {
         const res = await fetch('/api/protected/user', {
             method: 'PUT',
             headers: {
@@ -34,25 +27,27 @@ export default function Page() {
         }
     }
 
-    if (!user) {
-        return (
-            <Flex align="center" gap="4">
-                <Spinner size="3" />
-                正在加载用户信息...
-            </Flex>
-        )
+    if (status === 'loading') {
+        // Show a loading state while session is being fetched
+        return <h1>Loading...</h1>
     }
+
+    if (!session || !user) {
+        // If there's no session, prompt user to log in
+        return <h1>Please log in to access this page</h1>
+    }
+
     return (
         <Flex direction="column" gap="5">
             {isEditing ? (
                 <EditUserForm
-                    user={user}
+                    user={user!}
                     onCancel={() => setIsEditing(false)}
                     onSave={handleSave}
                 />
             ) : (
                 <ViewUserDataList
-                    user={user}
+                    user={user!}
                     onEditClick={() => setIsEditing(true)}
                 />
             )}

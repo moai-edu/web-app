@@ -3,36 +3,7 @@ import { auth } from '@/auth'
 import { bizAdapter } from '@/persist/db'
 import { NextResponse } from 'next/server'
 
-// 动态导入 AWS SDK 并获取版本号
-export async function GET() {
-    const session = await auth()
-
-    if (!session) {
-        // 如果用户未登录或会话不存在，返回 401 未授权状态
-        return new Response(
-            JSON.stringify({ message: 'Unauthorized access. Please log in.' }),
-            {
-                status: 401,
-                headers: { 'Content-Type': 'application/json' }
-            }
-        )
-    }
-    // 返回BizUser用户信息
-    const user = await bizAdapter.getBizUserById(session.user!.id!)
-    return new Response(JSON.stringify(user), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-    })
-
-    return NextResponse.json({
-        id: '123456',
-        name: '张三',
-        email: 'zs@qq.com',
-        slug: 'zhangsan'
-    })
-}
-
-// 假设BizUser的更新信息通过JSON格式传递
+// BizUser的更新信息通过JSON格式传递
 export async function PUT(request: Request) {
     const session = await auth()
 

@@ -1,5 +1,6 @@
-import { BizUser } from '@/app/domain/types'
+'use client'
 import { Flex, Text, TextField, Button } from '@radix-ui/themes'
+import { User } from 'next-auth'
 import { useState } from 'react'
 
 export default function EditUserForm({
@@ -7,12 +8,12 @@ export default function EditUserForm({
     onSave,
     onCancel
 }: {
-    user: BizUser
-    onSave: (user: BizUser) => void
+    user: User
+    onSave: (user: User) => void
     onCancel: () => void
 }) {
-    const [name, setName] = useState(user.name)
-    const [slug, setSlug] = useState(user.slug)
+    const [name, setName] = useState<string | null | undefined>(user.name)
+    const [slug, setSlug] = useState<string | null | undefined>(user.slug)
 
     return (
         <>
@@ -22,7 +23,7 @@ export default function EditUserForm({
                         姓名
                     </Text>
                     <TextField.Root
-                        defaultValue={name}
+                        defaultValue={name!}
                         placeholder="请输入用户姓名"
                         onChange={(event) => setName(event.target.value)}
                     />
@@ -32,7 +33,7 @@ export default function EditUserForm({
                         slug
                     </Text>
                     <TextField.Root
-                        defaultValue={slug}
+                        defaultValue={slug!}
                         placeholder="请输入slug"
                         onChange={(event) => setSlug(event.target.value)}
                     />
@@ -44,7 +45,9 @@ export default function EditUserForm({
                     取消
                 </Button>
                 <Button
-                    onClick={() => onSave({ id: '', email: '', name, slug })}
+                    onClick={() =>
+                        onSave({ id: '', email: '', name: name!, slug: slug! })
+                    }
                 >
                     保存
                 </Button>

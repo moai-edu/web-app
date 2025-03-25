@@ -1,10 +1,12 @@
-import NextAuth, { NextAuthResult } from 'next-auth'
+import NextAuth from 'next-auth'
 import Cognito from 'next-auth/providers/cognito'
 import { Resource } from 'sst'
 import { DynamoDBAdapter } from '@auth/dynamodb-adapter'
 import { NextResponse } from 'next/server'
 import { AUTH_TABLE_NAME, bizAdapter, dynamoClient } from './persist/db'
 import { BizUser } from './app/domain/types'
+import { NextAuthResult } from 'next-auth'
+import { Adapter } from 'next-auth/adapters'
 
 const PROVIDER = 'cognito'
 
@@ -56,7 +58,8 @@ const result: NextAuthResult = NextAuth({
             return token
         },
         async session({ session, user }) {
-            // 这个函数在进入每个页面都会执行
+            // 这个函数在进入每个页面都会执行，
+            // 所以，可以把BizUser的信息放到session里面，供每个页面使用。
 
             // create user in bizdata db for new user
             let bizUser: BizUser | null = await bizAdapter.getBizUserById(
@@ -73,6 +76,7 @@ const result: NextAuthResult = NextAuth({
                 console.log(`create new user in biz data db: ${bizUser}`)
             }
             session.user.name = bizUser.name
+            session.user.slug = bizUser.slug
             return session
         }
     },
@@ -84,7 +88,7 @@ const result: NextAuthResult = NextAuth({
     },
     adapter: DynamoDBAdapter(dynamoClient, {
         tableName: AUTH_TABLE_NAME
-    })
+    }) as unknown as Adapter
 })
 
 export const { handlers, signOut, auth } = result

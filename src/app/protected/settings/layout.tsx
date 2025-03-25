@@ -1,5 +1,6 @@
 'use client' // 标记为客户端组件
 import { Box, Link, Flex, ScrollArea } from '@radix-ui/themes'
+import { SessionProvider } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 
 export default function SettingLayout({
@@ -33,7 +34,9 @@ export default function SettingLayout({
                     </Flex>
                 </ScrollArea>
             </Box>
-            <Box minWidth="400px">{children}</Box>
+            <Box minWidth="400px">
+                <SessionProvider>{children}</SessionProvider>
+            </Box>
         </Flex>
     )
 }

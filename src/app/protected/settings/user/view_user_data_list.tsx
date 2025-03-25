@@ -1,11 +1,12 @@
-import { BizUser } from '@/app/domain/types'
+'use client'
 import { Button, DataList, Flex, Link } from '@radix-ui/themes'
+import { User } from 'next-auth'
 
 export default function ViewUserDataList({
     user,
     onEditClick
 }: {
-    user: BizUser
+    user: User
     onEditClick: () => void
 }) {
     return (
