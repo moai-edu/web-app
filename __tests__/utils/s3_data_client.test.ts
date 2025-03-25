@@ -1,22 +1,20 @@
-import { S3DataClient } from "@/utils/s3_data_client";
+import { s3DataClient } from "@/persist/s3";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 describe("S3DataClient.getMarkdownTextWithS3SignedUrls", () => {
-    let s3Client: S3DataClient;
-
     beforeEach(() => {
-        s3Client = new S3DataClient();
-        vi.spyOn(s3Client, "getMdContent").mockResolvedValue(`# Sample Markdown
-![Image](./image.png)
-[PDF File](../docs/sample.pdf)
-# Slide {data-background-image=/assets/bg.jpg data-background-size=contain}`);
-        vi.spyOn(s3Client, "getSignedUrl").mockImplementation(
+        vi.spyOn(s3DataClient, "getMdContent")
+            .mockResolvedValue(`# Sample Markdown
+    ![Image](./image.png)
+    [PDF File](../docs/sample.pdf)
+    # Slide {data-background-image=/assets/bg.jpg data-background-size=contain}`);
+        vi.spyOn(s3DataClient, "getSignedUrl").mockImplementation(
             async (key) => `https://signed-url.com/${key}`
         );
     });
 
     it("should replace resource paths with signed URLs", async () => {
-        const result = await s3Client.getMarkdownTextWithS3SignedUrls(
+        const result = await s3DataClient.getMarkdownTextWithS3SignedUrls(
             "docs/index.md"
         );
 

@@ -21,6 +21,7 @@ export default $config({
             webUrl: infra.web.url,
             dataBucketName: infra.dataBucket.name,
             nextAuthDynamoName: infra.nextAuthDynamo.name,
+            bizDataDynamoName: infra.bizDataDynamo.name,
             // clientId: infra.webClient.id,
             // authUrl: infra.authUrl,
             // static_site_url: infra.static_site.url,

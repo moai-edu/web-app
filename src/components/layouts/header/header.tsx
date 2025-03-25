@@ -1,12 +1,13 @@
-import React from "react";
-import Link from "next/link";
-import UserButton from "./userButton";
-import Image from "next/image";
-import { auth } from "@/auth";
-import DarkModeDropDown from "./dark-mode-dropdown";
+import React from 'react'
+import UserButton from './userButton'
+import Image from 'next/image'
+import { auth } from '@/auth'
+import DarkModeDropDown from './dark-mode-dropdown'
+import { TabNav, Link as RadixLink } from '@radix-ui/themes'
+import Link from 'next/link'
 
 const Header = async () => {
-    const session = await auth();
+    const session = await auth()
     return (
         <div className="px-8 py-6 flex items-center justify-between">
             <Link
@@ -20,13 +21,20 @@ const Header = async () => {
                     height={42}
                     priority
                 />
-                SST ion Next auth
+                Portal
             </Link>
             <div className="flex items-center gap-4">
+                <TabNav.Root>
+                    <TabNav.Link href="/docs" active>
+                        Documents
+                    </TabNav.Link>
+                    <TabNav.Link href="/courses">Courses</TabNav.Link>
+                </TabNav.Root>
                 <UserButton session={session} />
+                <RadixLink href="/settings/user">设置</RadixLink>
                 <DarkModeDropDown />
             </div>
         </div>
-    );
-};
-export default Header;
+    )
+}
+export default Header

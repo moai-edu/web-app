@@ -1,5 +1,5 @@
+import { s3DataClient } from "@/persist/s3";
 import { NextResponse } from "next/server";
-import s3DataClient from "@/utils/s3_data_client";
 
 export async function POST(request: Request) {
     try {

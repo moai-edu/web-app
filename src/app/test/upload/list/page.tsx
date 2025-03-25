@@ -1,19 +1,19 @@
 // src/app/upload/list/page.tsx
 // import { Resource } from "sst";
-import s3DataClient from "@/utils/s3_data_client";
-import Link from "next/link";
+import { s3DataClient } from '@/persist/s3'
+import Link from 'next/link'
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic'
 
 export default async function ListImages() {
-    const resFiles = await s3DataClient.listFiles("test/");
+    const resFiles = await s3DataClient.listFiles('test/')
     return (
         <div>
             <Link href="/test/upload">Upload</Link>
             <h1>Uploaded Files</h1>
             <ul>
                 {resFiles.map((file) =>
-                    file.endsWith(".md") ? (
+                    file.endsWith('.md') ? (
                         <li key={file}>
                             <Link href={`/test/upload/view/md/${file}`}>
                                 {file}
@@ -29,5 +29,5 @@ export default async function ListImages() {
                 )}
             </ul>
         </div>
-    );
+    )
 }

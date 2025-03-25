@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import React from "react";
-import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu } from "@radix-ui/themes";
+import React from 'react'
+import { Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu } from '@radix-ui/themes'
 const DarkModeDropDown = () => {
-    const { setTheme } = useTheme();
+    const { setTheme } = useTheme()
 
     return (
         <DropdownMenu.Root>
@@ -17,18 +17,18 @@ const DarkModeDropDown = () => {
                     <span className="sr-only">Toggle theme</span>
                 </Button>
             </DropdownMenu.Trigger>
-            <DropdownMenu.Content size="2">
-                <DropdownMenu.Item onClick={() => setTheme("light")}>
+            <DropdownMenu.Content size="1">
+                <DropdownMenu.Item onClick={() => setTheme('light')}>
                     Light
                 </DropdownMenu.Item>
-                <DropdownMenu.Item onClick={() => setTheme("dark")}>
+                <DropdownMenu.Item onClick={() => setTheme('dark')}>
                     Dark
                 </DropdownMenu.Item>
-                <DropdownMenu.Item onClick={() => setTheme("system")}>
+                <DropdownMenu.Item onClick={() => setTheme('system')}>
                     System
                 </DropdownMenu.Item>
             </DropdownMenu.Content>
         </DropdownMenu.Root>
-    );
-};
-export default DarkModeDropDown;
+    )
+}
+export default DarkModeDropDown

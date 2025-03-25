@@ -1,5 +1,5 @@
-import { GetStarted, SignOut } from "@/features/authentication/auth-components";
-import { Session } from "next-auth";
+import { GetStarted, SignOut } from '@/features/authentication/auth-components'
+import { Session } from 'next-auth'
 import {
     Box,
     Button,
@@ -7,16 +7,16 @@ import {
     Popover,
     Avatar,
     DataList,
-    Link,
-} from "@radix-ui/themes";
-import { PersonIcon } from "@radix-ui/react-icons";
+    Link
+} from '@radix-ui/themes'
+import { PersonIcon } from '@radix-ui/react-icons'
 
 interface UserButtonProps {
-    session: Session | null;
+    session: Session | null
 }
 
 const UserButton: React.FC<UserButtonProps> = ({ session }) => {
-    if (!session?.user) return <GetStarted />;
+    if (!session?.user) return <GetStarted />
 
     return (
         <div className="flex gap-2 items-center">
@@ -70,7 +70,7 @@ const UserButton: React.FC<UserButtonProps> = ({ session }) => {
                 </Popover.Content>
             </Popover.Root>
         </div>
-    );
-};
+    )
+}
 
-export default UserButton;
+export default UserButton

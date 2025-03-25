@@ -23,10 +23,12 @@ teardown:
 localstack:
 	PERSISTENCE=1 localstack start
 tflocal:
+	echo "在本地开发环境的localstack中，初始化dynamodb表，tflocal命令需要在windows cmd中运行。"
 	tflocal init
 	tflocal plan
 	tflocal apply
 	$(awslocal) dynamodb describe-table --table-name next-auth
+	$(awslocal) dynamodb describe-table --table-name biz-data
 
 .PHONY: scan
 scan:
