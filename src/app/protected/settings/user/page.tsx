@@ -4,13 +4,7 @@ import { Flex, Spinner } from '@radix-ui/themes'
 import { useEffect, useState } from 'react'
 import ViewUserDataList from './view_user_data_list'
 import EditUserForm from './edit_user_form'
-
-export interface BizUser {
-    id: string
-    name: string
-    email: string
-    slug: string
-}
+import { BizUser } from '@/app/domain/types'
 
 export default function Page() {
     const [user, setUser] = useState<BizUser | null>(null)
@@ -18,12 +12,27 @@ export default function Page() {
 
     useEffect(() => {
         async function fetchUserProfile() {
-            const res = await fetch('/api/user/profile')
+            const res = await fetch('/api/protected/user')
             const data = await res.json()
             setUser(data)
         }
         fetchUserProfile()
     }, [])
+
+    async function handleSave(user: BizUser) {
+        const res = await fetch('/api/protected/user', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        if (res.ok) {
+            window.location.reload()
+        } else {
+            console.error('Failed to save user data')
+        }
+    }
 
     if (!user) {
         return (
@@ -39,7 +48,7 @@ export default function Page() {
                 <EditUserForm
                     user={user}
                     onCancel={() => setIsEditing(false)}
-                    onSave={() => window.location.reload()}
+                    onSave={handleSave}
                 />
             ) : (
                 <ViewUserDataList

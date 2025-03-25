@@ -1,5 +1,5 @@
+import { BizUser } from '@/app/domain/types'
 import { Button, DataList, Flex, Link } from '@radix-ui/themes'
-import { BizUser } from './page'
 
 export default function ViewUserDataList({
     user,

@@ -1,5 +1,6 @@
+import { BizUser } from '@/app/domain/types'
 import { Flex, Text, TextField, Button } from '@radix-ui/themes'
-import { BizUser } from './page'
+import { useState } from 'react'
 
 export default function EditUserForm({
     user,
@@ -7,9 +8,12 @@ export default function EditUserForm({
     onCancel
 }: {
     user: BizUser
-    onSave: () => void
+    onSave: (user: BizUser) => void
     onCancel: () => void
 }) {
+    const [name, setName] = useState(user.name)
+    const [slug, setSlug] = useState(user.slug)
+
     return (
         <>
             <Flex direction="column" gap="3">
@@ -18,8 +22,9 @@ export default function EditUserForm({
                         姓名
                     </Text>
                     <TextField.Root
-                        defaultValue={user.name}
+                        defaultValue={name}
                         placeholder="请输入用户姓名"
+                        onChange={(event) => setName(event.target.value)}
                     />
                 </label>
                 <label>
@@ -27,8 +32,9 @@ export default function EditUserForm({
                         slug
                     </Text>
                     <TextField.Root
-                        defaultValue={user.slug}
+                        defaultValue={slug}
                         placeholder="请输入slug"
+                        onChange={(event) => setSlug(event.target.value)}
                     />
                 </label>
             </Flex>
@@ -37,7 +43,11 @@ export default function EditUserForm({
                 <Button variant="soft" onClick={onCancel}>
                     取消
                 </Button>
-                <Button onClick={onSave}>保存</Button>
+                <Button
+                    onClick={() => onSave({ id: '', email: '', name, slug })}
+                >
+                    保存
+                </Button>
             </Flex>
         </>
     )

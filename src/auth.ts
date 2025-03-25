@@ -3,7 +3,8 @@ import Cognito from 'next-auth/providers/cognito'
 import { Resource } from 'sst'
 import { DynamoDBAdapter } from '@auth/dynamodb-adapter'
 import { NextResponse } from 'next/server'
-import { AUTH_TABLE_NAME, dynamoClient } from './persist/db'
+import { AUTH_TABLE_NAME, bizAdapter, dynamoClient } from './persist/db'
+import { BizUser } from './app/domain/types'
 
 const PROVIDER = 'cognito'
 
@@ -54,8 +55,24 @@ const result: NextAuthResult = NextAuth({
             if (trigger === 'update') token.name = session.user.email
             return token
         },
-        session({ session, user }) {
-            session.user.name = user.email.split('@')[0]
+        async session({ session, user }) {
+            // 这个函数在进入每个页面都会执行
+
+            // create user in bizdata db for new user
+            let bizUser: BizUser | null = await bizAdapter.getBizUserById(
+                user.id
+            )
+            if (!bizUser) {
+                const name = user.email.split('@')[0]
+                bizUser = await bizAdapter.createBizUser({
+                    id: user.id,
+                    email: user.email,
+                    name: name,
+                    slug: ''
+                })
+                console.log(`create new user in biz data db: ${bizUser}`)
+            }
+            session.user.name = bizUser.name
             return session
         }
     },
@@ -75,6 +92,8 @@ export async function signIn() {
     await result.signIn(PROVIDER)
 }
 
+// 这个路由中间件暂时不使用，因为部署在Lambda@Edge上。
+// Lambda@Edge 不支持环境变量、文件系统等，无法读取配置文件，而且访问DynamoDB时不方便，成本也比较高。
 export async function middleware(req: Request) {
     const url = new URL(req.url)
 
@@ -106,11 +125,4 @@ export async function middleware(req: Request) {
 
     // 如果请求不匹配任何规则，则继续处理
     return NextResponse.next()
-}
-
-export const config = {
-    matcher: [
-        '/api/protected/:path*', // API 路由需要身份验证
-        '/protected/:path*' // 页面路由需要身份验证
-    ]
 }

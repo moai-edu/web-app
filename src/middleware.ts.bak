@@ -1,3 +1,20 @@
+/**
+ * 路由中间件：
+ * 注意事项
+ * 环境变量限制:
+ * 
+ * Lambda@Edge 不支持环境变量，因此如果你的中间件依赖环境变量（如 process.env），需要通过其他方式传递配置，例如通过构建时注入或使用 AWS Secrets Manager。
+ * import { fromNodeProviderChain } from '@aws-sdk/credential-providers' 这个库也不支持，需要使用其他方式传递DynamoDB 的配置。
+ * 
+ * 部署复杂性:
+ * 
+ * 使用 Lambda@Edge 部署中间件可能会增加部署时间，因为每次更新都需要将代码分发到所有边缘节点。
+ * 
+ * 成本:
+ * 
+ * Lambda@Edge 的执行成本可能比普通 Lambda 函数高，尤其是在高流量应用中。
+ */
+ 
 export { middleware } from '@/auth'
 
 export const config = {

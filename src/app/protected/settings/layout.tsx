@@ -20,7 +20,7 @@ export default function SettingLayout({
                         {settings.map((setting) => (
                             <Link
                                 key={setting.href}
-                                href={`/settings/${setting.href}`}
+                                href={`${setting.href}`}
                                 weight={
                                     pathname.endsWith(setting.href)
                                         ? 'bold'
