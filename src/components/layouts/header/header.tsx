@@ -31,7 +31,9 @@ const Header = async () => {
                     <TabNav.Link href="/courses">Courses</TabNav.Link>
                 </TabNav.Root>
                 <UserButton session={session} />
-                <RadixLink href="/settings/user">设置</RadixLink>
+                {session && (
+                    <RadixLink href="/protected/settings/user">设置</RadixLink>
+                )}
                 <DarkModeDropDown />
             </div>
         </div>

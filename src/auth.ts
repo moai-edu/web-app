@@ -1,46 +1,11 @@
 import NextAuth, { NextAuthResult } from 'next-auth'
 import Cognito from 'next-auth/providers/cognito'
 import { Resource } from 'sst'
-
-// import { DynamoDB, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb'
-// import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAdapter } from '@auth/dynamodb-adapter'
-// import { fromNodeProviderChain } from '@aws-sdk/credential-providers'
 import { NextResponse } from 'next/server'
 import { AUTH_TABLE_NAME, dynamoClient } from './persist/db'
 
 const PROVIDER = 'cognito'
-
-// TODO: 这里不能引用persist/db.ts，原因不明！！！！
-// const authDbConf: DynamoDBClientConfig =
-//     process.env.NODE_ENV === 'development'
-//         ? {
-//               endpoint: process.env.AWS_ENDPOINT_URL!, // LocalStack 的地址
-//               credentials: {
-//                   accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-//                   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
-//               },
-//               region: process.env.AWS_REGION!
-//           }
-//         : {
-//               credentials: fromNodeProviderChain(), // 这里会自动获取 IAM Role 的凭证
-//               region: process.env.AWS_REGION!
-//           }
-
-// const authDbClient = DynamoDBDocument.from(new DynamoDB(authDbConf), {
-//     marshallOptions: {
-//         convertEmptyValues: true,
-//         removeUndefinedValues: true,
-//         convertClassInstanceToMap: true
-//     }
-// })
-
-// console.log(`authDbConf=${JSON.stringify(authDbConf)}`);
-
-// const authDbTableName =
-//     process.env.NODE_ENV === 'development'
-//         ? process.env.AUTH_TABLE_NAME
-//         : Resource.NextAuthDynamo.name
 
 const cognitoOptions =
     process.env.NODE_ENV === 'development'

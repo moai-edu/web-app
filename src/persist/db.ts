@@ -1,6 +1,6 @@
 import { DynamoDBBizUserAdapter } from '@/app/domain/adapter-dynamodb'
 import { DynamoDB, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb'
-// import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
+import { fromNodeProviderChain } from '@aws-sdk/credential-providers'
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { Resource } from 'sst'
 
@@ -16,8 +16,7 @@ const authDbConf: DynamoDBClientConfig = ['development', 'test'].includes(
           region: process.env.AWS_REGION!
       }
     : {
-          //   credentials: fromNodeProviderChain(), // 这里会自动获取 IAM Role 的凭证
-          credentials: undefined, // 这里会自动获取 IAM Role 的凭证
+          credentials: fromNodeProviderChain(), // 这里会自动获取 IAM Role 的凭证
           region: process.env.AWS_REGION!
       }
 
