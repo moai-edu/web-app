@@ -62,9 +62,7 @@ const result: NextAuthResult = NextAuth({
             // 所以，可以把BizUser的信息放到session里面，供每个页面使用。
 
             // create user in bizdata db for new user
-            let bizUser: BizUser | null = await bizAdapter.getBizUserById(
-                user.id
-            )
+            let bizUser = await bizAdapter.getBizUserById(user.id)
             if (!bizUser) {
                 const name = user.email.split('@')[0]
                 bizUser = await bizAdapter.createBizUser({
@@ -73,10 +71,11 @@ const result: NextAuthResult = NextAuth({
                     name: name,
                     slug: ''
                 })
-                console.log(`create new user in biz data db: ${bizUser}`)
+                console.log(`create new user in biz data db. id=${user.id}`)
             } else {
-                console.log(`use existed user in biz data db: ${bizUser}`)
+                console.log(`use existed user in biz data db. id=${user.id}`)
             }
+            console.log(`biz user: ${JSON.stringify(bizUser)}`)
             session.user.name = bizUser.name
             session.user.slug = bizUser.slug
             return session
