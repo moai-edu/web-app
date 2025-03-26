@@ -4,7 +4,6 @@ import { Resource } from 'sst'
 import { DynamoDBAdapter } from '@auth/dynamodb-adapter'
 import { NextResponse } from 'next/server'
 import { AUTH_TABLE_NAME, bizAdapter, dynamoClient } from './persist/db'
-import { BizUser } from './app/domain/types'
 import { NextAuthResult } from 'next-auth'
 import { Adapter } from 'next-auth/adapters'
 
@@ -58,24 +57,25 @@ const result: NextAuthResult = NextAuth({
             return token
         },
         async session({ session, user }) {
-            // 这个函数在进入每个页面都会执行，
+            // 这个函数在进入每个调用getSession或useSession时都会执行，
             // 所以，可以把BizUser的信息放到session里面，供每个页面使用。
 
             // create user in bizdata db for new user
             let bizUser = await bizAdapter.getBizUserById(user.id)
             if (!bizUser) {
-                const name = user.email.split('@')[0]
+                console.log(`create new user in biz data db. id=${user.id}`)
                 bizUser = await bizAdapter.createBizUser({
                     id: user.id,
                     email: user.email,
-                    name: name,
-                    slug: ''
+                    name: user.email.split('@')[0], //新用户名字默认为邮箱前缀
+                    slug: '' // 新用户slug为空
                 })
-                console.log(`create new user in biz data db. id=${user.id}`)
             } else {
                 console.log(`use existed user in biz data db. id=${user.id}`)
             }
+
             console.log(`biz user: ${JSON.stringify(bizUser)}`)
+            // 把BizUser的信息放到session.user里面
             session.user.name = bizUser.name
             session.user.slug = bizUser.slug
             return session
