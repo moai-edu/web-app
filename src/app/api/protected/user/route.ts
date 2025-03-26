@@ -1,6 +1,5 @@
-import { BizUser } from '@/app/domain/types'
 import { auth } from '@/auth'
-import { bizAdapter } from '@/persist/db'
+import { dbAdapter } from '@/persist/db'
 import { NextResponse } from 'next/server'
 
 // BizUser的更新信息通过JSON格式传递
@@ -20,14 +19,28 @@ export async function PUT(request: Request) {
 
     try {
         // 解析请求体中的JSON数据
-        const userData = await request.json()
-        const user: BizUser = {
-            ...userData,
-            id: session.user!.id!,
-            email: session.user!.email!
+        const { name, slug } = await request.json()
+
+        if (slug && slug !== session.user!.slug) {
+            const existedUser = await dbAdapter.getUserBySlug(slug)
+            if (existedUser) {
+                // 如果slug已被占用，返回 400 错误状态
+                return new Response(
+                    JSON.stringify({ message: 'Slug has been taken.' }),
+                    {
+                        status: 400,
+                        headers: { 'Content-Type': 'application/json' }
+                    }
+                )
+            }
         }
-        // 更新BizUser用户信息
-        const updatedUser = await bizAdapter.updateBizUser(user)
+
+        // 更新User用户的name和slug
+        const updatedUser = await dbAdapter.updateUser(
+            session.user!.id!,
+            name,
+            slug
+        )
 
         // 返回更新后的用户信息
         return NextResponse.json(updatedUser, {

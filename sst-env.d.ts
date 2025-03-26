@@ -5,15 +5,11 @@
 
 declare module 'sst' {
     export interface Resource {
-        BizDataDynamo: {
-            name: string
-            type: 'sst.aws.Dynamo'
-        }
         DataBucket: {
             name: string
             type: 'sst.aws.Bucket'
         }
-        NextAuthDynamo: {
+        DbDynamo: {
             name: string
             type: 'sst.aws.Dynamo'
         }

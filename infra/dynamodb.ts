@@ -10,29 +10,17 @@
 //     ],
 // }));
 
-export const nextAuthDynamo = new sst.aws.Dynamo("NextAuthDynamo", {
+export const dbDynamo = new sst.aws.Dynamo('DbDynamo', {
     fields: {
-        pk: "string", // 分区键
-        sk: "string", // 排序键
-        GSI1PK: "string", // GSI1 分区键
-        GSI1SK: "string", // GSI1 排序键
+        pk: 'string', // 分区键
+        sk: 'string', // 排序键
+        GSI1PK: 'string', // GSI1 分区键
+        GSI1SK: 'string' // GSI1 排序键
     },
-    primaryIndex: { hashKey: "pk", rangeKey: "sk" }, // 主键
+    primaryIndex: { hashKey: 'pk', rangeKey: 'sk' }, // 主键
     globalIndexes: {
-        GSI1: { hashKey: "GSI1PK", rangeKey: "GSI1SK", projection: "all" }, // 全局二级索引
+        GSI1: { hashKey: 'GSI1PK', rangeKey: 'GSI1SK', projection: 'all' }, // 全局二级索引
+        GSI2: { hashKey: 'GSI2PK', rangeKey: 'GSI2SK', projection: 'all' } // 全局二级索引
     },
-    ttl: "expires", // TTL 属性
-});
-
-export const bizDataDynamo = new sst.aws.Dynamo("BizDataDynamo", {
-    fields: {
-        pk: "string", // 分区键
-        sk: "string", // 排序键
-        GSI1PK: "string", // GSI1 分区键
-        GSI1SK: "string", // GSI1 排序键
-    },
-    primaryIndex: { hashKey: "pk", rangeKey: "sk" }, // 主键
-    globalIndexes: {
-        GSI1: { hashKey: "GSI1PK", rangeKey: "GSI1SK", projection: "all" }, // 全局二级索引
-    },
-});
+    ttl: 'expires' // TTL 属性
+})

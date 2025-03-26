@@ -5,15 +5,45 @@ import { useState } from 'react'
 
 export default function EditUserForm({
     user,
-    onSave,
     onCancel
 }: {
     user: User
-    onSave: (user: User) => void
     onCancel: () => void
 }) {
     const [name, setName] = useState<string | null | undefined>(user.name)
     const [slug, setSlug] = useState<string | null | undefined>(user.slug)
+    const [isSlugDuplicateErrorVisible, setIsSlugDuplicateErrorVisible] =
+        useState<boolean>(false)
+    const [isSlugFormatErrorVisible, setIsSlugFormatErrorVisible] =
+        useState<boolean>(false)
+
+    async function onSaveClick() {
+        setIsSlugFormatErrorVisible(false)
+        setIsSlugDuplicateErrorVisible(false)
+
+        if (!slug || !/^[a-z0-9_-]+$/.test(slug)) {
+            setIsSlugFormatErrorVisible(true)
+            return
+        }
+
+        const res = await fetch('/api/protected/user', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name,
+                slug
+            })
+        })
+        if (res.ok) {
+            window.location.reload()
+        } else {
+            setIsSlugDuplicateErrorVisible(true)
+            console.error('Failed to save user data')
+            return false
+        }
+    }
 
     return (
         <>
@@ -37,6 +67,14 @@ export default function EditUserForm({
                         placeholder="请输入slug"
                         onChange={(event) => setSlug(event.target.value)}
                     />
+                    {isSlugFormatErrorVisible && (
+                        <Text color="crimson">
+                            slug只能包含小写字母、数字、下划线、中划线
+                        </Text>
+                    )}
+                    {isSlugDuplicateErrorVisible && (
+                        <Text color="crimson">slug已被占用</Text>
+                    )}
                 </label>
             </Flex>
 
@@ -44,13 +82,7 @@ export default function EditUserForm({
                 <Button variant="soft" onClick={onCancel}>
                     取消
                 </Button>
-                <Button
-                    onClick={() =>
-                        onSave({ id: '', email: '', name: name!, slug: slug! })
-                    }
-                >
-                    保存
-                </Button>
+                <Button onClick={() => onSaveClick()}>保存</Button>
             </Flex>
         </>
     )

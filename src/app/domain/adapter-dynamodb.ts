@@ -1,89 +1,95 @@
 import { BatchWriteCommandInput, DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { BizUser } from './types'
+import { User } from 'next-auth'
 
-export function DynamoDBBizUserAdapter(
-    client: DynamoDBDocument,
-    tableName: string
-) {
+export function DynamoDBAdapter(client: DynamoDBDocument, tableName: string) {
     const TableName = tableName
-    const pk = 'pk'
-    const sk = 'sk'
-    const IndexName = 'GSI1'
-    const GSI1PK = 'GSI1PK'
-    const GSI1SK = 'GSI1SK'
 
     return {
-        async createBizUser(user: BizUser): Promise<BizUser> {
+        async createUser(user: User): Promise<User> {
             const Item = format.to({
                 ...user,
-                [pk]: `USER#${user.id}`,
-                [sk]: `USER#${user.id}`,
+                pk: `USER#${user.id}`,
+                sk: `USER#${user.id}`,
                 type: 'USER',
-                [GSI1PK]: `USER#${user.email}`,
-                [GSI1SK]: `USER#${user.email}`
+                GSI1PK: `USER#${user.email}`,
+                GSI1SK: `USER#${user.email}`
             })
 
             await client.put({ TableName, Item })
             return user
         },
 
-        async getBizUserById(id: string): Promise<BizUser | null> {
+        async getUserById(id: string): Promise<User | null> {
             const { Item } = await client.get({
                 TableName,
-                Key: { [pk]: `USER#${id}`, [sk]: `USER#${id}` }
+                Key: { pk: `USER#${id}`, sk: `USER#${id}` }
             })
 
-            return format.from<BizUser>(Item)
+            return format.from<User>(Item)
         },
 
-        async getBizUserByEmail(email: string): Promise<BizUser | null> {
+        async getUserByEmail(email: string): Promise<User | null> {
             const { Items } = await client.query({
                 TableName,
-                IndexName, // 使用全局二级索引查询
-                KeyConditionExpression:
-                    '#gsi1pk = :gsi1pk AND #gsi1sk = :gsi1sk',
-                ExpressionAttributeNames: {
-                    '#gsi1pk': GSI1PK,
-                    '#gsi1sk': GSI1SK
-                },
+                IndexName: 'GSI1', // 使用全局二级索引查询
+                KeyConditionExpression: 'GSI1PK = :gsi1pk AND GSI1SK = :gsi1sk',
                 ExpressionAttributeValues: {
                     ':gsi1pk': `USER#${email}`,
                     ':gsi1sk': `USER#${email}`
                 }
             })
 
-            return format.from<BizUser>(Items?.[0])
+            return format.from<User>(Items?.[0])
         },
 
-        async updateBizUser(
-            user: Partial<BizUser> & Pick<BizUser, 'id'>
-        ): Promise<BizUser> {
+        async getUserBySlug(slug: string): Promise<User | null> {
+            const { Items } = await client.query({
+                TableName,
+                IndexName: 'GSI2', // 使用全局二级索引查询
+                KeyConditionExpression: 'GSI2PK = :gsi2pk AND GSI2SK = :gsi2sk',
+                ExpressionAttributeValues: {
+                    ':gsi2pk': `USER#${slug}`,
+                    ':gsi2sk': `USER#${slug}`
+                }
+            })
+
+            return format.from<User>(Items?.[0])
+        },
+
+        async updateUser(
+            id: string,
+            name: string,
+            slug: string
+        ): Promise<User> {
             const {
                 UpdateExpression,
                 ExpressionAttributeNames,
                 ExpressionAttributeValues
-            } = generateUpdateExpression(user)
+            } = generateUpdateExpression({ name, slug })
+            const newUpdateExpression = `${UpdateExpression}, GSI2PK = :gsi2pk, GSI2SK = :gsi2sk`
+            ExpressionAttributeValues[':gsi2pk'] = `USER#${slug}`
+            ExpressionAttributeValues[':gsi2sk'] = `USER#${slug}`
+
             const data = await client.update({
                 TableName,
                 Key: {
-                    [pk]: `USER#${user.id}`,
-                    [sk]: `USER#${user.id}`
+                    pk: `USER#${id}`,
+                    sk: `USER#${id}`
                 },
-                UpdateExpression,
+                UpdateExpression: newUpdateExpression,
                 ExpressionAttributeNames,
                 ExpressionAttributeValues,
                 ReturnValues: 'ALL_NEW'
             })
 
-            return format.from<BizUser>(data.Attributes)!
+            return format.from<User>(data.Attributes)!
         },
 
-        async deleteBizUser(userId: string) {
+        async deleteUser(userId: string) {
             // query all the items related to the user to delete
             const res = await client.query({
                 TableName,
-                KeyConditionExpression: '#pk = :pk',
-                ExpressionAttributeNames: { '#pk': pk },
+                KeyConditionExpression: 'pk = :pk',
                 ExpressionAttributeValues: { ':pk': `USER#${userId}` }
             })
             if (!res.Items) return null
@@ -94,8 +100,8 @@ export function DynamoDBBizUserAdapter(
                 return {
                     DeleteRequest: {
                         Key: {
-                            [sk]: item.sk,
-                            [pk]: item.pk
+                            sk: item.sk,
+                            pk: item.pk
                         }
                     }
                 }
@@ -106,7 +112,7 @@ export function DynamoDBBizUserAdapter(
                 RequestItems: { [TableName]: itemsToDeleteMax }
             }
             await client.batchWrite(param)
-            return format.from<BizUser>(user)
+            return format.from<User>(user)
         }
     }
 }

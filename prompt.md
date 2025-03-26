@@ -87,9 +87,7 @@ NextAuth.js 和 DynanmoDBAdapter 的使用方法。其中与 DynamoDBAdapter 相
 ，包括针对 User 和 Session 的 CRUD 操作等。
 
 我现在希望将我的业务数据也以相同的方式（指与 NextAuth.js 相同的单表模式）存储在
-另个一个单独的 DynamoDB 表中（假设表名为`next-biz`）。我已经使用如下的 sst 配置
-，创建了一个与 next-auth 结构完全相同的 dynamodb 表`BizDataDynamo`，仅仅去掉了不
-被需要的 expires 属性，代码如下：
+next-auth 使用的 DynamoDB 表中（假设表名为`portal-site-db`）。
 
 ```typescript
 /// <reference path="../.sst/platform/config.d.ts" />
@@ -104,22 +102,11 @@ export const nextAuthDynamo = new sst.aws.Dynamo('NextAuthDynamo', {
     primaryIndex: { hashKey: 'pk', rangeKey: 'sk' }, // 主键
     globalIndexes: {
         GSI1: { hashKey: 'GSI1PK', rangeKey: 'GSI1SK', projection: 'all' } // 全局二级索引
+        GSI2: { hashKey: 'GSI2PK', rangeKey: 'GSI2SK', projection: 'all' } // 全局二级索引
     },
     ttl: 'expires' // TTL 属性
 })
 
-export const bizDataDynamo = new sst.aws.Dynamo('BizDataDynamo', {
-    fields: {
-        pk: 'string', // 分区键
-        sk: 'string', // 排序键
-        GSI1PK: 'string', // GSI1 分区键
-        GSI1SK: 'string' // GSI1 排序键
-    },
-    primaryIndex: { hashKey: 'pk', rangeKey: 'sk' }, // 主键
-    globalIndexes: {
-        GSI1: { hashKey: 'GSI1PK', rangeKey: 'GSI1SK', projection: 'all' } // 全局二级索引
-    }
-})
 ```
 
 我们的业务系统中的第一个领域模型（Domain Model）就是：业务用户（BizUser）

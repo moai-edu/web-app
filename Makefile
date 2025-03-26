@@ -1,3 +1,13 @@
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
+ifneq (,$(wildcard ./.env.local))
+    include .env.local
+    export
+endif
+
 # 如果环境变量STAGE未定义，则使用dev作为默认值；否则，使用环境变量STAGE中的值
 STAGE?=dev
 SECRET_NAME:=NextAuthSecret
@@ -27,12 +37,7 @@ tflocal:
 	tflocal init
 	tflocal plan
 	tflocal apply
-	$(awslocal) dynamodb describe-table --table-name next-auth
-	$(awslocal) dynamodb describe-table --table-name biz-data
-
-.PHONY: scan
-scan:
-	$(awslocal) dynamodb scan --table-name next-auth
+	$(awslocal) dynamodb describe-table --table-name $(DB_TABLE_NAME)
 
 .PHONY: push
 push:
@@ -43,13 +48,19 @@ push:
 
 .PHONY: doc
 doc: doc/deploy.png
-
 doc/deploy.png: index.drawio
 	draw.io -x -f png -p 3 -o doc/deploy.png index.drawio
 
-.PHONY: clear-local-biz-data
-clear-local-biz-data:
-	LOCAL=1 TABLE_NAME=biz-data python script/clear-table.py
-.PHONY: clear-remote-biz-data
-clear-remote-biz-data:
-	TABLE_NAME=portal-site-dev-BizDataDynamoTable-mbouwtna python script/clear-table.py
+REMOTE_DB_TABLE_NAME:=portal-site-dev-BizDataDynamoTable-mbouwtna
+
+.PHONY: scan-local-db scan-remote-db
+scan-local-db:
+	$(awslocal) dynamodb scan --table-name $(DB_TABLE_NAME)
+scan-remote-db:
+	$(awslocal) dynamodb scan --table-name $(REMOTE_DB_TABLE_NAME)
+
+.PHONY: clean-local-db clean-remote-db
+clean-local-db:
+	LOCAL=1 TABLE_NAME=$(DB_TABLE_NAME) python script/clear-table.py
+clean-remote-db:
+	TABLE_NAME=$(REMOTE_DB_TABLE_NAME) python script/clear-table.py

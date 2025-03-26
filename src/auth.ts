@@ -1,11 +1,11 @@
 import NextAuth from 'next-auth'
 import Cognito from 'next-auth/providers/cognito'
 import { Resource } from 'sst'
-import { DynamoDBAdapter } from '@auth/dynamodb-adapter'
 import { NextResponse } from 'next/server'
-import { AUTH_TABLE_NAME, bizAdapter, dynamoClient } from './persist/db'
+import { DB_TABLE_NAME, dynamoClient } from './persist/db'
 import { NextAuthResult } from 'next-auth'
 import { Adapter } from 'next-auth/adapters'
+import { DynamoDBAdapter } from '@auth/dynamodb-adapter'
 
 const PROVIDER = 'cognito'
 
@@ -59,25 +59,8 @@ const result: NextAuthResult = NextAuth({
         async session({ session, user }) {
             // 这个函数在进入每个调用getSession或useSession时都会执行，
             // 所以，可以把BizUser的信息放到session里面，供每个页面使用。
-
-            // create user in bizdata db for new user
-            let bizUser = await bizAdapter.getBizUserById(user.id)
-            if (!bizUser) {
-                console.log(`create new user in biz data db. id=${user.id}`)
-                bizUser = await bizAdapter.createBizUser({
-                    id: user.id,
-                    email: user.email,
-                    name: user.email.split('@')[0], //新用户名字默认为邮箱前缀
-                    slug: '' // 新用户slug为空
-                })
-            } else {
-                console.log(`use existed user in biz data db. id=${user.id}`)
-            }
-
-            console.log(`biz user: ${JSON.stringify(bizUser)}`)
-            // 把BizUser的信息放到session.user里面
-            session.user.name = bizUser.name
-            session.user.slug = bizUser.slug
+            console.log(session)
+            console.log(user)
             return session
         }
     },
@@ -88,7 +71,7 @@ const result: NextAuthResult = NextAuth({
         maxAge: 30 * 24 * 60 * 60 // 30 days
     },
     adapter: DynamoDBAdapter(dynamoClient, {
-        tableName: AUTH_TABLE_NAME
+        tableName: DB_TABLE_NAME
     }) as unknown as Adapter
 })
 

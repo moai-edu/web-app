@@ -1,10 +1,10 @@
-import { DynamoDBBizUserAdapter } from '@/app/domain/adapter-dynamodb'
+import { DynamoDBAdapter } from '@/app/domain/adapter-dynamodb'
 import { DynamoDB, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb'
 import { fromNodeProviderChain } from '@aws-sdk/credential-providers'
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { Resource } from 'sst'
 
-const authDbConf: DynamoDBClientConfig = ['development', 'test'].includes(
+const dbConf: DynamoDBClientConfig = ['development', 'test'].includes(
     process.env.NODE_ENV
 )
     ? {
@@ -20,7 +20,7 @@ const authDbConf: DynamoDBClientConfig = ['development', 'test'].includes(
           region: process.env.AWS_REGION!
       }
 
-export const dynamoClient = DynamoDBDocument.from(new DynamoDB(authDbConf), {
+export const dynamoClient = DynamoDBDocument.from(new DynamoDB(dbConf), {
     marshallOptions: {
         convertEmptyValues: true,
         removeUndefinedValues: true,
@@ -28,16 +28,10 @@ export const dynamoClient = DynamoDBDocument.from(new DynamoDB(authDbConf), {
     }
 })
 
-export const AUTH_TABLE_NAME: string = ['test', 'development'].includes(
+export const DB_TABLE_NAME: string = ['test', 'development'].includes(
     process.env.NODE_ENV
 )
-    ? process.env.AUTH_TABLE_NAME!
-    : Resource.NextAuthDynamo.name
+    ? process.env.DB_TABLE_NAME!
+    : Resource.DbDynamo.name
 
-export const BIZ_TABLE_NAME: string = ['test', 'development'].includes(
-    process.env.NODE_ENV
-)
-    ? process.env.BIZ_TABLE_NAME!
-    : Resource.BizDataDynamo.name
-
-export const bizAdapter = DynamoDBBizUserAdapter(dynamoClient, BIZ_TABLE_NAME)
+export const dbAdapter = DynamoDBAdapter(dynamoClient, DB_TABLE_NAME)

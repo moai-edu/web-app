@@ -1,10 +1,10 @@
 /// <reference path="../.sst/platform/config.d.ts" />
 
 import { table } from 'console'
-import { authUrl, portalDomain, userPool, webClient } from './auth'
+import { portalDomain, userPool, webClient } from './auth'
 import { secret } from './secret'
 import { dataBucket } from './bucket'
-import { bizDataDynamo, nextAuthDynamo } from './dynamodb'
+import { dbDynamo } from './dynamodb'
 
 const webConfig = {
     /**
@@ -13,14 +13,7 @@ const webConfig = {
      * 2. 自动配置 IAM 权限：SST 会在 Lambda（如果 Next.js 需要 API 处理）和其他 AWS 服务之间自动添加适当的权限，使其可以安全访问这些资源，而不需要手动配置 IAM 角色。
      *
      */
-    link: [
-        userPool,
-        webClient,
-        dataBucket,
-        nextAuthDynamo,
-        bizDataDynamo,
-        table
-    ],
+    link: [userPool, webClient, dataBucket, dbDynamo, table],
     domain: portalDomain,
     environment: {
         // 这3个环境变量是保留的，所以这里不能设置，否则会报错；
