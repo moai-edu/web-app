@@ -15,7 +15,9 @@ export const dbDynamo = new sst.aws.Dynamo('DbDynamo', {
         pk: 'string', // 分区键
         sk: 'string', // 排序键
         GSI1PK: 'string', // GSI1 分区键
-        GSI1SK: 'string' // GSI1 排序键
+        GSI1SK: 'string', // GSI1 排序键
+        GSI2PK: 'string', // GSI2 分区键
+        GSI2SK: 'string' // GSI2 排序键
     },
     primaryIndex: { hashKey: 'pk', rangeKey: 'sk' }, // 主键
     globalIndexes: {

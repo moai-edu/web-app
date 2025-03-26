@@ -56,11 +56,8 @@ const result: NextAuthResult = NextAuth({
             if (trigger === 'update') token.name = session.user.email
             return token
         },
-        async session({ session, user }) {
-            // 这个函数在进入每个调用getSession或useSession时都会执行，
-            // 所以，可以把BizUser的信息放到session里面，供每个页面使用。
-            console.log(session)
-            console.log(user)
+        async session({ session }) {
+            // 这个函数在进入每个调用getSession或useSession时都会执行
             return session
         }
     },
