@@ -33,3 +33,13 @@ tflocal:
 .PHONY: scan
 scan:
 	$(awslocal) dynamodb scan --table-name next-auth
+
+.PHONY: push
+push:
+	git add .
+	git commit -m "同步代码"
+	git push github develop
+	git push gitee develop
+
+doc/deploy.png: index.drawio
+	draw.io -x -f png -p 3 -o doc/deploy.png index.drawio
