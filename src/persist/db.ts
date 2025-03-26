@@ -32,7 +32,7 @@ export const AUTH_TABLE_NAME: string = ['test', 'development'].includes(
     process.env.NODE_ENV
 )
     ? process.env.AUTH_TABLE_NAME!
-    : Resource.BizDataDynamo.name
+    : Resource.NextAuthDynamo.name
 
 export const BIZ_TABLE_NAME: string = ['test', 'development'].includes(
     process.env.NODE_ENV

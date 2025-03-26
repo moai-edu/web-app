@@ -1,10 +1,24 @@
 import os
 import boto3
 from botocore.exceptions import ClientError
+from botocore.config import Config
 
 def clear_dynamodb_table(table_name, pk_attr="pk", sk_attr="sk"):
-    dynamodb = boto3.client('dynamodb')
-    
+    if os.environ.get('LOCAL'):
+        dynamodb = boto3.client(
+            'dynamodb',
+            endpoint_url='http://localhost:4566',  # LocalStack 默认端口
+            region_name='us-east-1',               # 任意 region（LocalStack 不校验）
+            aws_access_key_id='test',              # LocalStack 固定值
+            aws_secret_access_key='test',          # LocalStack 固定值
+            config=Config(                         # 可选：超时设置
+                connect_timeout=3,
+                read_timeout=3
+            )
+        )
+    else:
+        dynamodb = boto3.client('dynamodb')
+
     try:
         # 1. 扫描所有记录的主键（仅需 pk 和 sk）
         print(f"Scanning table {table_name}...")

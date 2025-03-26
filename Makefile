@@ -46,3 +46,10 @@ doc: doc/deploy.png
 
 doc/deploy.png: index.drawio
 	draw.io -x -f png -p 3 -o doc/deploy.png index.drawio
+
+.PHONY: clear-local-biz-data
+clear-local-biz-data:
+	LOCAL=1 TABLE_NAME=biz-data python script/clear-table.py
+.PHONY: clear-remote-biz-data
+clear-remote-biz-data:
+	TABLE_NAME=portal-site-dev-BizDataDynamoTable-mbouwtna python script/clear-table.py
