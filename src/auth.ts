@@ -74,6 +74,8 @@ const result: NextAuthResult = NextAuth({
                     slug: ''
                 })
                 console.log(`create new user in biz data db: ${bizUser}`)
+            } else {
+                console.log(`use existed user in biz data db: ${bizUser}`)
             }
             session.user.name = bizUser.name
             session.user.slug = bizUser.slug
