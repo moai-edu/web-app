@@ -32,11 +32,16 @@ teardown:
 .PHONY: localstack tflocal
 localstack:
 	PERSISTENCE=1 localstack start
-tflocal:
+
+localstack-apply:
 	echo "在本地开发环境的localstack中，初始化dynamodb表，tflocal命令需要在windows cmd中运行。"
-	tflocal init
-	tflocal plan
-	tflocal apply
+	set TF_VAR_bucket_name=$(DATA_BUCKET_NAME)&& set TF_VAR_table_name=$(DB_TABLE_NAME)&& tflocal init && tflocal plan && tflocal apply
+
+localstack-destroy:
+	set TF_VAR_bucket_name=$(DATA_BUCKET_NAME)&& set TF_VAR_table_name=$(DB_TABLE_NAME)&& tflocal destroy
+
+localstack-show:
+	$(awslocal) s3 ls s3://$(DATA_BUCKET_NAME)/
 	$(awslocal) dynamodb describe-table --table-name $(DB_TABLE_NAME)
 
 .PHONY: push

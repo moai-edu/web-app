@@ -37,10 +37,6 @@ export default async function Page({
     const { slug, path } = await params
     const { step } = await searchParams
     const filePath = `docs/${slug}/course/${path.join('/')}/index.md` // 构建 S3 文件路径
-    console.log('############')
-    console.log(path)
-    console.log(step)
-    console.log('############')
     const current = step ? parseInt(step) : 0 // 获取当前步骤
     try {
         let isAuthorized = false
