@@ -29,15 +29,17 @@ teardown:
 	npx sst remove --stage $(STAGE)
 	npx sst secret remove $(SECRET_NAME) --stage $(STAGE)
 
-.PHONY: localstack tflocal
+.PHONY: localstack localstack-apply localstack-destroy localstack-show
 localstack:
+	echo "需要在windows cmd中运行localstack命令。"
 	set PERSISTENCE=1&& localstack start
 
 localstack-apply:
-	echo "在本地开发环境的localstack中，初始化dynamodb表，tflocal命令需要在windows cmd中运行。"
+	echo "在本地开发环境的localstack中，初始化dynamodb表和s3桶，tflocal命令需要在windows cmd中运行。"
 	set TF_VAR_bucket_name=$(DATA_BUCKET_NAME)&& set TF_VAR_table_name=$(DB_TABLE_NAME)&& tflocal init && tflocal plan && tflocal apply
 
 localstack-destroy:
+	echo "需要在windows cmd中运行tflocal命令。"
 	set TF_VAR_bucket_name=$(DATA_BUCKET_NAME)&& set TF_VAR_table_name=$(DB_TABLE_NAME)&& tflocal destroy
 
 localstack-show:
