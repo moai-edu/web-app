@@ -31,7 +31,7 @@ teardown:
 
 .PHONY: localstack tflocal
 localstack:
-	PERSISTENCE=1 localstack start
+	set PERSISTENCE=1&& localstack start
 
 localstack-apply:
 	echo "在本地开发环境的localstack中，初始化dynamodb表，tflocal命令需要在windows cmd中运行。"
