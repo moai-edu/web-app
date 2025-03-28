@@ -21,6 +21,17 @@ export async function PUT(request: Request) {
         // 解析请求体中的JSON数据
         const { name, slug } = await request.json()
 
+        if (slug && ['public'].includes(slug)) {
+            // 不能使用保留的slug
+            return new Response(
+                JSON.stringify({ message: 'Slug has been taken.' }),
+                {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            )
+        }
+
         if (slug && slug !== session.user!.slug) {
             const existedUser = await dbAdapter.getUserBySlug(slug)
             if (existedUser) {

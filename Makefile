@@ -64,3 +64,10 @@ clean-local-db:
 	LOCAL=1 TABLE_NAME=$(DB_TABLE_NAME) python script/clear-table.py
 clean-remote-db:
 	TABLE_NAME=$(REMOTE_DB_TABLE_NAME) python script/clear-table.py
+
+.PHONY: sync-local-s3 sync-remote-s3
+sync-local-s3:
+	$(awslocal) s3 sync data/docs s3://$(DATA_BUCKET_NAME)/docs --delete
+	$(awslocal) s3 ls s3://$(DATA_BUCKET_NAME)/docs/
+sync-remote-s3:
+	aws s3 sync data/docs s3://$(REMOTE_DATA_BUCKET_NAME)/docs --delete

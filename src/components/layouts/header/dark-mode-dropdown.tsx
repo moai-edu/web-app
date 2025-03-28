@@ -17,7 +17,7 @@ const DarkModeDropDown = () => {
                     <span className="sr-only">Toggle theme</span>
                 </Button>
             </DropdownMenu.Trigger>
-            <DropdownMenu.Content size="1">
+            <DropdownMenu.Content size="2">
                 <DropdownMenu.Item onClick={() => setTheme('light')}>
                     Light
                 </DropdownMenu.Item>
