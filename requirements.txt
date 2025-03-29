@@ -1,0 +1,2 @@
+terraform-local
+boto3
