@@ -28,13 +28,13 @@ export function extractResourceFromMdLine(mdLine: string): string | null {
     const imagePattern = /\!\[(.*?)\]\((.*?)\)/
     const backgroundPattern = /data-background-image=\\"(.*?)\\"/
 
-    let match =
+    const match =
         mdLine.match(linkPattern) ||
         mdLine.match(imagePattern) ||
         mdLine.match(backgroundPattern)
     if (!match) return null
 
-    let filePath = match[2].trim()
+    const filePath = match[2].trim()
     if (!filePath) return null
 
     const ext = filePath.split('.').pop()
