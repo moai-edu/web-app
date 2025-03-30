@@ -2,19 +2,19 @@
 
 task 1 step 1
 
-![course](./course.drawio.png)
+![course](./hello-world.webp)
 
 # Step2{第二步}
 
 task 1 step 2
 
-![course](./course.drawio.png)
+![course](../hello-world.webp)
 
 # Step3{第三步}
 
 task 1 step 3
 
-![course](./course.drawio.png)
+![course](./hello-world.webp)
 
 # Step4
 
