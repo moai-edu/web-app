@@ -15,19 +15,19 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v2
               with:
-                  node-version: "21" # 使用 Node.js 版本 21，您可以根据项目需要修改版本
+                  node-version: '21' # 使用 Node.js 版本 21，您可以根据项目需要修改版本
             - name: Install Make (if not already installed)
               run: |
                   sudo apt-get update
                   sudo apt-get install -y make  # 安装 GNU make
             - name: Install dependencies
               run: |
-                  npm install  # 安装项目依赖
+                  npm ci  # 根据package-lock.json安装项目依赖
             - name: Deploy to AWS (Development or Production)
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # 从 GitHub Secrets 获取 AWS 访问密钥
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # 从 GitHub Secrets 获取 AWS 秘密访问密钥
-                  AWS_REGION: "us-east-1" # 设定 AWS 区域，您可以根据需要修改
+                  AWS_REGION: 'us-east-1' # 设定 AWS 区域，您可以根据需要修改
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }} # 从 GitHub Secrets 获取 auth.js 密钥
               run: |
                   if [ "${GITHUB_REF}" == "refs/heads/main" ]; then

@@ -78,4 +78,7 @@ sync-local-s3:
 	$(awslocal) s3 sync data/docs s3://$(DATA_BUCKET_NAME)/docs --delete
 	$(awslocal) s3 ls s3://$(DATA_BUCKET_NAME)/docs/
 sync-remote-s3:
-	aws s3 sync data/docs s3://$(REMOTE_DATA_BUCKET_NAME)/docs --delete
+	@echo This must be done manually.
+	@echo because in the begining of this Makefile, .env.local is pointing aws environment variablesto localstack.
+	@echo aws s3 sync data/docs s3://$(REMOTE_DATA_BUCKET_NAME)/docs --delete
+	@echo aws s3 ls s3://$(REMOTE_DATA_BUCKET_NAME)/docs/
