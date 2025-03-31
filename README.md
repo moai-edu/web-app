@@ -3,7 +3,7 @@
 ### Dependencies
 
 -   使用WSL2(Windows Subsystem for Linux 2)做为开发环境；
--   Prerequisites: `sudo apt install zip unzip curl python3 python3-pip python3-venv nodejs npm`
+-   Prerequisites: `sudo apt update && sudo apt install zip unzip curl python3 python3-pip python3-venv nodejs npm`
 -   AWS CLI:
     https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 -   Docker for windows(needed by localstack):
