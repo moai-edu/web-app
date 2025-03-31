@@ -49,8 +49,8 @@ localstack-show:
 
 .PHONY: push
 push:
-	git add .
-	git commit -m "同步代码"
+	-git add .
+	-git commit -m "同步代码"
 	git push github develop
 	git push gitee develop
 
