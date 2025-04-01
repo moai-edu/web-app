@@ -13,14 +13,14 @@ STAGE?=dev
 SECRET_NAME:=NextAuthSecret
 awslocal:=aws --profile localstack
 
-.PHONY: dev deploy teardown
+.PHONY: dev setup teardown
 
 # 如果不指定stage，则stage=dev
 # 自动使用.env
 dev:
 	npx sst dev --stage dev
 
-deploy:
+setup:
 	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(NEXT_AUTH_SECRET)
 	-npx sst unlock --stage $(STAGE)
 	npx sst deploy --stage $(STAGE)
@@ -79,6 +79,6 @@ sync-local-s3:
 	$(awslocal) s3 ls s3://$(DATA_BUCKET_NAME)/docs/
 sync-remote-s3:
 	@echo This must be done manually.
-	@echo because in the begining of this Makefile, .env.local is pointing aws environment variablesto localstack.
+	@echo because in the begining of this Makefile, .env.local is pointing aws environment variables to localstack.
 	@echo aws s3 sync data/docs s3://$(REMOTE_DATA_BUCKET_NAME)/docs --delete
 	@echo aws s3 ls s3://$(REMOTE_DATA_BUCKET_NAME)/docs/

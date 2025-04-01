@@ -31,15 +31,22 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }} # 从 GitHub Secrets 获取 auth.js 密钥
               run: |
                   if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
-                    echo "Deploying to Production environment..."
-                    STAGE="prod" make deploy  # 生产环境部署
+                    if [ -f "TEARDOWN" ]; then
+                      echo "Tearing down the Development environment..."
+                      STAGE="prod" make teardown  # 开发环境拆除
+                    fi
+                    if [ -f "SETUP" ]; then
+                      echo "Deploying to Production environment..."
+                      STAGE="prod" make setup  # 生产环境部署
+                    fi
                   elif [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
                     if [ -f "TEARDOWN" ]; then
                       echo "Tearing down the Development environment..."
                       STAGE="dev" make teardown  # 开发环境拆除
-                    else
+                    fi
+                    if [ -f "SETUP" ]; then
                       echo "Deploying to Development environment..."
-                      STAGE="dev" make deploy  # 开发环境部署
+                      STAGE="dev" make setup  # 开发环境部署
                     fi
                   fi
             - name: Always check the content of sst-env.d.ts
