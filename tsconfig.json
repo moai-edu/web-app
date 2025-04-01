@@ -28,7 +28,6 @@
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "__tests__/**/*.test.{tsx,ts}"
     ],
     "exclude": ["node_modules"]
 }
