@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { BizUser } from '@/app/domain/types'
-import { BIZ_TABLE_NAME, bizAdapter, dynamoClient } from '@/persist/db'
-import { format } from '@/app/domain/adapter-dynamodb'
+import { DB_TABLE_NAME, dbAdapter, dynamoClient } from '@/persist/db'
+import { format } from './adapter-dynamodb'
 
-const adapter = bizAdapter
-const TableName = BIZ_TABLE_NAME
+const adapter = dbAdapter
+const TableName = DB_TABLE_NAME
 
 // Mock 数据
 const mockUser: BizUser = {

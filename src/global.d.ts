@@ -1,4 +1,4 @@
-// types/next-auth.d.ts
+// global.d.ts
 
 import 'next-auth' // 确保引入原始类型声明
 
