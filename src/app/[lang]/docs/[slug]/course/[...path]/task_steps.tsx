@@ -1,6 +1,6 @@
 import { CourseStep } from '@/app/_todo/domain/types'
+import { Link } from '@radix-ui/themes'
 import { Steps } from 'antd'
-import Link from 'next/link'
 
 export default function TaskSteps({
     current,

@@ -6,20 +6,27 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import { Suspense } from 'react'
 import TaskSteps from './task_steps'
 import path from 'path'
+import { useMDXComponents } from '@/mdx-components'
 
-export default async function Page({
-    params,
-    searchParams
-}: {
+type PageProps = Readonly<{
     params: Promise<{ slug: string; path: string[] }>
     searchParams: Promise<{ step?: string }>
-}) {
+}>
+
+export default async function Page({ params, searchParams }: PageProps) {
     const { slug, path: urlPath } = await params
     const { step } = await searchParams
     const filePath = `docs/${slug}/course/${urlPath.join('/')}/index.md` // 构建 S3 文件路径
     const entryFileDir = path.dirname(filePath)
 
     const current = step ? parseInt(step) : 0 // 获取当前步骤
+
+    // 获取 Nextra 的组件配置
+    const nextraComponents = useMDXComponents()
+
+    // 直接使用 Nextra 的组件，排除 wrapper
+    const { wrapper, ...components } = nextraComponents
+
     try {
         let isAuthorized = false
         const { metadata, steps } = await s3DataClient.getMetadataSteps(filePath)
@@ -36,12 +43,12 @@ export default async function Page({
 
             return (
                 <Flex gap="3">
-                    <Box minWidth="180px">
+                    <Box width="225px" minWidth="225px">
                         <TaskSteps current={current} status="process" steps={steps} />
                     </Box>
                     <Box px="4">
                         <Suspense fallback={<>Loading...</>}>
-                            <MDXRemote source={s3StepContent} />
+                            <MDXRemote source={s3StepContent} components={components} />
                         </Suspense>
                     </Box>
                 </Flex>
