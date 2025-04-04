@@ -9,8 +9,12 @@ variable "table_name" {
   default     = ""
 }
 
+# tflocal 始终创建不成功，原因不明！！
 resource "aws_s3_bucket" "PortalSiteDataBucket" {
   bucket = var.bucket_name
+
+  # 防止因LocalStack限制导致的验证失败
+  force_destroy = true
 }
 
 resource "aws_dynamodb_table" "PortalSiteDb" {

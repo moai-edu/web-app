@@ -1,4 +1,4 @@
-import { CourseStep } from '@/app/domain/types'
+import { CourseStep } from '@/app/_todo/domain/types'
 import { Steps } from 'antd'
 import Link from 'next/link'
 
@@ -17,14 +17,5 @@ export default function TaskSteps({
             description: step.description
         }
     })
-    return (
-        <Steps
-            direction="vertical"
-            size="default"
-            status={status}
-            current={current}
-            items={items}
-            type="default"
-        />
-    )
+    return <Steps direction="vertical" size="default" status={status} current={current} items={items} type="default" />
 }

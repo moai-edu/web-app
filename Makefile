@@ -34,16 +34,20 @@ localstack:
 	PERSISTENCE=1 && localstack start
 
 localstack-apply:
-	export TF_VAR_bucket_name=$(DATA_BUCKET_NAME) && \
-	export TF_VAR_table_name=$(DB_TABLE_NAME) && \
-	tflocal init && tflocal plan && tflocal apply
+	@echo "confirm that you have added the following line to the /etc/hosts file:"
+	@echo "127.0.0.1 $(DATA_BUCKET_NAME).s3.localhost.localstack.cloud"
+	@echo "otherwise, the s3 bucket creations will fail."
+	tflocal init && \
+		tflocal plan  -var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)' && \
+		tflocal apply -var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)' -auto-approve
 
 localstack-destroy:
-	export TF_VAR_bucket_name=$(DATA_BUCKET_NAME) && \
-	export TF_VAR_table_name=$(DB_TABLE_NAME) && \
-	tflocal destroy
+	tflocal destroy -var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)' -auto-approve
+	rm -rf .terraform terraform.tfstate* .terraform.lock.hcl
+
 
 localstack-show:
+	$(awslocal) s3 ls
 	$(awslocal) s3 ls s3://$(DATA_BUCKET_NAME)/
 	$(awslocal) dynamodb describe-table --table-name $(DB_TABLE_NAME)
 
@@ -58,8 +62,6 @@ push:
 doc: doc/deploy.png
 doc/deploy.png: index.drawio
 	draw.io -x -f png -p 3 -o doc/deploy.png index.drawio
-
-REMOTE_DB_TABLE_NAME:=portal-site-dev-BizDataDynamoTable-mbouwtna
 
 .PHONY: scan-local-db scan-remote-db
 scan-local-db:

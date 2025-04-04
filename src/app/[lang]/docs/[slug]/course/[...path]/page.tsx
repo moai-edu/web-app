@@ -22,13 +22,8 @@ export default async function Page({
     const current = step ? parseInt(step) : 0 // 获取当前步骤
     try {
         let isAuthorized = false
-        const { metadata, steps } = await s3DataClient.getMetadataSteps(
-            filePath
-        )
-        if (
-            slug === 'public' ||
-            (metadata.access && metadata.access === 'public')
-        ) {
+        const { metadata, steps } = await s3DataClient.getMetadataSteps(filePath)
+        if (slug === 'public' || (metadata.access && metadata.access === 'public')) {
             isAuthorized = true
         } else {
             const session = await auth()
@@ -37,20 +32,12 @@ export default async function Page({
 
         if (isAuthorized) {
             const stepContent = steps[current].content
-            const s3StepContent =
-                await s3DataClient.replaceResUrlsWithS3SignedUrls(
-                    entryFileDir,
-                    stepContent
-                )
+            const s3StepContent = await s3DataClient.replaceResUrlsWithS3SignedUrls(entryFileDir, stepContent)
 
             return (
                 <Flex gap="3">
-                    <Box width="250px">
-                        <TaskSteps
-                            current={current}
-                            status="process"
-                            steps={steps}
-                        />
+                    <Box minWidth="180px">
+                        <TaskSteps current={current} status="process" steps={steps} />
                     </Box>
                     <Box px="4">
                         <Suspense fallback={<>Loading...</>}>
@@ -64,8 +51,7 @@ export default async function Page({
         console.error(error)
         return (
             <h1>
-                Document or step is not found. filePath: {filePath}, step:{' '}
-                {current}
+                Document or step is not found. filePath: {filePath}, step: {current}
             </h1>
         )
     }

@@ -1,11 +1,7 @@
-import { CourseStep } from '@/app/domain/types'
+import { CourseStep } from '@/app/_todo/domain/types'
 import { extractResourceFromMdLine, getAbsFilePath } from '@/lib/md_utils'
 import { S3Client } from '@aws-sdk/client-s3'
-import {
-    GetObjectCommand,
-    PutObjectCommand,
-    ListObjectsV2Command
-} from '@aws-sdk/client-s3'
+import { GetObjectCommand, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import matter from 'gray-matter'
 
@@ -43,10 +39,7 @@ export default class S3DataClient {
         const response = await this.s3Client.send(command)
 
         // 获取所有图片文件的 Key
-        const resFiles =
-            response.Contents?.filter((file) =>
-                file.Key?.match(/\.(jpg|jpeg|png|md)$/i)
-            ) || []
+        const resFiles = response.Contents?.filter((file) => file.Key?.match(/\.(jpg|jpeg|png|md)$/i)) || []
         return resFiles.map((file) => file.Key!)
     }
 
@@ -83,9 +76,7 @@ export default class S3DataClient {
         return url
     }
 
-    async getMetadataSteps(
-        entryMdFilePath: string
-    ): Promise<{ metadata: Metadata; steps: CourseStep[] }> {
+    async getMetadataSteps(entryMdFilePath: string): Promise<{ metadata: Metadata; steps: CourseStep[] }> {
         // 获取入口文件原始的 markdown 文本
         const { metadata, content } = await this.getMdContent(entryMdFilePath)
 
@@ -105,10 +96,7 @@ export default class S3DataClient {
      * @param mdContent markdown文本内容
      * @returns 资源引用路径全部被s3 signed url替换以后的markdown文本
      */
-    async replaceResUrlsWithS3SignedUrls(
-        entryFileDir: string,
-        mdContent: string
-    ): Promise<string> {
+    async replaceResUrlsWithS3SignedUrls(entryFileDir: string, mdContent: string): Promise<string> {
         const mdLines = []
         const lines = mdContent.split('\n')
         for (const line of lines) {

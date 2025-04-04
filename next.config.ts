@@ -1,10 +1,29 @@
-import type { NextConfig } from "next";
+import createWithNextra from 'nextra'
 
-const nextConfig: NextConfig = {
-    /* config options here */
-    // If using with Turbopack, you'll need to add the following to your next.config.js until this issue is resolved:
+const withNextra = createWithNextra({
+    defaultShowCopyCode: true,
+    unstable_shouldAddLocaleToLinks: true
+})
+
+/**
+ * @type {import("next").NextConfig}
+ */
+export default withNextra({
+    images: {
+        unoptimized: true
+    },
+    eslint: {
+        ignoreDuringBuilds: true
+    },
+    reactStrictMode: true,
+    cleanDistDir: true,
+    i18n: {
+        locales: ['zh', 'en'],
+        defaultLocale: 'zh'
+    },
+    sassOptions: {
+        silenceDeprecations: ['legacy-js-api']
+    },
     // https://github.com/hashicorp/next-mdx-remote
-    transpilePackages: ["next-mdx-remote"],
-};
-
-export default nextConfig;
+    transpilePackages: ['next-mdx-remote']
+})

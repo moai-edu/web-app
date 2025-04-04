@@ -1,12 +1,10 @@
-import { DynamoDBAdapter } from '@/app/domain/adapter-dynamodb'
+import { DynamoDBAdapter } from '@/app/_todo/domain/adapter-dynamodb'
 import { DynamoDB, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb'
 import { fromNodeProviderChain } from '@aws-sdk/credential-providers'
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { Resource } from 'sst'
 
-const dbConf: DynamoDBClientConfig = ['development', 'test'].includes(
-    process.env.NODE_ENV
-)
+const dbConf: DynamoDBClientConfig = ['development', 'test'].includes(process.env.NODE_ENV)
     ? {
           endpoint: process.env.AWS_ENDPOINT_URL!, // LocalStack 的地址
           credentials: {
@@ -28,9 +26,7 @@ export const dynamoClient = DynamoDBDocument.from(new DynamoDB(dbConf), {
     }
 })
 
-export const DB_TABLE_NAME: string = ['test', 'development'].includes(
-    process.env.NODE_ENV
-)
+export const DB_TABLE_NAME: string = ['test', 'development'].includes(process.env.NODE_ENV)
     ? process.env.DB_TABLE_NAME!
     : Resource.DbDynamo.name
 
