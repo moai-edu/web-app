@@ -72,7 +72,7 @@ export default async function RootLayout({ children, params }: Props) {
     const pageMap = await getPageMap(lang)
 
     const title = 'Moai'
-    const description = 'A portal website'
+    const description = 'A Portal Website'
 
     const { t } = await useServerLocale(lang)
 
