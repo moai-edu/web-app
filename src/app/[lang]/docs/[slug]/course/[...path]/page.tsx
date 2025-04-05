@@ -2,11 +2,16 @@ export const dynamic = 'force-dynamic'
 import { auth } from '@/auth'
 import { s3DataClient } from '@/persist/s3'
 import { Box, Flex } from '@radix-ui/themes'
-import { MDXRemote } from 'next-mdx-remote/rsc'
 import { Suspense } from 'react'
 import TaskSteps from './task_steps'
 import path from 'path'
-import { useMDXComponents } from '@/mdx-components'
+import { useMDXComponents as getMDXComponents } from '@/mdx-components'
+
+import { compileMdx } from 'nextra/compile'
+import { evaluate } from 'nextra/evaluate'
+
+// 直接使用 Nextra 的组件，排除 wrapper
+const { wrapper, ...components } = getMDXComponents()
 
 type PageProps = Readonly<{
     params: Promise<{ slug: string; path: string[] }>
@@ -21,14 +26,8 @@ export default async function Page({ params, searchParams }: PageProps) {
 
     const current = step ? parseInt(step) : 0 // 获取当前步骤
 
-    // 获取 Nextra 的组件配置
-    const nextraComponents = useMDXComponents()
-
-    // 直接使用 Nextra 的组件，排除 wrapper
-    const { wrapper, ...components } = nextraComponents
-
+    let isAuthorized = false
     try {
-        let isAuthorized = false
         const { metadata, steps } = await s3DataClient.getMetadataSteps(filePath)
         if (slug === 'public' || (metadata.access && metadata.access === 'public')) {
             isAuthorized = true
@@ -39,7 +38,10 @@ export default async function Page({ params, searchParams }: PageProps) {
 
         if (isAuthorized) {
             const stepContent = steps[current].content
-            const s3StepContent = await s3DataClient.replaceResUrlsWithS3SignedUrls(entryFileDir, stepContent)
+            const data = await s3DataClient.replaceResUrlsWithS3SignedUrls(entryFileDir, stepContent)
+
+            const rawJs = await compileMdx(data, { filePath })
+            const { default: MDXContent } = evaluate(rawJs, components)
 
             return (
                 <Flex gap="3">
@@ -48,7 +50,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                     </Box>
                     <Box px="4">
                         <Suspense fallback={<>Loading...</>}>
-                            <MDXRemote source={s3StepContent} components={components} />
+                            <MDXContent />
                         </Suspense>
                     </Box>
                 </Flex>
