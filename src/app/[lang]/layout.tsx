@@ -1,5 +1,6 @@
 import type { I18nLangAsyncProps, I18nLangKeys } from '@/i18n'
-
+import { AntdRegistry } from '@ant-design/nextjs-registry'
+import { ConfigProvider } from 'antd'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
@@ -69,8 +70,8 @@ export default async function RootLayout({ children, params }: Props) {
     const dictionary = await getDictionary(lang)
     const pageMap = await getPageMap(lang)
 
-    const title = 'My Nextra Starter'
-    const description = 'A Starter template with Next.js, Nextra'
+    const title = 'Moai'
+    const description = 'A portal website'
 
     const { t } = await useServerLocale(lang)
 
@@ -101,28 +102,43 @@ export default async function RootLayout({ children, params }: Props) {
                     storageKey="starter-theme-provider"
                     disableTransitionOnChange
                 >
-                    <Layout
-                        banner={<CustomBanner lang={lang} />}
-                        navbar={<CustomNavbar lang={lang} />}
-                        lastUpdated={<LastUpdated>{t('lastUpdated')}</LastUpdated>}
-                        editLink={null}
-                        docsRepositoryBase="https://github.com/pdsuwwz/nextjs-nextra-starter"
-                        footer={
-                            <Footer className="bg-background py-5!">
-                                <CustomFooter />
-                            </Footer>
-                        }
-                        search={<Search />}
-                        i18n={[
-                            { locale: 'en', name: 'English' },
-                            { locale: 'zh', name: '简体中文' }
-                        ]}
-                        pageMap={pageMap}
-                        feedback={{ content: '' }}
-                        // ... Your additional layout options
-                    >
-                        <Theme>{children}</Theme>
-                    </Layout>
+                    <Theme>
+                        <AntdRegistry>
+                            <ConfigProvider
+                                theme={{
+                                    cssVar: true,
+                                    token: {
+                                        colorText: 'var(--color-foreground)',
+                                        colorTextSecondary: 'var(--color-secondary-foreground)',
+                                        colorTextDescription: 'var(--color-secondary-foreground)'
+                                    }
+                                }}
+                            >
+                                <Layout
+                                    banner={<CustomBanner lang={lang} />}
+                                    navbar={<CustomNavbar lang={lang} />}
+                                    lastUpdated={<LastUpdated>{t('lastUpdated')}</LastUpdated>}
+                                    editLink={null}
+                                    docsRepositoryBase="https://github.com/pdsuwwz/nextjs-nextra-starter"
+                                    footer={
+                                        <Footer className="bg-background py-5!">
+                                            <CustomFooter />
+                                        </Footer>
+                                    }
+                                    search={<Search />}
+                                    i18n={[
+                                        { locale: 'en', name: 'English' },
+                                        { locale: 'zh', name: '简体中文' }
+                                    ]}
+                                    pageMap={pageMap}
+                                    feedback={{ content: '' }}
+                                    // ... Your additional layout options
+                                >
+                                    {children}
+                                </Layout>
+                            </ConfigProvider>
+                        </AntdRegistry>
+                    </Theme>
                 </ThemeProvider>
             </body>
         </html>
