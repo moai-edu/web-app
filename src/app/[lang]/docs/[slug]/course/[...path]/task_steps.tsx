@@ -1,4 +1,4 @@
-import { CourseStep } from '@/app/_todo/domain/types'
+import { CourseStep } from '@/domain/types'
 import { Link } from '@radix-ui/themes'
 import { Steps } from 'antd'
 

@@ -1,4 +1,4 @@
-import { CourseStep } from '@/app/_todo/domain/types'
+import { CourseStep } from '@/domain/types'
 import { extractResourceFromMdLine, getAbsFilePath } from '@/lib/md_utils'
 import { S3Client } from '@aws-sdk/client-s3'
 import { GetObjectCommand, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3'

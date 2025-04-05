@@ -1,4 +1,5 @@
 import type { I18nLangAsyncProps, I18nLangKeys } from '@/i18n'
+import '@ant-design/v5-patch-for-react-19'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { ConfigProvider } from 'antd'
 import type { Metadata } from 'next'
@@ -22,14 +23,14 @@ import UserButton from '@/components/layouts/header/userButton'
 import '@radix-ui/themes/styles.css'
 import './styles/index.css'
 
+const repo = 'https://github.com/sanyedu/portal-site'
+
 export const metadata = {
     // Define your metadata here
     // For more information on metadata API, see: https://nextjs.org/docs/app/building-your-application/optimizing/metadata
-    metadataBase: new URL('https://nextjs-nextra-starter-green.vercel.app'),
+    metadataBase: new URL(repo),
     icons: '/img/favicon.svg'
 } satisfies Metadata
-
-const repo = 'https://github.com/pdsuwwz/nextjs-nextra-starter'
 
 const CustomBanner = async ({ lang }: I18nLangAsyncProps) => {
     const { t } = await useServerLocale(lang)
@@ -119,7 +120,7 @@ export default async function RootLayout({ children, params }: Props) {
                                     navbar={<CustomNavbar lang={lang} />}
                                     lastUpdated={<LastUpdated>{t('lastUpdated')}</LastUpdated>}
                                     editLink={null}
-                                    docsRepositoryBase="https://github.com/pdsuwwz/nextjs-nextra-starter"
+                                    docsRepositoryBase={repo}
                                     footer={
                                         <Footer className="bg-background py-5!">
                                             <CustomFooter />

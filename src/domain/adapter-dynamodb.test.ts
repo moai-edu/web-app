@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { BizUser } from '@/app/_todo/domain/types'
+import { BizUser } from '@/domain/types'
 import { DB_TABLE_NAME, dbAdapter, dynamoClient } from '@/persist/db'
 import { format } from './adapter-dynamodb'
 

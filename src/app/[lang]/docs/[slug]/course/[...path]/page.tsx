@@ -2,13 +2,13 @@ export const dynamic = 'force-dynamic'
 import { auth } from '@/auth'
 import { s3DataClient } from '@/persist/s3'
 import { Box, Flex } from '@radix-ui/themes'
-import { Suspense } from 'react'
 import TaskSteps from './task_steps'
 import path from 'path'
 import { useMDXComponents as getMDXComponents } from '@/mdx-components'
 
 import { compileMdx } from 'nextra/compile'
 import { evaluate } from 'nextra/evaluate'
+import MobileDrawerTaskSteps from './mobile_drawer_task_steps'
 
 // 直接使用 Nextra 的组件，排除 wrapper
 const { wrapper, ...components } = getMDXComponents()
@@ -44,15 +44,21 @@ export default async function Page({ params, searchParams }: PageProps) {
             const { default: MDXContent } = evaluate(rawJs, components)
 
             return (
-                <Flex gap="3">
-                    <Box width="225px" minWidth="225px">
-                        <TaskSteps current={current} status="process" steps={steps} />
-                    </Box>
-                    <Box px="4">
-                        <Suspense fallback={<>Loading...</>}>
+                <Flex direction="column" gap="4">
+                    {/* 移动端显示的按钮和抽屉 */}
+                    <div className="md:hidden">
+                        <MobileDrawerTaskSteps steps={steps} status="process" current={current} />
+                    </div>
+                    <Flex gap="3">
+                        {/* 桌面端显示的侧边栏 - 在移动端隐藏 */}
+                        <div style={{ width: '225px', minWidth: '225px' }} className="hidden md:block">
+                            <TaskSteps current={current} status="process" steps={steps} />
+                        </div>
+
+                        <Box px="4">
                             <MDXContent />
-                        </Suspense>
-                    </Box>
+                        </Box>
+                    </Flex>
                 </Flex>
             )
         } else return <h1>Document is not authorized for access</h1>

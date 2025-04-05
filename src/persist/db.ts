@@ -1,4 +1,4 @@
-import { DynamoDBAdapter } from '@/app/_todo/domain/adapter-dynamodb'
+import { DynamoDBAdapter } from '@/domain/adapter-dynamodb'
 import { DynamoDB, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb'
 import { fromNodeProviderChain } from '@aws-sdk/credential-providers'
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
