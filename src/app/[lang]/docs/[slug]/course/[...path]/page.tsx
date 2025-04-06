@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic'
+
 import { auth } from '@/auth'
 import { s3DataClient } from '@/persist/s3'
 import { Box, Flex } from '@radix-ui/themes'
@@ -39,10 +40,12 @@ export default async function Page({ params, searchParams }: PageProps) {
         if (isAuthorized) {
             const stepContent = steps[current].content
             const data = await s3DataClient.replaceResUrlsWithS3SignedUrls(entryFileDir, stepContent)
-
+            console.log(data)
             const rawJs = await compileMdx(data, { filePath })
+            console.log(rawJs)
+            console.log('## return rawJs')
             const { default: MDXContent } = evaluate(rawJs, components)
-
+            console.log('## return MDXContent')
             return (
                 <Flex direction="column" gap="4">
                     {/* 移动端显示的按钮和抽屉 */}

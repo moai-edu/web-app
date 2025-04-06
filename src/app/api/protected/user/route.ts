@@ -8,13 +8,10 @@ export async function PUT(request: Request) {
 
     if (!session) {
         // 如果用户未登录或会话不存在，返回 401 未授权状态
-        return new Response(
-            JSON.stringify({ message: 'Unauthorized access. Please log in.' }),
-            {
-                status: 401,
-                headers: { 'Content-Type': 'application/json' }
-            }
-        )
+        return new Response(JSON.stringify({ message: 'Unauthorized access. Please log in.' }), {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' }
+        })
     }
 
     try {
@@ -23,35 +20,27 @@ export async function PUT(request: Request) {
 
         if (slug && ['public'].includes(slug)) {
             // 不能使用保留的slug
-            return new Response(
-                JSON.stringify({ message: 'Slug has been taken.' }),
-                {
-                    status: 400,
-                    headers: { 'Content-Type': 'application/json' }
-                }
-            )
+            return new Response(JSON.stringify({ message: 'Slug has been taken.' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            })
         }
 
         if (slug && slug !== session.user!.slug) {
             const existedUser = await dbAdapter.getUserBySlug(slug)
             if (existedUser) {
                 // 如果slug已被占用，返回 400 错误状态
-                return new Response(
-                    JSON.stringify({ message: 'Slug has been taken.' }),
-                    {
-                        status: 400,
-                        headers: { 'Content-Type': 'application/json' }
-                    }
-                )
+                return new Response(JSON.stringify({ message: 'Slug has been taken.' }), {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' }
+                })
             }
         }
 
         // 更新User用户的name和slug
-        const updatedUser = await dbAdapter.updateUser(
-            session.user!.id!,
-            name,
-            slug
-        )
+        const updatedUser = await dbAdapter.updateUser(session.user!.id!, name, slug)
+
+        console.log(JSON.stringify(updatedUser))
 
         // 返回更新后的用户信息
         return NextResponse.json(updatedUser, {
@@ -60,12 +49,9 @@ export async function PUT(request: Request) {
         })
     } catch (error) {
         // 处理错误
-        return new Response(
-            JSON.stringify({ message: 'Failed to update user.', error: error }),
-            {
-                status: 500,
-                headers: { 'Content-Type': 'application/json' }
-            }
-        )
+        return new Response(JSON.stringify({ message: 'Failed to update user.', error: error }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        })
     }
 }
