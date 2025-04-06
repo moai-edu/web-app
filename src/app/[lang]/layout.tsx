@@ -1,5 +1,4 @@
 import type { I18nLangAsyncProps, I18nLangKeys } from '@/i18n'
-import '@ant-design/v5-patch-for-react-19'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { ConfigProvider } from 'antd'
 import type { Metadata } from 'next'
@@ -20,7 +19,6 @@ import { auth } from '@/auth'
 import { Link as RadixLink, Theme } from '@radix-ui/themes'
 import UserButton from '@/components/layouts/header/userButton'
 
-import '@radix-ui/themes/styles.css'
 import './styles/index.css'
 
 const repo = 'https://github.com/sanyedu/portal-site'

@@ -46,15 +46,14 @@ export default async function Page({ params, searchParams }: PageProps) {
             return (
                 <Flex direction="column" gap="4">
                     {/* 移动端显示的按钮和抽屉 */}
-                    <div className="md:hidden">
+                    <Box display={{ initial: 'block', md: 'none' }}>
                         <MobileDrawerTaskSteps steps={steps} status="process" current={current} />
-                    </div>
+                    </Box>
                     <Flex gap="3">
                         {/* 桌面端显示的侧边栏 - 在移动端隐藏 */}
-                        <div style={{ width: '225px', minWidth: '225px' }} className="hidden md:block">
+                        <Box width="225px" minWidth="225px" pl="4" pt="4" display={{ initial: 'none', md: 'block' }}>
                             <TaskSteps current={current} status="process" steps={steps} />
-                        </div>
-
+                        </Box>
                         <Box px="4">
                             <MDXContent />
                         </Box>
