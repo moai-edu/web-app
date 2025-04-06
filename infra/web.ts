@@ -9,8 +9,8 @@ import { dbDynamo } from './dynamodb'
 const webConfig = {
     transform: {
         server: {
-            timeout: '900 seconds',
-            memorySize: '2048 MB'
+            timeout: '90 seconds' as const,
+            memory: '2048 MB' as const
         }
     },
     /**
