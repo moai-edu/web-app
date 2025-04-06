@@ -7,6 +7,12 @@ import { dataBucket } from './bucket'
 import { dbDynamo } from './dynamodb'
 
 const webConfig = {
+    transform: {
+        server: {
+            timeout: '900 seconds',
+            memorySize: '2048 MB'
+        }
+    },
     /**
      * 这行代码的作用是将一组 AWS 资源链接到 sst.aws.Nextjs 组件，使其可以：
      * 1. 自动注入环境变量：这些资源的信息（如 ID、ARN）会自动添加到 Next.js 的环境变量中，使得前端代码可以访问它们。

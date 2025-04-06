@@ -41,11 +41,13 @@ export default async function Page({ params, searchParams }: PageProps) {
             const stepContent = steps[current].content
             const data = await s3DataClient.replaceResUrlsWithS3SignedUrls(entryFileDir, stepContent)
             console.log(data)
+            console.log('@@@@ start compileMdx')
             const rawJs = await compileMdx(data, { filePath })
-            console.log(rawJs)
-            console.log('## return rawJs')
+            console.log('@@@@ end compileMdx')
+            // console.log(rawJs)
+            console.log('@@@@ start evaluate')
             const { default: MDXContent } = evaluate(rawJs, components)
-            console.log('## return MDXContent')
+            console.log('@@@@ end evaluate')
             return (
                 <Flex direction="column" gap="4">
                     {/* 移动端显示的按钮和抽屉 */}
