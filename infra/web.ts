@@ -7,8 +7,14 @@ import { dataBucket } from './bucket'
 import { dbDynamo } from './dynamodb'
 
 const webConfig = {
+    /**
+     * 这里设置了 Next.js 应用的基本配置，包括运行时、超时时间、内存大小等。
+     * 解决这个代码超时的问题：const rawJs = await compileMdx(data, { filePath })
+     *
+     */
     transform: {
         server: {
+            runtime: 'nodejs22.x' as const,
             timeout: '90 seconds' as const,
             memory: '2048 MB' as const
         }
