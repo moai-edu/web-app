@@ -6,7 +6,7 @@ import Link from 'next/link'
 export const dynamic = 'force-dynamic'
 
 export default async function ListImages() {
-    const resFiles = await s3DataClient.listFiles('test/')
+    const resFiles = await s3DataClient.listFiles('test/', '.md')
     return (
         <div>
             <Link href="/test/upload">Upload</Link>
@@ -15,15 +15,11 @@ export default async function ListImages() {
                 {resFiles.map((file) =>
                     file.endsWith('.md') ? (
                         <li key={file}>
-                            <Link href={`/test/upload/view/md/${file}`}>
-                                {file}
-                            </Link>
+                            <Link href={`/test/upload/view/md/${file}`}>{file}</Link>
                         </li>
                     ) : (
                         <li key={file}>
-                            <Link href={`/test/upload/view/res/${file}`}>
-                                {file}
-                            </Link>
+                            <Link href={`/test/upload/view/res/${file}`}>{file}</Link>
                         </li>
                     )
                 )}

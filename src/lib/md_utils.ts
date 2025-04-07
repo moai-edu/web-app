@@ -1,16 +1,6 @@
 import path from 'path'
 
-const RES_FILE_EXTS: Set<string> = new Set([
-    'pdf',
-    'png',
-    'jpg',
-    'jpeg',
-    'gif',
-    'svg',
-    'webp',
-    'avif',
-    'mp4'
-])
+const RES_FILE_EXTS: Set<string> = new Set(['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'avif', 'mp4'])
 /*
  * 从一行markdown文本中提取出所引用的资源的路径
  *
@@ -26,21 +16,31 @@ const RES_FILE_EXTS: Set<string> = new Set([
 export function extractResourceFromMdLine(mdLine: string): string | null {
     const linkPattern = /\[(.*?)\]\((.*?)\)/
     const imagePattern = /\!\[(.*?)\]\((.*?)\)/
-    const backgroundPattern = /data-background-image=\\"(.*?)\\"/
+    const backgroundPattern = /data-background-image=([^\s}]*)/
 
-    const match =
-        mdLine.match(linkPattern) ||
-        mdLine.match(imagePattern) ||
-        mdLine.match(backgroundPattern)
-    if (!match) return null
+    let match = mdLine.match(linkPattern) || mdLine.match(imagePattern)
+    if (match) {
+        const filePath = match[2].trim()
+        if (!filePath) return null
 
-    const filePath = match[2].trim()
-    if (!filePath) return null
+        const ext = filePath.split('.').pop()
+        if (!ext || !RES_FILE_EXTS.has(ext)) return null
 
-    const ext = filePath.split('.').pop()
-    if (!ext || !RES_FILE_EXTS.has(ext)) return null
+        return filePath
+    }
 
-    return filePath
+    match = mdLine.match(backgroundPattern)
+    if (match) {
+        const filePath = match[1].trim()
+        if (!filePath) return null
+
+        const ext = filePath.split('.').pop()
+        if (!ext || !RES_FILE_EXTS.has(ext)) return null
+
+        return filePath
+    }
+
+    return null
 }
 
 /*
@@ -60,10 +60,7 @@ export function extractResourceFromMdLine(mdLine: string): string | null {
  * @param resFilePath markdown文本中所引用的资源路径
  * @returns 绝对路径
  */
-export function getAbsFilePath(
-    entryFileDir: string,
-    resFilePath: string
-): string {
+export function getAbsFilePath(entryFileDir: string, resFilePath: string): string {
     if (resFilePath.startsWith('/')) {
         return resFilePath.slice(1)
     } else {

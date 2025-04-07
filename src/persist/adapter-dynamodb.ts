@@ -1,7 +1,16 @@
 import { BatchWriteCommandInput, DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { User } from 'next-auth'
 
-export function DynamoDBAdapter(client: DynamoDBDocument, tableName: string) {
+export interface DynamoDBAdapter {
+    createUser(user: User): Promise<User>
+    getUserById(id: string): Promise<User | null>
+    getUserByEmail(email: string): Promise<User | null>
+    getUserBySlug(slug: string): Promise<User | null>
+    updateUser(id: string, name: string, slug: string): Promise<User>
+    deleteUser(userId: string): Promise<User | null>
+}
+
+export function DynamoDBAdapter(client: DynamoDBDocument, tableName: string): DynamoDBAdapter {
     const TableName = tableName
 
     return {
@@ -56,16 +65,11 @@ export function DynamoDBAdapter(client: DynamoDBDocument, tableName: string) {
             return format.from<User>(Items?.[0])
         },
 
-        async updateUser(
-            id: string,
-            name: string,
-            slug: string
-        ): Promise<User> {
-            const {
-                UpdateExpression,
-                ExpressionAttributeNames,
-                ExpressionAttributeValues
-            } = generateUpdateExpression({ name, slug })
+        async updateUser(id: string, name: string, slug: string): Promise<User> {
+            const { UpdateExpression, ExpressionAttributeNames, ExpressionAttributeValues } = generateUpdateExpression({
+                name,
+                slug
+            })
             const newUpdateExpression = `${UpdateExpression}, GSI2PK = :gsi2pk, GSI2SK = :gsi2sk`
             ExpressionAttributeValues[':gsi2pk'] = `USER#${slug}`
             ExpressionAttributeValues[':gsi2sk'] = `USER#${slug}`
@@ -123,11 +127,7 @@ const isoDateRE =
 
 /** Determines if a given value can be parsed into `Date` */
 export function isDate(value: unknown): value is string {
-    return (
-        typeof value === 'string' &&
-        isoDateRE.test(value) &&
-        !isNaN(Date.parse(value))
-    )
+    return typeof value === 'string' && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
 
 const format = {
@@ -145,9 +145,7 @@ const format = {
         return newObject
     },
     /** Takes a Dynamo object and returns a plain old JavaScript object */
-    from<T = Record<string, unknown>>(
-        object?: Record<string, unknown>
-    ): T | null {
+    from<T = Record<string, unknown>>(object?: Record<string, unknown>): T | null {
         if (!object) return null
         const newObject: Record<string, unknown> = {}
         for (const key in object) {
@@ -159,15 +157,10 @@ const format = {
 
             if (isDate(value)) newObject[key] = new Date(value)
             // hack to keep type property in account
-            else if (
-                key === 'type' &&
-                ['USER', 'COURSE'].includes(value as string)
-            )
-                continue
+            else if (key === 'type' && ['USER', 'COURSE'].includes(value as string)) continue
             // The expires property is stored as a UNIX timestamp in seconds, but
             // JavaScript needs it in milliseconds, so multiply by 1000.
-            else if (key === 'expires' && typeof value === 'number')
-                newObject[key] = new Date(value * 1000)
+            else if (key === 'expires' && typeof value === 'number') newObject[key] = new Date(value * 1000)
             else newObject[key] = value
         }
         return newObject as T

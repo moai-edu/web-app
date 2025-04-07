@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic'
 
 import { auth } from '@/auth'
-import { s3DataClient } from '@/persist/s3'
 import { Box, Flex } from '@radix-ui/themes'
 import TaskSteps from './task_steps'
 import path from 'path'
@@ -10,6 +9,7 @@ import { useMDXComponents as getMDXComponents } from '@/mdx-components'
 import { compileMdx } from 'nextra/compile'
 import { evaluate } from 'nextra/evaluate'
 import MobileDrawerTaskSteps from './mobile_drawer_task_steps'
+import { CourseDomain } from '@/domain/course_domain'
 
 // 直接使用 Nextra 的组件，排除 wrapper
 const { wrapper, ...components } = getMDXComponents()
@@ -27,9 +27,10 @@ export default async function Page({ params, searchParams }: PageProps) {
 
     const current = step ? parseInt(step) : 0 // 获取当前步骤
 
+    const courseDomain = new CourseDomain()
     let isAuthorized = false
     try {
-        const { metadata, steps } = await s3DataClient.getMetadataSteps(filePath)
+        const { metadata, steps } = await courseDomain.getMetadataSteps(filePath)
         if (slug === 'public' || (metadata.access && metadata.access === 'public')) {
             isAuthorized = true
         } else {
@@ -38,8 +39,8 @@ export default async function Page({ params, searchParams }: PageProps) {
         }
 
         if (isAuthorized) {
-            const stepContent = steps[current].content
-            const data = await s3DataClient.replaceResUrlsWithS3SignedUrls(entryFileDir, stepContent)
+            const stepContent = steps[current].content!
+            const data = await courseDomain.replaceResUrlsWithS3SignedUrls(entryFileDir, stepContent)
             const rawJs = await compileMdx(data, { filePath })
             const { default: MDXContent } = evaluate(rawJs, components)
             return (
