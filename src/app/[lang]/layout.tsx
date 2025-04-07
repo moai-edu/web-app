@@ -1,3 +1,4 @@
+import '@ant-design/v5-patch-for-react-19'
 import type { I18nLangAsyncProps, I18nLangKeys } from '@/i18n'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { ConfigProvider } from 'antd'
@@ -107,6 +108,7 @@ export default async function RootLayout({ children, params }: Props) {
                                 theme={{
                                     cssVar: true,
                                     token: {
+                                        colorBgElevated: 'var(--color-background)',
                                         colorText: 'var(--color-foreground)',
                                         colorTextSecondary: 'var(--color-secondary-foreground)',
                                         colorTextDescription: 'var(--color-secondary-foreground)'
