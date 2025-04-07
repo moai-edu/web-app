@@ -115,8 +115,9 @@ export default class S3DataClient {
     /**
      * 从markdown文本中解析出1级标题，并将内容按1级标题分成steps数组，每个step包含name, description和content属性
      * 每个1级标题是一个step，其内容如下：
-     * - 从标题行中解析设置step的name和descrition：# 标题名{可选的description}，其中标题名为step的name属性，可选的description为step的description属性
+     * - 从标题行中解析设置step的name和descrition：# 标题名{可选的description}，其中标题名为step的name属性，可选的description为step的description属性；并且余要求标题不在markdown文件的代码段内部，即在代码段内部的文本要忽略
      * - 从内容行中设置step的content：标题行以及标题行下面的内容，直到下一个一级标题或文件末尾；如果标题行在标题名name的后面还有可选的属性，比如：{可选的description}，则将可选属性从内容中移除
+     *
      * - 示例：
      *   # Step 1{This is the first step}
      *   content of step 1
@@ -125,16 +126,53 @@ export default class S3DataClient {
      *   # Step 3{This is the third step}
      *   # Step 2
      *   Content of step 2
+     *   ```
+     *   # 代码内部的标题要忽略
+     *   ```
+     *
      *   # Step 3
      *   Content of step 3
+     *   ```bash
+     *   # 代码内部的标题要忽略
+     *   ```
+     *
      *   # Summary
      *   Conclusion of the course
+     *
      * @param content markdown文本
      * @returns steps数组
      */
     getStepsFromContent(content: string): CourseStep[] {
-        // 将内容按一级标题分割
-        const sections = content.split(/(?=^# )/m)
+        // 将内容按一级标题分割，但忽略代码块内的标题
+        const sections: string[] = []
+        let currentSection = ''
+        let inCodeBlock = false
+
+        const lines = content.split('\n')
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i]
+
+            // 检测代码块开始和结束，支持 ``` 和 ```language 形式
+            if (line.trim().match(/^```(\w*)$/)) {
+                inCodeBlock = !inCodeBlock
+            }
+
+            // 如果遇到一级标题且不在代码块内，开始新的section
+            if (line.startsWith('# ') && !inCodeBlock) {
+                if (currentSection) {
+                    sections.push(currentSection)
+                }
+                currentSection = line
+            } else {
+                currentSection += (currentSection ? '\n' : '') + line
+            }
+        }
+
+        // 添加最后一个section
+        if (currentSection) {
+            sections.push(currentSection)
+        }
+
         // 过滤掉空白部分并处理每个部分
         return sections
             .filter((section) => section.trim())
