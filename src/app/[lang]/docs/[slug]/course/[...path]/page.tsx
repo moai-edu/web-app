@@ -53,7 +53,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                         <Box width="225px" minWidth="225px" pl="4" pt="4" display={{ initial: 'none', md: 'block' }}>
                             <TaskSteps current={current} status="process" steps={steps} />
                         </Box>
-                        <Box px="4">
+                        <Box px="4" maxWidth="100%">
                             <MDXContent />
                         </Box>
                     </Flex>
