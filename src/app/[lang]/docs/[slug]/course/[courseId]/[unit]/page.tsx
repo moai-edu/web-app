@@ -15,14 +15,16 @@ import { CourseDomain } from '@/domain/course_domain'
 const { wrapper, ...components } = getMDXComponents()
 
 type PageProps = Readonly<{
-    params: Promise<{ slug: string; path: string[] }>
+    params: Promise<{ slug: string; course: string; unit: string }>
     searchParams: Promise<{ step?: string }>
 }>
 
 export default async function Page({ params, searchParams }: PageProps) {
-    const { slug, path: urlPath } = await params
+    const { slug, course, unit } = await params
+    console.log('params', slug, course, unit)
+
     const { step } = await searchParams
-    const filePath = `docs/${slug}/course/${urlPath.join('/')}/index.md` // 构建 S3 文件路径
+    const filePath = `docs/${slug}/course/${course}/index.md` // 构建 S3 文件路径
     const entryFileDir = path.dirname(filePath)
 
     const current = step ? parseInt(step) : 0 // 获取当前步骤
