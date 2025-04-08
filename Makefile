@@ -31,7 +31,7 @@ teardown:
 
 .PHONY: localstack localstack-apply localstack-destroy localstack-show
 localstack:
-	PERSISTENCE=1 && localstack start
+	PERSISTENCE=1 localstack start
 
 localstack-apply:
 	@echo "confirm that you have added the following line to the /etc/hosts file:"
