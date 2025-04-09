@@ -1,6 +1,6 @@
 # TODO
 
-1. 在 course 部分，集成 react-duolingo 项目；
+1. course 的 index.md 页面，把 1 级标题对应到 units，2 级标题对应到 tiles/steps；
 1. sst dev 本地开发部署问题；
 1. 完成课程内容中每个 step 对应的任务（课前键盘打字练习、中英文配对测验；课后屏幕截图上传；测验、作业、考试、练习、其它
    ……以后补充）
@@ -15,6 +15,7 @@
 
 ## DONE
 
+1. 在 course 部分，集成 react-duolingo 项目；
 1. course 列表页；
 1. 解决 markdown 内容代码部分的#号被识别为标题的问题；
 1. 解决 markdown 页面的 max-width 100% 问题；
