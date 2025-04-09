@@ -1,4 +1,3 @@
-import { CourseMetadata } from '@/domain/types'
 import { S3Client } from '@aws-sdk/client-s3'
 import { GetObjectCommand, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
@@ -37,8 +36,8 @@ export default class S3DataClient {
         return resFiles.map((file) => file.Key!)
     }
 
-    async getMdContent(key: string): Promise<{
-        metadata: CourseMetadata
+    async getMdDataContent(key: string): Promise<{
+        data: any | null | undefined
         content: string
     }> {
         // console.log('Getting markdown content for key:', key)
@@ -52,8 +51,8 @@ export default class S3DataClient {
         if (!source) {
             throw new Error(`Key not found in s3 bucket: ${key}`)
         }
-        const { data: metadata, content } = matter(source)
-        return { metadata, content }
+        const { data, content } = matter(source)
+        return { data, content }
     }
 
     async getSignedUrl(key: string): Promise<string> {

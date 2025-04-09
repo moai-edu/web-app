@@ -15,24 +15,27 @@ import { CourseDomain } from '@/domain/course_domain'
 const { wrapper, ...components } = getMDXComponents()
 
 type PageProps = Readonly<{
-    params: Promise<{ slug: string; course: string; unit: string }>
-    searchParams: Promise<{ step?: string }>
+    params: Promise<{ slug: string; courseId: string; unitIndex: string }>
+    searchParams: Promise<{ stepIndex?: string }>
 }>
 
 export default async function Page({ params, searchParams }: PageProps) {
-    const { slug, course, unit } = await params
-    console.log('params', slug, course, unit)
+    const { slug, courseId, unitIndex } = await params
+    const { stepIndex } = await searchParams
+    const currentStep = stepIndex ? parseInt(stepIndex) : 0 // 获取当前步骤
+    console.log('params:', slug, courseId, unitIndex, stepIndex, currentStep)
 
-    const { step } = await searchParams
-    const filePath = `docs/${slug}/course/${course}/index.md` // 构建 S3 文件路径
-    const entryFileDir = path.dirname(filePath)
-
-    const current = step ? parseInt(step) : 0 // 获取当前步骤
+    const filePath = `docs/${slug}/course/${courseId}/index.md` // 构建 S3 文件路径
 
     const courseDomain = new CourseDomain()
     let isAuthorized = false
     try {
-        const { metadata, steps } = await courseDomain.getMetadataSteps(filePath)
+        const result = await courseDomain.getCourseUnitStep(slug, courseId, parseInt(unitIndex), currentStep)
+        if (!result) {
+            throw new Error('Course unit step not found')
+        }
+
+        const { metadata, unit, content } = result
         if (slug === 'public' || (metadata.access && metadata.access === 'public')) {
             isAuthorized = true
         } else {
@@ -41,20 +44,18 @@ export default async function Page({ params, searchParams }: PageProps) {
         }
 
         if (isAuthorized) {
-            const stepContent = steps[current].content!
-            const data = await courseDomain.replaceResUrlsWithS3SignedUrls(entryFileDir, stepContent)
-            const rawJs = await compileMdx(data, { filePath })
+            const rawJs = await compileMdx(content, { filePath })
             const { default: MDXContent } = evaluate(rawJs, components)
             return (
                 <Flex direction="column" gap="4">
                     {/* 移动端显示的按钮和抽屉 */}
                     <Box display={{ initial: 'block', md: 'none' }}>
-                        <MobileDrawerTaskSteps steps={steps} status="process" current={current} />
+                        <MobileDrawerTaskSteps steps={unit.steps || []} status="process" current={currentStep} />
                     </Box>
                     <Flex gap="3">
                         {/* 桌面端显示的侧边栏 - 在移动端隐藏 */}
                         <Box width="225px" minWidth="225px" pl="4" pt="4" display={{ initial: 'none', md: 'block' }}>
-                            <TaskSteps current={current} status="process" steps={steps} />
+                            <TaskSteps current={currentStep} status="process" steps={unit.steps || []} />
                         </Box>
                         <Box px="4" maxWidth="100%">
                             <MDXContent />
@@ -67,7 +68,7 @@ export default async function Page({ params, searchParams }: PageProps) {
         console.error(error)
         return (
             <h1>
-                Document or step is not found. filePath: {filePath}, step: {current}
+                Document or step is not found. filePath: {filePath}, step: {currentStep}
             </h1>
         )
     }

@@ -128,6 +128,9 @@ importers:
       tsparticles:
         specifier: ^3.8.1
         version: 3.8.1
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^4.11.0

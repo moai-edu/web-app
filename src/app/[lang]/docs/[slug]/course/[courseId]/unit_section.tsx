@@ -1,5 +1,5 @@
 'use client'
-import { Tile, TileStatus, TileType, Unit } from '@/domain/types'
+import { Tile, TileStatus, TileType, CourseUnit } from '@/domain/types'
 import { UnitHeader } from './unit_header'
 import { Fragment, JSX, useCallback, useEffect, useRef, useState } from 'react'
 import {
@@ -25,7 +25,7 @@ import { LessonCompletionSvg } from './lesson_completion_svg'
 import { TileTooltip } from './tile_tooltip'
 import { useRouter } from 'next/navigation'
 
-const tileStatus = (units: Unit[], tile: Tile, lessonsCompleted: number): TileStatus => {
+const tileStatus = (units: CourseUnit[], tile: Tile, lessonsCompleted: number): TileStatus => {
     const lessonsPerTile = 4
     const tilesCompleted = Math.floor(lessonsCompleted / lessonsPerTile)
     const tiles = units.flatMap((unit) => unit.tiles)
@@ -133,7 +133,15 @@ const getTileColors = ({
     }
 }
 
-export const UnitSection = ({ units, unit }: { units: Unit[]; unit: Unit }): JSX.Element => {
+export const UnitSection = ({
+    units,
+    unit,
+    index
+}: {
+    units: CourseUnit[]
+    unit: CourseUnit
+    index: number
+}): JSX.Element => {
     const router = useRouter()
 
     const [selectedTile, setSelectedTile] = useState<null | number>(null)
@@ -146,24 +154,24 @@ export const UnitSection = ({ units, unit }: { units: Unit[]; unit: Unit }): JSX
 
     const closeTooltip = useCallback(() => setSelectedTile(null), [])
 
-    const lessonsCompleted = 4
+    const lessonsCompleted = 10
     const increaseLessonsCompleted = (i: number) => {
         console.log(i)
     }
     const increaseLingots = (i: number) => {
         console.log(i)
     }
-
+    const unitNumber = index + 1
     return (
         <>
             <UnitHeader
-                unitNumber={unit.unitNumber}
-                description={unit.description}
-                backgroundColor={unit.backgroundColor}
-                borderColor={unit.borderColor}
+                unitIndex={index}
+                description={unit.name}
+                backgroundColor={unit.style!.backgroundColor}
+                borderColor={unit.style!.borderColor}
             />
             <div className="relative mb-8 mt-[67px] flex max-w-2xl flex-col items-center gap-4">
-                {unit.tiles.map((tile, i): JSX.Element => {
+                {unit.tiles!.map((tile, i): JSX.Element => {
                     const status = tileStatus(units, tile, lessonsCompleted)
                     return (
                         <Fragment key={i}>
@@ -179,7 +187,7 @@ export const UnitSection = ({ units, unit }: { units: Unit[]; unit: Unit }): JSX
                                                 <div className="relative">
                                                     <TileIcon tileType={tile.type} status={status} />
                                                     <div className="absolute left-0 right-0 top-6 flex justify-center text-lg font-bold text-yellow-700">
-                                                        {unit.unitNumber}
+                                                        {unitNumber}
                                                     </div>
                                                 </div>
                                             )
@@ -190,15 +198,15 @@ export const UnitSection = ({ units, unit }: { units: Unit[]; unit: Unit }): JSX
                                                     'relative -mb-4 h-[93px] w-[98px]',
                                                     getTileLeftClassName({
                                                         index: i,
-                                                        unitNumber: unit.unitNumber,
-                                                        tilesLength: unit.tiles.length
+                                                        unitNumber,
+                                                        tilesLength: unit.tiles!.length
                                                     })
                                                 ].join(' ')}
                                             >
                                                 {tile.type === 'fast-forward' && status === 'LOCKED' ? (
-                                                    <HoverLabel text="Jump here?" textColor={unit.textColor} />
+                                                    <HoverLabel text="Jump here?" textColor={unit.style!.textColor} />
                                                 ) : selectedTile !== i && status === 'ACTIVE' ? (
-                                                    <HoverLabel text="Start" textColor={unit.textColor} />
+                                                    <HoverLabel text="Start" textColor={unit.style!.textColor} />
                                                 ) : null}
                                                 <LessonCompletionSvg
                                                     lessonsCompleted={lessonsCompleted}
@@ -210,12 +218,14 @@ export const UnitSection = ({ units, unit }: { units: Unit[]; unit: Unit }): JSX
                                                         getTileColors({
                                                             tileType: tile.type,
                                                             status,
-                                                            defaultColors: `${unit.borderColor} ${unit.backgroundColor}`
+                                                            defaultColors: `${unit.style!.borderColor} ${
+                                                                unit.style!.backgroundColor
+                                                            }`
                                                         })
                                                     ].join(' ')}
                                                     onClick={() => {
                                                         if (tile.type === 'fast-forward' && status === 'LOCKED') {
-                                                            void router.push(`/lesson?fast-forward=${unit.unitNumber}`)
+                                                            void router.push(`/lesson?fast-forward=${unitNumber}`)
                                                             return
                                                         }
                                                         setSelectedTile(i)
@@ -233,8 +243,8 @@ export const UnitSection = ({ units, unit }: { units: Unit[]; unit: Unit }): JSX
                                                     'relative -mb-4',
                                                     getTileLeftClassName({
                                                         index: i,
-                                                        unitNumber: unit.unitNumber,
-                                                        tilesLength: unit.tiles.length
+                                                        unitNumber,
+                                                        tilesLength: unit.tiles!.length
                                                     })
                                                 ].join(' ')}
                                                 onClick={() => {
@@ -260,8 +270,8 @@ export const UnitSection = ({ units, unit }: { units: Unit[]; unit: Unit }): JSX
                                 units={units}
                                 selectedTile={selectedTile}
                                 index={i}
-                                unitNumber={unit.unitNumber}
-                                tilesLength={unit.tiles.length}
+                                unitIndex={index}
+                                tilesLength={unit.tiles!.length}
                                 description={(() => {
                                     switch (tile.type) {
                                         case 'book':
@@ -271,7 +281,7 @@ export const UnitSection = ({ units, unit }: { units: Unit[]; unit: Unit }): JSX
                                         case 'fast-forward':
                                             return status === 'LOCKED' ? 'Jump here?' : tile.description
                                         case 'trophy':
-                                            return `Unit ${unit.unitNumber} review`
+                                            return `Unit ${unitNumber} review`
                                         case 'treasure':
                                             return ''
                                     }

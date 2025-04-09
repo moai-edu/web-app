@@ -1,6 +1,11 @@
 # TODO
 
-1. course 的 index.md 页面，把 1 级标题对应到 units，2 级标题对应到 tiles/steps；
+1. course 的 index.md 页面，把 1 级标题对应到 units，2 级标题对应到 steps/tiles（界面显示上把 step 转成 tile），3 级标题
+   对应到 tasks；
+
+1. 点击 unit_header 的 guidebook 跳转到对应该单元的全部任务页面；
+1. 每个 tile 的状态对应于 step 的进度（在查看课程的页面中，step 进度永远为 0），点击 tile 跳转到对应的 stepIndex=0 页面
+   ；
 1. sst dev 本地开发部署问题；
 1. 完成课程内容中每个 step 对应的任务（课前键盘打字练习、中英文配对测验；课后屏幕截图上传；测验、作业、考试、练习、其它
    ……以后补充）

@@ -13,7 +13,7 @@ export default function TaskSteps({
 }) {
     const items = steps.map((step, index) => {
         return {
-            title: <Link href={`?step=${index}`}>{step.name}</Link>,
+            title: <Link href={`?stepIndex=${index}`}>{step.name}</Link>,
             description: step.description
         }
     })

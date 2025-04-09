@@ -1,5 +1,5 @@
 'use client'
-import { TileStatus, Unit } from '@/domain/types'
+import { TileStatus, CourseUnit } from '@/domain/types'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 
@@ -32,16 +32,16 @@ export const TileTooltip = ({
     units,
     selectedTile,
     index,
-    unitNumber,
+    unitIndex,
     tilesLength,
     description,
     status,
     closeTooltip
 }: {
-    units: Unit[]
+    units: CourseUnit[]
     selectedTile: number | null
     index: number
-    unitNumber: number
+    unitIndex: number
     tilesLength: number
     description: string
     status: TileStatus
@@ -61,9 +61,9 @@ export const TileTooltip = ({
         return () => window.removeEventListener('click', containsTileTooltip, true)
     }, [selectedTile, tileTooltipRef, closeTooltip, index])
 
-    const unit = units.find((unit) => unit.unitNumber === unitNumber)
-    const activeBackgroundColor = unit?.backgroundColor ?? 'bg-green-500'
-    const activeTextColor = unit?.textColor ?? 'text-green-500'
+    const unit = units[unitIndex]
+    const activeBackgroundColor = unit?.style!.backgroundColor ?? 'bg-green-500'
+    const activeTextColor = unit?.style!.textColor ?? 'text-green-500'
 
     return (
         <div
@@ -92,7 +92,7 @@ export const TileTooltip = ({
                             : 'bg-yellow-400'
                     ].join(' ')}
                     style={{
-                        left: getTileTooltipLeftOffset({ index, unitNumber, tilesLength })
+                        left: getTileTooltipLeftOffset({ index, unitNumber: unitIndex + 1, tilesLength })
                     }}
                 ></div>
                 <div
