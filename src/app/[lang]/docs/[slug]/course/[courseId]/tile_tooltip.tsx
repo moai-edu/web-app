@@ -2,6 +2,7 @@
 import { TileStatus, CourseUnit } from '@/domain/types'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 
 const tileTooltipLeftOffsets = [140, 95, 70, 95, 140, 185, 210, 185] as const
 
@@ -48,6 +49,7 @@ export const TileTooltip = ({
     closeTooltip: () => void
 }) => {
     const tileTooltipRef = useRef<HTMLDivElement | null>(null)
+    const pathname = usePathname()
 
     useEffect(() => {
         const containsTileTooltip = (event: MouseEvent) => {
@@ -105,7 +107,7 @@ export const TileTooltip = ({
                 </div>
                 {status === 'ACTIVE' ? (
                     <Link
-                        href="/lesson"
+                        href={`${pathname}/${unitIndex}/view?tileIndex=${index}`}
                         className={[
                             'flex w-full items-center justify-center rounded-xl border-b-4 border-gray-200 bg-white p-3 uppercase',
                             activeTextColor
@@ -119,7 +121,7 @@ export const TileTooltip = ({
                     </button>
                 ) : (
                     <Link
-                        href="/lesson"
+                        href={`${pathname}/${unitIndex}/view?tileIndex=${index}`}
                         className="flex w-full items-center justify-center rounded-xl border-b-4 border-yellow-200 bg-white p-3 uppercase text-yellow-400"
                     >
                         Practice +5 XP

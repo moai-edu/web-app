@@ -19,6 +19,7 @@ export interface UnitStyle {
 }
 
 export type CourseUnit = {
+    index: number
     name: string
     description: string
     content: string
@@ -28,6 +29,7 @@ export type CourseUnit = {
 }
 
 export interface CourseStep {
+    index: number
     name: string
     description: string
     content: string
@@ -37,10 +39,16 @@ export type TileStatus = 'LOCKED' | 'ACTIVE' | 'COMPLETE'
 
 export type Tile =
     | {
+          index: number
           type: 'star' | 'dumbbell' | 'book' | 'trophy' | 'fast-forward'
           name: string
           description: string
+          steps: CourseStep[] | null
       }
-    | { type: 'treasure' }
+    | { index: number; type: 'treasure' }
 
 export type TileType = Tile['type']
+
+//一个tile固定就是4个steps。
+// 注意：目前这里只能是4，没有处理其它进度比例的方案，其它值会显示进度异常；
+export const STEPS_PER_TILE = 4

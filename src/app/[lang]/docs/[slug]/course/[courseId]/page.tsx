@@ -14,7 +14,7 @@ export default async function Page({ params }: PageProps) {
     const { slug, courseId } = await params
     console.log(`Slug: ${slug}, Course: ${courseId}`)
     const courseDomain = new CourseDomain()
-    const course = await courseDomain.getCourseDeep(slug, courseId)
+    const course = await courseDomain.getCourseUnitsAndTiles(slug, courseId)
     if (!course) {
         return <div>Course not found</div>
     }

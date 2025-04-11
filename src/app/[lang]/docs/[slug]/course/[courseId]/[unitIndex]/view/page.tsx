@@ -1,41 +1,42 @@
 export const dynamic = 'force-dynamic'
 
 import { auth } from '@/auth'
-import { Box, Flex } from '@radix-ui/themes'
+import { Box, Button, Flex, Link } from '@radix-ui/themes'
 import TaskSteps from './task_steps'
-import path from 'path'
 import { useMDXComponents as getMDXComponents } from '@/mdx-components'
 
 import { compileMdx } from 'nextra/compile'
 import { evaluate } from 'nextra/evaluate'
 import MobileDrawerTaskSteps from './mobile_drawer_task_steps'
 import { CourseDomain } from '@/domain/course_domain'
+import { ExitIcon } from '@radix-ui/react-icons'
+import { redirect } from 'next/navigation'
 
 // 直接使用 Nextra 的组件，排除 wrapper
 const { wrapper, ...components } = getMDXComponents()
 
 type PageProps = Readonly<{
     params: Promise<{ slug: string; courseId: string; unitIndex: string }>
-    searchParams: Promise<{ stepIndex?: string }>
+    searchParams: Promise<{ tileIndex?: string; stepIndex?: string }>
 }>
 
 export default async function Page({ params, searchParams }: PageProps) {
     const { slug, courseId, unitIndex } = await params
-    const { stepIndex } = await searchParams
-    const currentStep = stepIndex ? parseInt(stepIndex) : 0 // 获取当前步骤
-    console.log('params:', slug, courseId, unitIndex, stepIndex, currentStep)
-
-    const filePath = `docs/${slug}/course/${courseId}/index.md` // 构建 S3 文件路径
+    const { tileIndex, stepIndex } = await searchParams
+    console.log('params:', slug, courseId, unitIndex, tileIndex, stepIndex)
 
     const courseDomain = new CourseDomain()
     let isAuthorized = false
     try {
-        const result = await courseDomain.getCourseUnitStep(slug, courseId, parseInt(unitIndex), currentStep)
+        const _unitIndex = parseInt(unitIndex)
+        const _tileIndex = tileIndex ? parseInt(tileIndex) : -1
+        const _stepIndex = stepIndex ? parseInt(stepIndex) : -1
+        const result = await courseDomain.getCourseUnitTileSteps(slug, courseId, _unitIndex, _tileIndex, _stepIndex)
         if (!result) {
             throw new Error('Course unit step not found')
         }
 
-        const { metadata, unit, content } = result
+        const { metadata, steps, currentStepIndex, currentStepContent } = result
         if (slug === 'public' || (metadata.access && metadata.access === 'public')) {
             isAuthorized = true
         } else {
@@ -44,32 +45,36 @@ export default async function Page({ params, searchParams }: PageProps) {
         }
 
         if (isAuthorized) {
-            const rawJs = await compileMdx(content, { filePath })
+            const rawJs = await compileMdx(currentStepContent, { filePath: 's3://foobar' })
             const { default: MDXContent } = evaluate(rawJs, components)
             return (
                 <Flex direction="column" gap="4">
                     {/* 移动端显示的按钮和抽屉 */}
                     <Box display={{ initial: 'block', md: 'none' }}>
-                        <MobileDrawerTaskSteps steps={unit.steps || []} status="process" current={currentStep} />
+                        <MobileDrawerTaskSteps steps={steps} tileIndex={_tileIndex} stepIndex={currentStepIndex} />
                     </Box>
                     <Flex gap="3">
                         {/* 桌面端显示的侧边栏 - 在移动端隐藏 */}
                         <Box width="225px" minWidth="225px" pl="4" pt="4" display={{ initial: 'none', md: 'block' }}>
-                            <TaskSteps current={currentStep} status="process" steps={unit.steps || []} />
+                            <TaskSteps steps={steps} tileIndex={_tileIndex} stepIndex={currentStepIndex} />
                         </Box>
-                        <Box px="4" maxWidth="100%">
+                        <Flex direction="column" gap="4" width="100%">
+                            {/* 桌面端显示的退出按钮 - 在移动端隐藏 */}
+                            <Flex justify="end" width="100%" pt="2" pr="4" display={{ initial: 'none', md: 'flex' }}>
+                                <form action="..">
+                                    <Button type="submit" color="crimson">
+                                        <ExitIcon /> 退出
+                                    </Button>
+                                </form>
+                            </Flex>
                             <MDXContent />
-                        </Box>
+                        </Flex>
                     </Flex>
                 </Flex>
             )
         } else return <h1>Document is not authorized for access</h1>
     } catch (error) {
         console.error(error)
-        return (
-            <h1>
-                Document or step is not found. filePath: {filePath}, step: {currentStep}
-            </h1>
-        )
+        return <h1>Error: Document or step is not found.</h1>
     }
 }

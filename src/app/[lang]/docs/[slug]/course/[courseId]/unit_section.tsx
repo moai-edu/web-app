@@ -1,5 +1,5 @@
 'use client'
-import { Tile, TileStatus, TileType, CourseUnit } from '@/domain/types'
+import { Tile, TileStatus, TileType, CourseUnit, STEPS_PER_TILE } from '@/domain/types'
 import { UnitHeader } from './unit_header'
 import { Fragment, JSX, useCallback, useEffect, useRef, useState } from 'react'
 import {
@@ -26,7 +26,7 @@ import { TileTooltip } from './tile_tooltip'
 import { useRouter } from 'next/navigation'
 
 const tileStatus = (units: CourseUnit[], tile: Tile, lessonsCompleted: number): TileStatus => {
-    const lessonsPerTile = 4
+    const lessonsPerTile = STEPS_PER_TILE
     const tilesCompleted = Math.floor(lessonsCompleted / lessonsPerTile)
     const tiles = units.flatMap((unit) => unit.tiles)
     const tileIndex = tiles.findIndex((t) => t === tile)
@@ -154,7 +154,7 @@ export const UnitSection = ({
 
     const closeTooltip = useCallback(() => setSelectedTile(null), [])
 
-    const lessonsCompleted = 10
+    const lessonsCompleted = 24
     const increaseLessonsCompleted = (i: number) => {
         console.log(i)
     }

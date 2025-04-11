@@ -1,9 +1,13 @@
 # TODO
 
-1. course 的 index.md 页面，把 1 级标题对应到 units，2 级标题对应到 steps/tiles（界面显示上把 step 转成 tile），3 级标题
-   对应到 tasks；
+查看课程页面：
 
-1. 点击 unit_header 的 guidebook 跳转到对应该单元的全部任务页面；
+学习课程页面：
+
+1. 参考 duolingo 的课程（主要考虑英文与技术的双向学习），结合上课的实际情况（截图上传可能更可行？），设计每个 step 的练
+   习题的类型，并在学习时显示；
+1. 按确定的规则，在学习时，固定往课程 tile 之间插入其它 tile（比如：treasure tile），以增加趣味性（playful learning 以及
+   游戏成瘾机制研究）；
 1. 每个 tile 的状态对应于 step 的进度（在查看课程的页面中，step 进度永远为 0），点击 tile 跳转到对应的 stepIndex=0 页面
    ；
 1. sst dev 本地开发部署问题；
@@ -19,6 +23,17 @@
 1. 当前页面如果没有 session，重定向到首页进行登录；
 
 ## DONE
+
+查看课程页面：
+
+1. md content 空内容显示不正常；
+1. 在 md content 的前面增加一个 h1 标题，作为课程标题；
+1. 查看页面 currentStep 逻辑不正确，永远都是显示第 1 个，应该显示当前选择的 step；
+1. 点击 unit_header 的 guidebook 跳转到该 unit 的全部 steps 的页面（路由
+   ：src/app/[lang]/docs/[slug]/course/[courseId]/[unitIndex]/view）；
+1. 点击 tile 跳转到该 tile 绑定的 4 个 steps 页面(路由同上，加 queryString 参数：tileIndex=2)；
+1. 在 duolingo 的界面显示上把 step 转成 tile，每个 tile 固定分配 4 个 step；
+1. course 的 index.md 页面，把 1 级标题对应到 units，2 级标题对应到 steps；
 
 1. 在 course 部分，集成 react-duolingo 项目；
 1. course 列表页；

@@ -2,9 +2,16 @@ import { DynamoDBAdapter } from '@/persist/adapter-dynamodb'
 import { dbAdapter } from '@/persist/db'
 import { s3DataClient } from '@/persist/s3'
 import S3DataClient from '@/persist/s3_data_client'
-import { Course, CourseMetadata, CourseUnit, TileType, UnitStyle, CourseStep, Tile } from './types'
+import { Course, CourseMetadata, CourseUnit, TileType, UnitStyle, CourseStep, Tile, STEPS_PER_TILE } from './types'
 import { extractResourceFromMdLine, getAbsFilePath } from '@/lib/md_utils'
 import path from 'path'
+
+interface ViewStepsPageData {
+    metadata: CourseMetadata
+    steps: CourseStep[]
+    currentStepIndex: number
+    currentStepContent: string
+}
 
 export class CourseDomain {
     s3DataClient: S3DataClient
@@ -85,7 +92,29 @@ export class CourseDomain {
         }
     }
 
-    async getCourseDeep(slug: string, courseId: string): Promise<Course | null> {
+    /**
+     * 获取课程的详细信息，包括单元、步骤和瓦片的完整结构
+     *
+     * @param slug - 课程分类标识
+     * @param courseId - 课程ID
+     * @returns 返回包含完整课程信息的Course对象，如果获取失败则返回null
+     *
+     * 主要功能:
+     * 1. 获取基础课程信息
+     * 2. 解析课程内容，生成单元(units)数组
+     * 3. 为每个单元生成:
+     *    - 步骤(steps)：从单元内容中解析
+     *    - 瓦片(tiles)：根据steps数量生成，每4个steps生成1个tile，并设置类型、名称、描述、steps属性；
+     *    - 样式(style)：轮换使用预定义的样式
+     *
+     * 瓦片tile生成规则:
+     * - 如果步骤数<=4，只生成1个fast-forward类型的tile
+     * - 如果步骤数>4:
+     *   - 第一个tile类型为fast-forward
+     *   - 最后一个tile类型为trophy
+     *   - 中间的tile轮换使用star/dumbbell/book类型
+     */
+    async getCourseUnitsAndTiles(slug: string, courseId: string): Promise<Course | null> {
         const course = await this.getCourse(slug, courseId)
         if (!course) {
             return null
@@ -105,28 +134,50 @@ export class CourseDomain {
         for (const unit of course.units) {
             const steps = this.getStepsFromContent(unit.content)
             if (steps && steps.length > 0) {
-                // 根据steps生成tiles数组
-                const tiles: Tile[] = steps.map((step) => ({
-                    type: 'star', // 默认类型，后面会修改
-                    name: step.name,
-                    description: step.description
-                }))
-
-                // 第一个tile设置为fast-forward
-                tiles[0].type = firstTileType
-
-                // 最后一个tile设置为trophy
-                tiles[tiles.length - 1].type = lastTileType
-
-                // 中间的tiles轮换其他类型
-                let currentTypeIndex = 0
-                for (let i = 1; i < tiles.length - 1; i++) {
-                    tiles[i].type = tileTypes[currentTypeIndex]
-                    currentTypeIndex = (currentTypeIndex + 1) % tileTypes.length
-                }
-
                 unit.steps = steps
-                unit.tiles = tiles
+
+                // 如果steps总数<=4,只生成一个fast-forward类型的tile
+                if (steps.length <= STEPS_PER_TILE) {
+                    unit.tiles = [
+                        {
+                            index: 0,
+                            type: firstTileType,
+                            name: unit.name,
+                            description: unit.description,
+                            steps: steps
+                        }
+                    ]
+                } else {
+                    // 每4个steps生成一个tile
+                    let tileIndex = 0
+                    const tiles: Tile[] = []
+                    for (let i = 0; i < steps.length; i += STEPS_PER_TILE) {
+                        const tileSteps = steps.slice(i, i + STEPS_PER_TILE)
+                        tiles.push({
+                            index: tileIndex,
+                            type: 'star', // 默认类型，后面会修改
+                            name: unit.name,
+                            description: unit.description,
+                            steps: tileSteps
+                        })
+                        tileIndex++
+                    }
+
+                    // 第一个tile设置为fast-forward
+                    tiles[0].type = firstTileType
+
+                    // 最后一个tile设置为trophy
+                    tiles[tiles.length - 1].type = lastTileType
+
+                    // 中间的tiles轮换其他类型
+                    let currentTypeIndex = 0
+                    for (let i = 1; i < tiles.length - 1; i++) {
+                        tiles[i].type = tileTypes[currentTypeIndex]
+                        currentTypeIndex = (currentTypeIndex + 1) % tileTypes.length
+                    }
+
+                    unit.tiles = tiles
+                }
             } else {
                 unit.tiles = []
                 unit.steps = []
@@ -139,29 +190,45 @@ export class CourseDomain {
         return course
     }
 
-    async getCourseUnitStep(
+    async getCourseUnitTileSteps(
         slug: string,
         courseId: string,
         unitIndex: number,
+        tileIndex: number,
         stepIndex: number
-    ): Promise<{ metadata: CourseMetadata; unit: CourseUnit; content: string } | null> {
-        const course = await this.getCourseDeep(slug, courseId)
+    ): Promise<ViewStepsPageData | null> {
+        const course = await this.getCourseUnitsAndTiles(slug, courseId)
         if (!course || !course.units) {
             return null
         }
         const unit = course.units[unitIndex]
-        const step = unit.steps?.[stepIndex]
-        if (!unit || !step) {
+
+        let currentStepIndex = 0
+        if (stepIndex > 0) {
+            currentStepIndex = stepIndex
+        } else if (tileIndex > 0) {
+            currentStepIndex = tileIndex * STEPS_PER_TILE
+        }
+
+        const currentStep = unit.steps?.[currentStepIndex]
+        if (!unit || !currentStep) {
             return null
         }
 
         const courseDir = `docs/${slug}/course/${courseId}` // 构建 S3 目录路径
-        const content = await this.replaceResUrlsWithS3SignedUrls(courseDir, step.content)
+        const currentStepContent = await this.replaceResUrlsWithS3SignedUrls(courseDir, currentStep.content)
 
+        const steps =
+            tileIndex < 0 ? unit.steps : unit.steps?.slice(tileIndex * STEPS_PER_TILE, (tileIndex + 1) * STEPS_PER_TILE)
+        if (!steps) return null
+
+        // 在这里增加页面标题
+        const content = `# ${currentStep.name}\n${currentStepContent}`
         return {
             metadata: course.metadata,
-            unit,
-            content
+            steps,
+            currentStepIndex,
+            currentStepContent: content
         }
     }
 
@@ -210,6 +277,7 @@ export class CourseDomain {
         let currentUnit: CourseUnit | null = null
         let currentContent: string[] = []
 
+        let unitIndex = 0
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i]
 
@@ -236,12 +304,14 @@ export class CourseDomain {
                 if (currentUnit) {
                     currentUnit.content = currentContent.join('\n').trim()
                     units.push(currentUnit)
+                    unitIndex++
                 }
 
                 // 解析新的单元标题
                 const titleMatch = line.match(/^# ([^{]+)(?:{(.+)})?/)
                 if (titleMatch) {
                     currentUnit = {
+                        index: unitIndex,
                         name: titleMatch[1].trim(),
                         description: titleMatch[2] ? titleMatch[2].trim() : '',
                         content: '',
@@ -306,6 +376,7 @@ export class CourseDomain {
         let currentStep: CourseStep | null = null
         let currentContent: string[] = []
 
+        let stepIndex = 0
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i]
 
@@ -332,12 +403,14 @@ export class CourseDomain {
                 if (currentStep) {
                     currentStep.content = currentContent.join('\n').trim()
                     steps.push(currentStep)
+                    stepIndex++
                 }
 
                 // 解析新的tile标题
                 const titleMatch = line.match(/^## ([^{]+)(?:{(.+)})?/)
                 if (titleMatch) {
                     currentStep = {
+                        index: stepIndex,
                         name: titleMatch[1].trim(),
                         description: titleMatch[2] ? titleMatch[2].trim() : '',
                         content: ''
