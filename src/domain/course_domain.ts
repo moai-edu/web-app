@@ -74,14 +74,17 @@ export class CourseDomain {
             const { data, content } = await this.s3DataClient.getMdDataContent(mdFilePath)
             if (data) {
                 const metadata = data as CourseMetadata
+                let coverUrl = null
                 if (metadata.cover) {
-                    metadata.cover = await this.s3DataClient.getSignedUrl(path.join(courseDir, metadata.cover))
+                    const coverKey = path.join(courseDir, metadata.cover)
+                    coverUrl = await this.s3DataClient.getSignedUrl(coverKey)
                 }
                 return {
-                    id: courseDir,
+                    id: courseId,
                     metadata,
                     content,
-                    units: null
+                    units: null,
+                    coverUrl
                 }
             } else {
                 return null

@@ -13,6 +13,9 @@ export default async function Page({ params }: PageProps) {
     const courseDomain = new CourseDomain()
 
     const courseList = await courseDomain.getCourseList(slug)
+    if (!courseList) {
+        return <div>No courses found</div>
+    }
     return (
         <Flex direction="column" gap="5" p="5">
             <Heading as="h1">{slug}</Heading>

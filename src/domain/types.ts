@@ -10,6 +10,7 @@ export interface Course {
     metadata: CourseMetadata
     content: string
     units: CourseUnit[] | null
+    coverUrl: string | null | undefined
 }
 
 export interface UnitStyle {

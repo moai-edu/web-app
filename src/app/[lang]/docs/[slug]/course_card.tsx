@@ -13,8 +13,8 @@ export default async function CourseCard({ slug, course }: PageProps) {
                 <Card size="4">
                     <Inset clip="padding-box" side="top" pb="current">
                         <img
-                            src={course.cover || '/img/default-cover.avif'}
-                            alt={course.title}
+                            src={course.coverUrl || '/img/default-cover.avif'}
+                            alt={course.metadata.title}
                             style={{
                                 display: 'block',
                                 objectFit: 'cover',
@@ -25,9 +25,9 @@ export default async function CourseCard({ slug, course }: PageProps) {
                         />
                     </Inset>
                     <Text as="p" size="3">
-                        <Strong>{course.title || ''}</Strong>
+                        <Strong>{course.metadata.title || ''}</Strong>
                     </Text>
-                    <Text weight="regular">{course.description}</Text>
+                    <Text weight="regular">{course.metadata.description}</Text>
                 </Card>
             </Link>
         </Box>
