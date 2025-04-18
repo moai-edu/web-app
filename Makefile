@@ -36,14 +36,12 @@ localstack:
 TF_USE_VARS:=-var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)'
 .PHONY: localstack-tf-all localstack-tf-init localstack-tf-plan localstack-tf-apply
 localstack-tf-setup:
-	source .venv/bin/activate && \
-		tflocal init && \
+	. .venv/bin/activate && tflocal init && \
 		tflocal plan $(TF_USE_VARS) && \
 		tflocal apply -auto-approve $(TF_USE_VARS)
 .PHONY: localstack-tf-teardown
 localstack-tf-teardown:
-	source .venv/bin/activate && \
-		tflocal destroy $(TF_USE_VARS)
+	. .venv/bin/activate && tflocal destroy $(TF_USE_VARS)
 	rm -rf .terraform terraform.tfstate* .terraform.lock.hcl
 
 .PHONY: localstack-show
