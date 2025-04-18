@@ -1,6 +1,6 @@
 'use client'
 
-import { Flex } from '@radix-ui/themes'
+import { Container } from '@radix-ui/themes'
 import { useState } from 'react'
 import ViewUserDataList from './view_user_data_list'
 import EditUserForm from './edit_user_form'
@@ -22,18 +22,12 @@ export default function Page() {
     }
 
     return (
-        <Flex direction="column" gap="5">
+        <Container size="2" p="4">
             {isEditing ? (
-                <EditUserForm
-                    user={user!}
-                    onCancel={() => setIsEditing(false)}
-                />
+                <EditUserForm user={user!} onCancel={() => setIsEditing(false)} />
             ) : (
-                <ViewUserDataList
-                    user={user!}
-                    onEditClick={() => setIsEditing(true)}
-                />
+                <ViewUserDataList user={user!} onEditClick={() => setIsEditing(true)} />
             )}
-        </Flex>
+        </Container>
     )
 }

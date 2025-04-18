@@ -152,8 +152,8 @@ test content
 
         it('应该正确取得markdown文件内容', async () => {
             // 执行测试
-            const { metadata, content } = await s3DataClient.getMdContent(mockKey)
-            expect(metadata).toEqual({
+            const { data, content } = await s3DataClient.getMdDataContent(mockKey)
+            expect(data).toEqual({
                 title: 'Sample Title',
                 description: 'Sample Description',
                 cover: '/assets/cover.jpg',

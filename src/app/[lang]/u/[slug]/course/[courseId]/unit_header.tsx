@@ -2,11 +2,13 @@ import { GuidebookSvg } from '@/components/Svgs'
 import Link from 'next/link'
 
 export const UnitHeader = ({
+    courseId,
     unitIndex,
     description,
     backgroundColor,
     borderColor
 }: {
+    courseId: string
     unitIndex: number
     description: string
     backgroundColor: `bg-${string}`
@@ -20,7 +22,7 @@ export const UnitHeader = ({
                     <p className="text-lg">{description}</p>
                 </div>
                 <Link
-                    href={`/zh/docs/public/course/dev/${unitIndex}/view`}
+                    href={`${courseId}/${unitIndex}/view`}
                     className={[
                         'flex items-center gap-3 rounded-2xl border-2 border-b-4 p-3 transition hover:text-gray-100',
                         borderColor

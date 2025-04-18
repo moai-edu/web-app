@@ -29,23 +29,26 @@ teardown:
 	npx sst remove --stage $(STAGE)
 	npx sst secret remove $(SECRET_NAME) --stage $(STAGE)
 
-.PHONY: localstack localstack-apply localstack-destroy localstack-show
+.PHONY: localstack
 localstack:
-	PERSISTENCE=1 localstack start
+	PERSISTANT=1 localstack start
 
-localstack-apply:
-	@echo "confirm that you have added the following line to the /etc/hosts file:"
-	@echo "127.0.0.1 $(DATA_BUCKET_NAME).s3.localhost.localstack.cloud"
-	@echo "otherwise, the s3 bucket creations will fail."
-	tflocal init && \
-		tflocal plan  -var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)' && \
-		tflocal apply -var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)' -auto-approve
+TF_USE_VARS:=-var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)'
+.PHONY: localstack-tf-all localstack-tf-init localstack-tf-plan localstack-tf-apply
+localstack-tf-all: localstack-tf-init localstack-tf-plan localstack-tf-apply
+localstack-tf-init:
+	tflocal init
+localstack-tf-plan:
+	tflocal plan $(TF_USE_VARS)
+localstack-tf-apply:
+	tflocal apply -auto-approve $(TF_USE_VARS)
+.PHONY: localstack-tf-destroy
+localstack-tf-destroy:
+	tflocal destroy $(TF_USE_VARS)
+	# rm -rf .terraform terraform.tfstate* .terraform.lock.hcl
 
-localstack-destroy:
-	tflocal destroy -var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)' -auto-approve
-	rm -rf .terraform terraform.tfstate* .terraform.lock.hcl
 
-
+.PHONY: localstack-show
 localstack-show:
 	$(awslocal) s3 ls
 	$(awslocal) s3 ls s3://$(DATA_BUCKET_NAME)/

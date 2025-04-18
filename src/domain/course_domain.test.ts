@@ -1,12 +1,11 @@
 import { s3Client, s3DataClient } from '@/persist/s3'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { CourseDomain } from './course_domain'
-import { identity } from '@tsparticles/engine'
 
 describe('replaceResUrlsWithS3SignedUrls', () => {
     beforeEach(() => {
-        vi.spyOn(s3DataClient, 'getMdContent').mockResolvedValue({
-            metadata: {},
+        vi.spyOn(s3DataClient, 'getMdDataContent').mockResolvedValue({
+            data: {},
             content: `# Sample Markdown
 ![Image](./image.png)
 [PDF File](../docs/sample.pdf)
@@ -48,8 +47,8 @@ test content
         const courseDomain = new CourseDomain()
         beforeEach(() => {
             vi.spyOn(courseDomain.s3DataClient, 'listFiles').mockResolvedValue(mockKeys)
-            vi.spyOn(courseDomain.s3DataClient, 'getMdContent').mockResolvedValue({
-                metadata: mockMetadata,
+            vi.spyOn(courseDomain.s3DataClient, 'getMdDataContent').mockResolvedValue({
+                data: mockMetadata,
                 content: mockContent
             })
             vi.spyOn(s3DataClient, 'getSignedUrl').mockImplementation(
@@ -65,16 +64,21 @@ test content
         it('获得测试课程列表数据', async () => {
             // 执行测试
             const courseList = await courseDomain.getCourseList('test')
+            // console.log(courseList)
             expect(courseList).toEqual([
                 {
                     id: 'path1',
-                    ...mockMetadata,
-                    cover: `https://signed-url.com/docs/test/course/path1/${mockMetadata.cover}`
+                    metadata: mockMetadata,
+                    content: mockContent,
+                    coverUrl: `https://signed-url.com/docs/test/course/path1/${mockMetadata.cover}`,
+                    units: null
                 },
                 {
                     id: 'path2',
-                    ...mockMetadata,
-                    cover: `https://signed-url.com/docs/test/course/path2/${mockMetadata.cover}`
+                    metadata: mockMetadata,
+                    content: mockContent,
+                    coverUrl: `https://signed-url.com/docs/test/course/path2/${mockMetadata.cover}`,
+                    units: null
                 }
             ])
         })

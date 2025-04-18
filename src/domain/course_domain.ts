@@ -1,5 +1,3 @@
-import { DynamoDBAdapter } from '@/persist/adapter-dynamodb'
-import { dbAdapter } from '@/persist/db'
 import { s3DataClient } from '@/persist/s3'
 import S3DataClient from '@/persist/s3_data_client'
 import { Course, CourseMetadata, CourseUnit, TileType, UnitStyle, CourseStep, Tile, STEPS_PER_TILE } from './types'
@@ -15,11 +13,9 @@ interface ViewStepsPageData {
 
 export class CourseDomain {
     s3DataClient: S3DataClient
-    dbAdapter: DynamoDBAdapter
     // Normal signature with defaults
     constructor() {
         this.s3DataClient = s3DataClient
-        this.dbAdapter = dbAdapter
     }
 
     /**

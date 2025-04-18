@@ -12,7 +12,6 @@ type PageProps = Readonly<{
 
 export default async function Page({ params }: PageProps) {
     const { slug, courseId } = await params
-    console.log(`Slug: ${slug}, Course: ${courseId}`)
     const courseDomain = new CourseDomain()
     const course = await courseDomain.getCourseUnitsAndTiles(slug, courseId)
     if (!course) {
@@ -27,7 +26,7 @@ export default async function Page({ params }: PageProps) {
         <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
             <div className="flex max-w-2xl grow flex-col">
                 {units.map((unit, index) => (
-                    <UnitSection units={units} unit={unit} index={index} key={index} />
+                    <UnitSection course={course} unitIndex={index} key={index} />
                 ))}
                 <div className="sticky bottom-28 left-0 right-0 flex items-end justify-between">
                     {/* <Link

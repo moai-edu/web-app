@@ -1,7 +1,7 @@
 export default {
-    systemTitle: '🚀 Moai',
+    systemTitle: '🚀 MoAI',
     banner: {
-        title: '👋 嘿，欢迎来到Moai门户',
+        title: '👋 嘿，欢迎来到MoAI！',
         more: '了解详情'
     },
 
@@ -10,6 +10,18 @@ export default {
     lastUpdated: '最后更新于:',
 
     getStarted: '开始使用',
+    userHomePage: '用户主页',
+
+    myProfile: '我的资料',
+    myCourse: '我的课程',
+    myCreatedClass: '创建的班级',
+    myJoinedClass: '加入的班级',
+
+    // 我创建的班级
+    createClass: '创建班级',
+    createdClassName: '名称',
+    createdClassCode: '邀请码',
+    createdClassOps: '操作',
 
     featureList: [
         {

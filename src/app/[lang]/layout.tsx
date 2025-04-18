@@ -52,7 +52,6 @@ const CustomNavbar = async ({ lang }: I18nLangAsyncProps) => {
         <Navbar logo={<span>{t('systemTitle')}</span>} logoLink={`/${lang}`} projectLink={repo}>
             <>
                 <UserButton session={session} />
-                {session && <RadixLink href={`/${lang}/protected/settings/user`}>设置</RadixLink>}
                 <LocaleToggle className="max-md:hidden" />
                 <ThemeToggle className="max-md:hidden" />
             </>
@@ -67,7 +66,7 @@ interface Props {
 
 export default async function RootLayout({ children, params }: Props) {
     const { lang } = await params
-    const dictionary = await getDictionary(lang)
+    // const dictionary = await getDictionary(lang)
     const pageMap = await getPageMap(lang)
 
     const title = 'Moai'

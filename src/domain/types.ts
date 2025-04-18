@@ -53,3 +53,10 @@ export type TileType = Tile['type']
 //一个tile固定就是4个steps。
 // 注意：目前这里只能是4，没有处理其它进度比例的方案，其它值会显示进度异常；
 export const STEPS_PER_TILE = 4
+
+export interface Class {
+    id: string
+    userId: string
+    name: string
+    courseId: string
+}

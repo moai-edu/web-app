@@ -1,57 +1,31 @@
 import { auth } from '@/auth'
-import { dbAdapter } from '@/persist/db'
-import { NextResponse } from 'next/server'
+import { nameZodSchema, slugZodSchema } from '@/domain/schemas'
+import { UserDomain } from '@/domain/user_domain'
+import { withAuth } from '@/lib/api_handler'
+import { z } from 'zod'
 
-// BizUser的更新信息通过JSON格式传递
-export async function PUT(request: Request) {
-    const session = await auth()
+export const PUT = withAuth(async (request, session) => {
+    const domain = new UserDomain()
+    const updateUserSchema = z.object({
+        name: nameZodSchema,
+        slug: slugZodSchema.refine(
+            async (slug) => {
+                // 这里可以添加异步校验逻辑，比如检查slug是否唯一
+                const session = await auth()
+                const user = await domain.getBySlug(slug)
+                // 没人用这个slug，或者就是我自己在用这个slug
+                return !user || user.id === session!.user!.id
+            },
+            { message: '该Slug已被占用' }
+        )
+    })
 
-    if (!session) {
-        // 如果用户未登录或会话不存在，返回 401 未授权状态
-        return new Response(JSON.stringify({ message: 'Unauthorized access. Please log in.' }), {
-            status: 401,
-            headers: { 'Content-Type': 'application/json' }
-        })
+    const rawData = await request.json()
+    const { name, slug } = await updateUserSchema.parseAsync(rawData)
+    const data = await domain.update(session.user!.id!, name, slug)
+
+    return {
+        status: 200,
+        data
     }
-
-    try {
-        // 解析请求体中的JSON数据
-        const { name, slug } = await request.json()
-
-        if (slug && ['public'].includes(slug)) {
-            // 不能使用保留的slug
-            return new Response(JSON.stringify({ message: 'Slug has been taken.' }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' }
-            })
-        }
-
-        if (slug && slug !== session.user!.slug) {
-            const existedUser = await dbAdapter.getUserBySlug(slug)
-            if (existedUser) {
-                // 如果slug已被占用，返回 400 错误状态
-                return new Response(JSON.stringify({ message: 'Slug has been taken.' }), {
-                    status: 400,
-                    headers: { 'Content-Type': 'application/json' }
-                })
-            }
-        }
-
-        // 更新User用户的name和slug
-        const updatedUser = await dbAdapter.updateUser(session.user!.id!, name, slug)
-
-        console.log(JSON.stringify(updatedUser))
-
-        // 返回更新后的用户信息
-        return NextResponse.json(updatedUser, {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        })
-    } catch (error) {
-        // 处理错误
-        return new Response(JSON.stringify({ message: 'Failed to update user.', error: error }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        })
-    }
-}
+})

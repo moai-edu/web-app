@@ -1,8 +1,19 @@
 # TODO
 
+-   把 slug 移动到 u 目录下；
+-   把 home、new 等不需要 slug 信息的页面都从 slug 下移出；
+
+设置页面：
+
+-   protected/setting 需要响应式布局，增加一个按键打开 drawer，参考：/zh/docs/public/course/dev/0/view 路由实现；
+
 查看课程页面：
 
+-   我的课程页面
+
 学习课程页面：
+
+-   增加截图上传功能；
 
 1. 参考 duolingo 的课程（主要考虑英文与技术的双向学习），结合上课的实际情况（截图上传可能更可行？），设计每个 step 的练
    习题的类型，并在学习时显示；
@@ -24,11 +35,11 @@
 
 ## DONE
 
--   只把依赖 s3 docs 目录的文件放到 slug 目录下，并且加上一个 u/slug 前缀
+框架：
+
+-   完成 dao 类；
 
 查看课程页面：
-
-wsl 下 localstack 无法保存数据；
 
 1. md content 空内容显示不正常；
 1. 在 md content 的前面增加一个 h1 标题，作为课程标题；
@@ -47,3 +58,5 @@ wsl 下 localstack 无法保存数据；
 1. ant design step 样式切换；
 1. 完成文档类型 step-task；
 1. 重写 replace markdown resource url with presigned url；
+
+其它： wsl 下 localstack 无法保存数据；使用 pro 服务解决；

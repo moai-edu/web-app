@@ -14,7 +14,7 @@ export default function SettingLayout({
         { name: '版本信息', href: 'version' }
     ]
     return (
-        <Flex gap="5">
+        <Flex gap="5" p="4">
             <Box width="110px">
                 <ScrollArea type="always" scrollbars="vertical">
                     <Flex direction="column" gap="3" mb="5">
@@ -22,11 +22,7 @@ export default function SettingLayout({
                             <Link
                                 key={setting.href}
                                 href={`${setting.href}`}
-                                weight={
-                                    pathname.endsWith(setting.href)
-                                        ? 'bold'
-                                        : undefined
-                                }
+                                weight={pathname.endsWith(setting.href) ? 'bold' : undefined}
                             >
                                 {setting.name}
                             </Link>

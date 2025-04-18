@@ -1,5 +1,5 @@
 'use client'
-import { Tile, TileStatus, TileType, CourseUnit, STEPS_PER_TILE } from '@/domain/types'
+import { Tile, TileStatus, TileType, CourseUnit, STEPS_PER_TILE, Course } from '@/domain/types'
 import { UnitHeader } from './unit_header'
 import { Fragment, JSX, useCallback, useEffect, useRef, useState } from 'react'
 import {
@@ -133,15 +133,12 @@ const getTileColors = ({
     }
 }
 
-export const UnitSection = ({
-    units,
-    unit,
-    index
-}: {
-    units: CourseUnit[]
-    unit: CourseUnit
-    index: number
-}): JSX.Element => {
+interface Props {
+    course: Course
+    unitIndex: number
+}
+
+export const UnitSection = ({ course, unitIndex }: Props): JSX.Element => {
     const router = useRouter()
 
     const [selectedTile, setSelectedTile] = useState<null | number>(null)
@@ -161,11 +158,14 @@ export const UnitSection = ({
     const increaseLingots = (i: number) => {
         console.log(i)
     }
-    const unitNumber = index + 1
+    const units = course.units!
+    const unit = units[unitIndex]
+    const unitNumber = unitIndex + 1
     return (
         <>
             <UnitHeader
-                unitIndex={index}
+                courseId={course.id}
+                unitIndex={unitIndex}
                 description={unit.name}
                 backgroundColor={unit.style!.backgroundColor}
                 borderColor={unit.style!.borderColor}
@@ -270,7 +270,7 @@ export const UnitSection = ({
                                 units={units}
                                 selectedTile={selectedTile}
                                 index={i}
-                                unitIndex={index}
+                                unitIndex={unitIndex}
                                 tilesLength={unit.tiles!.length}
                                 description={(() => {
                                     switch (tile.type) {

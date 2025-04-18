@@ -1,15 +1,16 @@
 import { Course } from '@/domain/types'
+import { I18nLangKeys } from '@/i18n'
 import { Box, Card, Inset, Text, Strong, Flex, Link } from '@radix-ui/themes'
 
 type PageProps = Readonly<{
-    slug: string
+    urlPrefix: string
     course: Course
 }>
 
-export default async function CourseCard({ slug, course }: PageProps) {
+export default async function CourseCard({ urlPrefix, course }: PageProps) {
     return (
         <Box maxWidth="250px">
-            <Link href={`${slug}/course/${course.id}`} underline="none">
+            <Link href={`${urlPrefix}/course/${course.id}`} underline="none">
                 <Card size="4">
                     <Inset clip="padding-box" side="top" pb="current">
                         <img
