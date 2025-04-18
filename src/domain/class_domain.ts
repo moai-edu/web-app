@@ -1,4 +1,5 @@
 import { classDao } from '@/persist/db'
+import { Class } from './types'
 
 export class ClassDomain {
     constructor() {}

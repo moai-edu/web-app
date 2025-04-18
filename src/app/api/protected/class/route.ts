@@ -1,5 +1,5 @@
+import { ClassDomain } from '@/domain/class_domain'
 import { withAuth } from '@/lib/api_handler'
-import { classDao } from '@/persist/db'
 
 export const POST = withAuth(async (request, session) => {
     // 解析请求体中的JSON数据
@@ -15,7 +15,8 @@ export const POST = withAuth(async (request, session) => {
     }
 
     // 保存到数据库
-    const savedClass = await classDao.create(newClass)
+    const domain = new ClassDomain()
+    const savedClass = await domain.create(newClass)
 
     return {
         status: 200,
