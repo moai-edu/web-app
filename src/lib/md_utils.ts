@@ -8,6 +8,7 @@ const RES_FILE_EXTS: Set<string> = new Set(['pdf', 'png', 'jpg', 'jpeg', 'gif', 
  *
  * - 链接或图片引用：链接引用：[A sample pdf](./sample.pdf) ，返回./sample.pdf；图像引用：![A sample png](/sample.png) ，返回/sample.png
  * - 背景图片：# My Slide {foo=bar data-background-image=../sample.png data-background-size=contain} ，返回../sample.png
+ * - 视频资源：<source src="./1.mp4" type="video/mp4" />，返回./1.mp4
  *
  * 以下情况返回null：
  * - 如果mdLine中没有满足上述资源引用，则返回null；
@@ -17,6 +18,7 @@ export function extractResourceFromMdLine(mdLine: string): string | null {
     const linkPattern = /\[(.*?)\]\((.*?)\)/
     const imagePattern = /\!\[(.*?)\]\((.*?)\)/
     const backgroundPattern = /data-background-image=([^\s}]*)/
+    const sourcePattern = /<source\s+src="([^"]+)"[^>]*>/
 
     let match = mdLine.match(linkPattern) || mdLine.match(imagePattern)
     if (match) {
@@ -30,6 +32,17 @@ export function extractResourceFromMdLine(mdLine: string): string | null {
     }
 
     match = mdLine.match(backgroundPattern)
+    if (match) {
+        const filePath = match[1].trim()
+        if (!filePath) return null
+
+        const ext = filePath.split('.').pop()
+        if (!ext || !RES_FILE_EXTS.has(ext)) return null
+
+        return filePath
+    }
+
+    match = mdLine.match(sourcePattern)
     if (match) {
         const filePath = match[1].trim()
         if (!filePath) return null
