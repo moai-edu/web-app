@@ -1,3 +1,5 @@
+import { auth } from '@/auth'
+import { ClassDomain } from '@/domain/class_domain'
 import { useServerLocale } from '@/hooks'
 import { I18nLangKeys } from '@/i18n'
 import { PlusIcon } from '@radix-ui/react-icons'
@@ -11,11 +13,18 @@ export default async function Page({ params }: Props) {
     const { lang } = await params
     const { t } = await useServerLocale(lang)
 
+    const session = await auth()
+    if (!session || !session.user || !session.user.id) {
+        return <div>Not authenticated</div>
+    }
+    const domain = new ClassDomain()
+    const classList = await domain.getListByUserId(session.user.id)
+
     return (
         <>
             <Flex justify="end" width="100%" pr="4">
                 <Button asChild>
-                    <Link href="../../new">
+                    <Link href="/new/class">
                         <PlusIcon /> {t('createClass')}
                     </Link>
                 </Button>
@@ -31,23 +40,15 @@ export default async function Page({ params }: Props) {
                 </Table.Header>
 
                 <Table.Body>
-                    <Table.Row>
-                        <Table.RowHeaderCell>Danilo Sousa</Table.RowHeaderCell>
-                        <Table.Cell>danilo@example.com</Table.Cell>
-                        <Table.Cell>Developer</Table.Cell>
-                    </Table.Row>
-
-                    <Table.Row>
-                        <Table.RowHeaderCell>Zahra Ambessa</Table.RowHeaderCell>
-                        <Table.Cell>zahra@example.com</Table.Cell>
-                        <Table.Cell>Admin</Table.Cell>
-                    </Table.Row>
-
-                    <Table.Row>
-                        <Table.RowHeaderCell>Jasper Eriksson</Table.RowHeaderCell>
-                        <Table.Cell>jasper@example.com</Table.Cell>
-                        <Table.Cell>Developer</Table.Cell>
-                    </Table.Row>
+                    {classList.map((classItem) => (
+                        <Table.Row key={classItem.id}>
+                            <Table.RowHeaderCell>{classItem.name}</Table.RowHeaderCell>
+                            <Table.Cell>{classItem.code}</Table.Cell>
+                            <Table.Cell>
+                                <Link href={`/class/${classItem.id}`}>{t('viewClass')}</Link>
+                            </Table.Cell>
+                        </Table.Row>
+                    ))}
                 </Table.Body>
             </Table.Root>
         </>

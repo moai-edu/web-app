@@ -31,7 +31,7 @@ teardown:
 
 .PHONY: localstack
 localstack:
-	PERSISTANT=1 localstack start
+	localstack start
 
 TF_USE_VARS:=-var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)'
 .PHONY: localstack-tf-all localstack-tf-init localstack-tf-plan localstack-tf-apply
@@ -46,6 +46,8 @@ localstack-tf-teardown:
 
 .PHONY: localstack-show
 localstack-show:
+	localstack config show
+	localstack status
 	$(awslocal) s3 ls
 	$(awslocal) s3 ls s3://$(DATA_BUCKET_NAME)/
 	$(awslocal) dynamodb describe-table --table-name $(DB_TABLE_NAME)
