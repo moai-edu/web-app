@@ -4,6 +4,8 @@ import { useServerLocale } from '@/hooks'
 import { I18nLangKeys } from '@/i18n'
 import { PlusIcon } from '@radix-ui/react-icons'
 import { Button, Flex, Link, Table } from '@radix-ui/themes'
+import EditNameButton from './edit_name_button'
+import DeleteClassButton from './delete_class_button'
 
 interface Props {
     params: Promise<{ lang: I18nLangKeys }>
@@ -42,10 +44,15 @@ export default async function Page({ params }: Props) {
                 <Table.Body>
                     {classList.map((classItem) => (
                         <Table.Row key={classItem.id}>
-                            <Table.RowHeaderCell>{classItem.name}</Table.RowHeaderCell>
+                            <Table.RowHeaderCell>
+                                <Link href={`/class/${classItem.id}`}>{classItem.name}</Link>
+                            </Table.RowHeaderCell>
                             <Table.Cell>{classItem.code}</Table.Cell>
                             <Table.Cell>
-                                <Link href={`/class/${classItem.id}`}>{t('viewClass')}</Link>
+                                <Flex gap="3">
+                                    <EditNameButton id={classItem.id} name={classItem.name} lang={lang} />
+                                    <DeleteClassButton id={classItem.id} name={classItem.name} lang={lang} />
+                                </Flex>
                             </Table.Cell>
                         </Table.Row>
                     ))}

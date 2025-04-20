@@ -22,6 +22,15 @@ export default {
     createdClassName: '名称',
     createdClassCode: '邀请码',
     createdClassOps: '操作',
+    deleteClass: '删除班级',
+    deleteClassConfirm: '确定要删除这个班级吗？此操作是永久性的，无法撤销。',
+
+    delete: '删除',
+    edit: '编辑',
+    join: '加入',
+    leave: '退出',
+    cancel: '取消',
+    confirm: '确认',
 
     featureList: [
         {

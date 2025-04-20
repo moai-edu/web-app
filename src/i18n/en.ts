@@ -22,6 +22,15 @@ export default {
     createdClassName: 'Name',
     createdClassCode: 'Invitation Code',
     createdClassOps: 'Operations',
+    deleteClass: 'Delete Class',
+    deleteClassConfirm: 'Are you sure you want to delete this class? This action is permanent and cannot be undone.',
+
+    delete: 'delete',
+    edit: 'edit',
+    join: 'join',
+    leave: 'leave',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
 
     featureList: [
         {

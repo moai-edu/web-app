@@ -59,4 +59,5 @@ export interface Class {
     userId: string
     name: string
     courseId: string
+    code: string
 }
