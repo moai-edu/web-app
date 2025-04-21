@@ -1,8 +1,11 @@
 import React from 'react'
 import { signIn, signOut } from '@/auth'
 import { Button } from '@radix-ui/themes'
+import { useServerLocale } from '@/hooks'
+import { I18nLangKeys } from '@/i18n'
 
-export function GetStarted() {
+export async function GetStarted({ ...props }: React.ComponentPropsWithRef<typeof Button>) {
+    const { t } = await useServerLocale(props.lang as I18nLangKeys)
     return (
         <form
             action={async () => {
@@ -10,14 +13,13 @@ export function GetStarted() {
                 await signIn()
             }}
         >
-            <Button>登录</Button>
+            <Button>{t('signin')}</Button>
         </form>
     )
 }
 
-export function SignOut({
-    ...props
-}: React.ComponentPropsWithRef<typeof Button>) {
+export async function SignOut({ ...props }: React.ComponentPropsWithRef<typeof Button>) {
+    const { t } = await useServerLocale(props.lang as I18nLangKeys)
     return (
         <form
             action={async () => {
@@ -26,7 +28,7 @@ export function SignOut({
             }}
             className="w-full"
         >
-            <Button {...props}>注销</Button>
+            <Button {...props}>{t('signout')}</Button>
         </form>
     )
 }

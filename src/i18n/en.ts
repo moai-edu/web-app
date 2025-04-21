@@ -25,6 +25,11 @@ export default {
     deleteClass: 'Delete Class',
     deleteClassConfirm: 'Are you sure you want to delete this class? This action is permanent and cannot be undone.',
 
+    signout: 'Sign out',
+    signin: 'Sign in',
+    enter: 'Enter',
+    name: 'Name',
+    email: 'Email',
     delete: 'delete',
     edit: 'edit',
     join: 'join',

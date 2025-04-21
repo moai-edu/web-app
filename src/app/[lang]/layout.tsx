@@ -51,7 +51,7 @@ const CustomNavbar = async ({ lang }: I18nLangAsyncProps) => {
     return (
         <Navbar logo={<span>{t('systemTitle')}</span>} logoLink={`/${lang}`} projectLink={repo}>
             <>
-                <UserButton session={session} />
+                <UserButton session={session} lang={lang} />
                 <LocaleToggle className="max-md:hidden" />
                 <ThemeToggle className="max-md:hidden" />
             </>

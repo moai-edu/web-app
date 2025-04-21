@@ -10,7 +10,7 @@ export default {
     lastUpdated: '最后更新于:',
 
     getStarted: '开始使用',
-    userHomePage: '用户主页',
+    userHomePage: '人个主页',
 
     myProfile: '我的资料',
     myCourse: '我的课程',
@@ -25,6 +25,11 @@ export default {
     deleteClass: '删除班级',
     deleteClassConfirm: '确定要删除这个班级吗？此操作是永久性的，无法撤销。',
 
+    signout: '退出登录',
+    signin: '登录',
+    enter: '进入',
+    name: '姓名',
+    email: '邮箱',
     delete: '删除',
     edit: '编辑',
     join: '加入',
