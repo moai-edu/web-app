@@ -37,7 +37,7 @@ TF_USE_VARS:=-var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_
 .PHONY: localstack-tf-all localstack-tf-init localstack-tf-plan localstack-tf-apply
 localstack-tf-setup:
 	@echo "clean up localstack"
-	-rm -rf .venv terraform.tfstate* .terraform.lock.hcl localstack_override*.tf
+	-rm -rf .venv terraform.tfstate* .terraform.lock.hcl localstack_providers_*.tf
 	@echo "create and init python virtual environment"
 	python3 -m venv .venv && \
 		. .venv/bin/activate && \
