@@ -33,6 +33,7 @@ const result: NextAuthResult = NextAuth({
     providers: [Cognito(cognitoOptions)],
     callbacks: {
         signIn({ account, profile }) {
+            // console.log('signIn', account, profile)
             if (account!.provider === PROVIDER) {
                 // console.log(profile!.email_verified)
                 return profile!.email_verified! // 仅允许已验证邮箱用户登录
@@ -40,6 +41,7 @@ const result: NextAuthResult = NextAuth({
             return false
         },
         authorized({ request, auth }) {
+            // console.log('authorized', request, auth)
             try {
                 const { pathname } = request.nextUrl
                 console.log(pathname)
@@ -50,10 +52,12 @@ const result: NextAuthResult = NextAuth({
             }
         },
         jwt({ token, trigger, session }) {
+            // console.log('jwt', token, trigger, session)
             if (trigger === 'update') token.name = session.user.email
             return token
         },
         async session({ session }) {
+            // console.log('session', session)
             // 这个函数在进入每个调用getSession或useSession时都会执行
             return session
         }
@@ -66,7 +70,8 @@ const result: NextAuthResult = NextAuth({
     },
     adapter: DynamoDBAdapter(dynamoClient, {
         tableName: DB_TABLE_NAME
-    }) as unknown as Adapter
+    }) as unknown as Adapter,
+    debug: false
 })
 
 export const { handlers, signOut, auth } = result
