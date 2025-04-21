@@ -49,7 +49,7 @@ localstack-tf-setup:
 .PHONY: localstack-tf-teardown
 localstack-tf-teardown:
 	. .venv/bin/activate && tflocal destroy $(TF_USE_VARS)
-	rm -rf .terraform terraform.tfstate* .terraform.lock.hcl
+	rm -rf terraform.tfstate* .terraform.lock.hcl
 
 .PHONY: localstack-show
 localstack-show:

@@ -23,11 +23,7 @@ const cognitoOptions =
         : {
               clientId: Resource.WebClient.id,
               clientSecret: Resource.WebClient.secret,
-              issuer:
-                  'https://cognito-idp.' +
-                  process.env.NEXT_PUBLIC_REGION +
-                  '.amazonaws.com/' +
-                  Resource.UserPool.id
+              issuer: 'https://cognito-idp.' + process.env.NEXT_PUBLIC_REGION + '.amazonaws.com/' + Resource.UserPool.id
           }
 
 const result: NextAuthResult = NextAuth({
@@ -38,6 +34,7 @@ const result: NextAuthResult = NextAuth({
     callbacks: {
         signIn({ account, profile }) {
             if (account!.provider === PROVIDER) {
+                // console.log(profile!.email_verified)
                 return profile!.email_verified! // 仅允许已验证邮箱用户登录
             }
             return false
@@ -86,10 +83,7 @@ export async function middleware(req: Request) {
         // API 路径处理：返回 401 未授权响应
         const session = await auth()
         if (!session) {
-            return NextResponse.json(
-                { message: 'Middleware: Unauthorized access. Please log in.' },
-                { status: 401 }
-            )
+            return NextResponse.json({ message: 'Middleware: Unauthorized access. Please log in.' }, { status: 401 })
         }
         return NextResponse.next()
     }
@@ -98,10 +92,7 @@ export async function middleware(req: Request) {
         // Page 路径处理：重定向到登录页面
         const session = await auth()
         if (!session) {
-            const loginUrl = new URL(
-                `/api/auth/signin?callbackUrl=${req.url}`,
-                req.url
-            )
+            const loginUrl = new URL(`/api/auth/signin?callbackUrl=${req.url}`, req.url)
 
             return NextResponse.redirect(loginUrl.toString())
         }
