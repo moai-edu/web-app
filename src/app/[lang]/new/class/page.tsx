@@ -14,6 +14,9 @@ export default async function Page() {
         return <div>No courses found</div>
     }
 
+    function onCancel() {
+        window.history.back()
+    }
     return (
         <Container size="2" p="4">
             <CreateClassForm courseList={courseList} />

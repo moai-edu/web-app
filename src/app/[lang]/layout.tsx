@@ -21,6 +21,7 @@ import { Link as RadixLink, Theme } from '@radix-ui/themes'
 import UserButton from '@/components/layouts/header/userButton'
 
 import './styles/index.css'
+import { SessionProvider } from 'next-auth/react'
 
 const repo = 'https://github.com/sanyedu/portal-site'
 
@@ -94,52 +95,54 @@ export default async function RootLayout({ children, params }: Props) {
                 <link rel="canonical" href={repo} />
             </Head>
             <body>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    storageKey="starter-theme-provider"
-                    disableTransitionOnChange
-                >
-                    <Theme>
-                        <AntdRegistry>
-                            <ConfigProvider
-                                theme={{
-                                    cssVar: true,
-                                    token: {
-                                        colorBgElevated: 'var(--color-background)',
-                                        colorText: 'var(--color-foreground)',
-                                        colorTextSecondary: 'var(--color-secondary-foreground)',
-                                        colorTextDescription: 'var(--color-secondary-foreground)'
-                                    }
-                                }}
-                            >
-                                <Layout
-                                    banner={<CustomBanner lang={lang} />}
-                                    navbar={<CustomNavbar lang={lang} />}
-                                    lastUpdated={<LastUpdated>{t('lastUpdated')}</LastUpdated>}
-                                    editLink={null}
-                                    docsRepositoryBase={repo}
-                                    footer={
-                                        <Footer className="bg-background py-5!">
-                                            <CustomFooter />
-                                        </Footer>
-                                    }
-                                    search={<Search />}
-                                    i18n={[
-                                        { locale: 'en', name: 'English' },
-                                        { locale: 'zh', name: '简体中文' }
-                                    ]}
-                                    pageMap={pageMap}
-                                    feedback={{ content: '' }}
-                                    // ... Your additional layout options
+                <SessionProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        storageKey="starter-theme-provider"
+                        disableTransitionOnChange
+                    >
+                        <Theme>
+                            <AntdRegistry>
+                                <ConfigProvider
+                                    theme={{
+                                        cssVar: true,
+                                        token: {
+                                            colorBgElevated: 'var(--color-background)',
+                                            colorText: 'var(--color-foreground)',
+                                            colorTextSecondary: 'var(--color-secondary-foreground)',
+                                            colorTextDescription: 'var(--color-secondary-foreground)'
+                                        }
+                                    }}
                                 >
-                                    {children}
-                                </Layout>
-                            </ConfigProvider>
-                        </AntdRegistry>
-                    </Theme>
-                </ThemeProvider>
+                                    <Layout
+                                        banner={<CustomBanner lang={lang} />}
+                                        navbar={<CustomNavbar lang={lang} />}
+                                        lastUpdated={<LastUpdated>{t('lastUpdated')}</LastUpdated>}
+                                        editLink={null}
+                                        docsRepositoryBase={repo}
+                                        footer={
+                                            <Footer className="bg-background py-5!">
+                                                <CustomFooter />
+                                            </Footer>
+                                        }
+                                        search={<Search />}
+                                        i18n={[
+                                            { locale: 'en', name: 'English' },
+                                            { locale: 'zh', name: '简体中文' }
+                                        ]}
+                                        pageMap={pageMap}
+                                        feedback={{ content: '' }}
+                                        // ... Your additional layout options
+                                    >
+                                        {children}
+                                    </Layout>
+                                </ConfigProvider>
+                            </AntdRegistry>
+                        </Theme>
+                    </ThemeProvider>
+                </SessionProvider>
             </body>
         </html>
     )

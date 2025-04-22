@@ -23,9 +23,9 @@ export default async function DeleteClassButton({ id, name, lang }: Props) {
             </AlertDialog.Trigger>
             <AlertDialog.Content maxWidth="500px">
                 <AlertDialog.Title>
-                    {t('deleteClass')}: <Em>{name}</Em>
+                    {t('delete')}: <Em>{name}</Em>
                 </AlertDialog.Title>
-                <AlertDialog.Description size="2">{t('deleteClassConfirm')}</AlertDialog.Description>
+                <AlertDialog.Description size="2">{t('deleteConfirm')}</AlertDialog.Description>
                 <Flex gap="3" justify="end">
                     <AlertDialog.Cancel>
                         <Button variant="soft" color="gray">
@@ -40,7 +40,7 @@ export default async function DeleteClassButton({ id, name, lang }: Props) {
                                 const savedClass = await domain.delete(id)
                                 if (savedClass) {
                                     console.log('deleted class', savedClass)
-                                    revalidatePath('/home/class-created')
+                                    revalidatePath('/home/created-class')
                                 } else {
                                     console.log('failed to delete class', id)
                                 }

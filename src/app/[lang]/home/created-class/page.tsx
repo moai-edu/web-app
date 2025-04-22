@@ -27,7 +27,7 @@ export default async function Page({ params }: Props) {
             <Flex justify="end" width="100%" pr="4">
                 <Button asChild>
                     <Link href="/new/class">
-                        <PlusIcon /> {t('createClass')}
+                        <PlusIcon /> {t('routeHome.routeCreatedClass.create')}
                     </Link>
                 </Button>
             </Flex>
@@ -35,9 +35,9 @@ export default async function Page({ params }: Props) {
             <Table.Root>
                 <Table.Header>
                     <Table.Row>
-                        <Table.ColumnHeaderCell>{t('createdClassName')}</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>{t('createdClassCode')}</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>{t('createdClassOps')}</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>{t('name')}</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>{t('invitationCode')}</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>{t('ops')}</Table.ColumnHeaderCell>
                     </Table.Row>
                 </Table.Header>
 

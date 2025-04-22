@@ -1,3 +1,5 @@
+import { zh } from './route/index_zh'
+
 export default {
     systemTitle: '🚀 MoAI',
     banner: {
@@ -12,23 +14,20 @@ export default {
     getStarted: '开始使用',
     userHomePage: '人个主页',
 
-    myProfile: '我的资料',
-    myCourse: '我的课程',
-    myCreatedClass: '创建的班级',
-    myJoinedClass: '加入的班级',
+    course: '课程',
+    class: '班级',
+    student: '学生',
+    teacher: '教师',
+    name: '名称',
+    invitationCode: '邀请码',
+    ops: '操作',
 
-    // 我创建的班级
-    createClass: '创建班级',
-    createdClassName: '名称',
-    createdClassCode: '邀请码',
-    createdClassOps: '操作',
-    deleteClass: '删除班级',
-    deleteClassConfirm: '确定要删除这个班级吗？此操作是永久性的，无法撤销。',
-
+    id: '标识',
+    slug: 'URL标识',
     signout: '退出登录',
     signin: '登录',
     enter: '进入',
-    name: '姓名',
+    fullname: '姓名',
     email: '邮箱',
     delete: '删除',
     edit: '编辑',
@@ -36,6 +35,20 @@ export default {
     leave: '退出',
     cancel: '取消',
     confirm: '确认',
+    save: '保存',
+    submitting: '提交中...',
+    submit: '提交',
+    occupied: '已被占用',
+
+    modifyProfile: '修改账户信息',
+    deleteConfirm: '确定要删除吗？此操作是永久性的，无法撤销。',
+
+    minChar: '至少需要{{min}}个字符',
+    maxChar: '最多允许{{max}}个字符',
+    reservedValidation: '该名称已被保留，请更换名称',
+    slugValidation: '只允许使用小写字母、数字、下划线和短横线',
+
+    ...zh,
 
     featureList: [
         {

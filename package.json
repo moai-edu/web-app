@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "next dev --turbopack",
+        "dev": "concurrently \"make localstack\" \"next dev --turbopack\"",
         "build": "next build",
         "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
         "start": "next start",
@@ -73,6 +73,7 @@
         "@types/react": "^19.1.0",
         "@types/react-dom": "^19.1.1",
         "@vitejs/plugin-react": "^4.3.4",
+        "concurrently": "^9.1.2",
         "dotenv": "^16.4.7",
         "eslint": "^9.24.0",
         "eslint-config-next": "15.2.1",

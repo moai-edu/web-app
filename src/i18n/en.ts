@@ -1,3 +1,5 @@
+import { en } from './route/index_en'
+
 export default {
     systemTitle: '🚀 MoAI',
     banner: {
@@ -12,23 +14,20 @@ export default {
     getStarted: 'Get Started',
     userHomePage: 'Home page',
 
-    myProfile: 'Profile',
-    myCourse: 'Courses',
-    myCreatedClass: 'Created Classes',
-    myJoinedClass: 'Joined Classes',
+    course: 'Course',
+    class: 'Class',
+    student: 'Student',
+    teacher: 'Teacher',
+    name: 'Name',
+    invitationCode: 'Invitation Code',
+    ops: 'Operation',
 
-    // 我创建的班级
-    createClass: 'New Class',
-    createdClassName: 'Name',
-    createdClassCode: 'Invitation Code',
-    createdClassOps: 'Operations',
-    deleteClass: 'Delete Class',
-    deleteClassConfirm: 'Are you sure you want to delete this class? This action is permanent and cannot be undone.',
-
+    id: 'ID',
+    slug: 'URL Slug',
     signout: 'Sign out',
     signin: 'Sign in',
     enter: 'Enter',
-    name: 'Name',
+    fullname: 'Name',
     email: 'Email',
     delete: 'delete',
     edit: 'edit',
@@ -36,6 +35,20 @@ export default {
     leave: 'leave',
     cancel: 'Cancel',
     confirm: 'Confirm',
+    save: 'Save',
+    submitting: 'Submitting...',
+    submit: 'Submit',
+    occupied: 'it is occupied',
+
+    modifyProfile: 'Modify Profile',
+    deleteConfirm: 'Are you sure you want to delete this? This action is permanent and cannot be undone.',
+
+    minChar: 'at least {{min}} characters',
+    maxChar: 'at most {{max}} characters',
+    reservedValidation: 'This name is reserved',
+    slugValidation: 'only lowercase letters, numbers, underscores and hyphens are allowed',
+
+    ...en,
 
     featureList: [
         {

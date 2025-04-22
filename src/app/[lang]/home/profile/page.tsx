@@ -1,33 +1,56 @@
-'use client'
+import { Button, Container, DataList, Flex, Link } from '@radix-ui/themes'
+import { auth } from '@/auth'
+import { Pencil2Icon } from '@radix-ui/react-icons'
+import { I18nLangKeys } from '@/i18n'
+import { useServerLocale } from '@/hooks'
 
-import { Container } from '@radix-ui/themes'
-import { useState } from 'react'
-import ViewUserDataList from './view_user_data_list'
-import EditUserForm from './edit_user_form'
-import { useSession } from 'next-auth/react'
+interface Props {
+    params: Promise<{ lang: I18nLangKeys }>
+}
 
-export default function Page() {
-    const [isEditing, setIsEditing] = useState<boolean>(false)
-    const { data: session, status } = useSession()
-    const user = session?.user
+export default async function Page({ params }: Props) {
+    const { lang } = await params
+    const { t } = await useServerLocale(lang)
 
-    if (status === 'loading') {
-        // Show a loading state while session is being fetched
-        return <h1>Loading...</h1>
-    }
+    const session = await auth()
 
-    if (!session || !user) {
+    if (!session || !session.user) {
         // If there's no session, prompt user to log in
         return <h1>Please log in to access this page</h1>
     }
 
+    const user = session.user
     return (
         <Container size="2" p="4">
-            {isEditing ? (
-                <EditUserForm user={user!} onCancel={() => setIsEditing(false)} />
-            ) : (
-                <ViewUserDataList user={user!} onEditClick={() => setIsEditing(true)} />
-            )}
+            <Flex direction="column" gap="3">
+                <DataList.Root className="py-8">
+                    <DataList.Item>
+                        <DataList.Label minWidth="88px">{t('id')}</DataList.Label>
+                        <DataList.Value>{user.id}</DataList.Value>
+                    </DataList.Item>
+                    <DataList.Item>
+                        <DataList.Label minWidth="88px">{t('fullname')}</DataList.Label>
+                        <DataList.Value>{user.name}</DataList.Value>
+                    </DataList.Item>
+                    <DataList.Item>
+                        <DataList.Label minWidth="88px">{t('email')}</DataList.Label>
+                        <DataList.Value>
+                            <Link href={`mailto:${user.email}`}>{user.email}</Link>
+                        </DataList.Value>
+                    </DataList.Item>
+                    <DataList.Item>
+                        <DataList.Label minWidth="88px">{t('slug')}</DataList.Label>
+                        <DataList.Value>{user.slug}</DataList.Value>
+                    </DataList.Item>
+                </DataList.Root>
+                <Flex justify="start">
+                    <Button asChild>
+                        <Link href="/edit/profile">
+                            <Pencil2Icon /> {t('modifyProfile')}
+                        </Link>
+                    </Button>
+                </Flex>
+            </Flex>
         </Container>
     )
 }

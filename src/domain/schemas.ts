@@ -1,16 +1,25 @@
+import { TFunction } from '@/hooks'
 import { z } from 'zod'
 
 const RESERVED_SLUGS = ['public', 'admin']
 
-export const nameZodSchema = z.string().min(2, '姓名至少需要2个字符').max(50, '姓名最多50个字符')
-export const slugZodSchema = z
-    .string()
-    .min(3, 'Slug至少需要3个字符')
-    .max(30)
-    .regex(/^[a-z0-9-]+$/, 'Slug只能包含小写字母、数字和连字符')
-    .refine((slug) => !RESERVED_SLUGS.includes(slug), { message: '该Slug是保留关键词，请选择其他Slug' })
+export const nameZodSchema = (t: TFunction) => {
+    return z
+        .string()
+        .min(2, t('minChar', { min: 2 }))
+        .max(50, t('maxChar', { max: 2 }))
+}
+export const slugZodSchema = (t: TFunction) => {
+    return z
+        .string()
+        .min(3, t('minChar', { min: 3 }))
+        .max(30, t('maxChar', { max: 30 }))
+        .regex(/^[a-z0-9-]+$/, t('slugValidation'))
+        .refine((slug) => !RESERVED_SLUGS.includes(slug), { message: t('reservedValidation') })
+}
 
-export const updateUserClientSchema = z.object({
-    name: nameZodSchema,
-    slug: slugZodSchema
-})
+export const updateUserSchema = (t: TFunction) =>
+    z.object({
+        name: nameZodSchema(t),
+        slug: slugZodSchema(t)
+    })
