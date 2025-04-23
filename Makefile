@@ -34,8 +34,8 @@ localstack:
 	localstack start
 
 TF_USE_VARS:=-var 'bucket_name=$(DATA_BUCKET_NAME)' -var 'table_name=$(DB_TABLE_NAME)'
-.PHONY: localstack-tf-all localstack-tf-init localstack-tf-plan localstack-tf-apply
-localstack-tf-setup:
+.PHONY: localstack-tf-all localstack-tf-init localstack-tf-setup
+localstack-tf-init:
 	@echo "clean up localstack"
 	-rm -rf .venv terraform.tfstate* .terraform.lock.hcl localstack_providers_*.tf
 	@echo "create and init python virtual environment"
@@ -43,8 +43,10 @@ localstack-tf-setup:
 		. .venv/bin/activate && \
 		pip install -r requirements.txt
 	@echo "setup localstack"
-	. .venv/bin/activate && tflocal init && \
-		tflocal plan $(TF_USE_VARS) && \
+	. .venv/bin/activate && tflocal init
+localstack-tf-setup:
+	@echo "setup localstack"
+	. .venv/bin/activate && tflocal plan $(TF_USE_VARS) && \
 		tflocal apply -auto-approve $(TF_USE_VARS)
 .PHONY: localstack-tf-teardown
 localstack-tf-teardown:
