@@ -3,7 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "concurrently \"make localstack\" \"next dev --turbopack\"",
+        "check-env": "node script/check-env.js",
+        "dev": "npm run check-env && concurrently \"make localstack\" \"next dev --turbopack\"",
         "build": "next build",
         "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
         "start": "next start",
