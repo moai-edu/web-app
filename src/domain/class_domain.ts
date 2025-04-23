@@ -23,4 +23,12 @@ export class ClassDomain {
     async delete(id: string) {
         return await classDao.delete(id)
     }
+
+    async updateName(id: string, name: string): Promise<Class> {
+        const _class = await classDao.getById(id)
+        if (!_class) {
+            throw new Error(`class id: ${id} not exist`)
+        }
+        return await classDao.update(id, name)
+    }
 }

@@ -34,6 +34,7 @@ export function withAuth(handler: FormActionHandler) {
                 }, {})
                 return { errors, status: 400 }
             }
+            console.log(error)
             return {
                 errors: {},
                 status: 500

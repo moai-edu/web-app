@@ -14,6 +14,8 @@ export default {
     getStarted: 'Get Started',
     userHomePage: 'Home page',
 
+    error: 'Error',
+
     course: 'Course',
     class: 'Class',
     student: 'Student',

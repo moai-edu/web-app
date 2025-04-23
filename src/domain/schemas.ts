@@ -23,3 +23,9 @@ export const updateUserSchema = (t: TFunction) =>
         name: nameZodSchema(t),
         slug: slugZodSchema(t)
     })
+
+export const createClassSchema = (t: TFunction) =>
+    z.object({
+        name: nameZodSchema(t),
+        courseId: slugZodSchema(t)
+    })

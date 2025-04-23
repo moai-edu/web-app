@@ -104,7 +104,7 @@ export default function Page() {
         ) // 确保字段不为空
     }
 
-    // 合并客户端和服务器端错误（服务器端错误优先）
+    // 合并客户端和服务器端错误
     const getFieldErrors = (field: keyof FormErrors) => {
         const serverErrors = state.errors[field] || []
         const clientSideErrors = clientErrors[field] || []

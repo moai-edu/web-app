@@ -14,6 +14,8 @@ export default {
     getStarted: '开始使用',
     userHomePage: '人个主页',
 
+    error: '出错了',
+
     course: '课程',
     class: '班级',
     student: '学生',

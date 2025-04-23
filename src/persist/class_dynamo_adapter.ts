@@ -17,8 +17,8 @@ export function ClassDynamoAdapter(client: DynamoDBDocument, tableName: string) 
         async getById(id: string): Promise<Class | null> {
             return dao.getById<Class>(id)
         },
-        async update(id: string, name: string, courseId: string): Promise<Class> {
-            return dao.update<Class>(id, { name, courseId })
+        async update(id: string, name: string): Promise<Class> {
+            return dao.update<Class>(id, { name })
         },
         async getListByUserId(userId: string): Promise<Class[]> {
             return dao.getListByGSI1<Class>(userId)
