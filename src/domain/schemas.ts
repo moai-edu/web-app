@@ -18,6 +18,10 @@ export const slugZodSchema = (t: TFunction) => {
         .refine((slug) => !RESERVED_SLUGS.includes(slug), { message: t('reservedValidation') })
 }
 
+export const uuidZodSchema = (t: TFunction) => {
+    return z.string().uuid({ message: t('uuidValidation') })
+}
+
 export const updateUserSchema = (t: TFunction) =>
     z.object({
         name: nameZodSchema(t),

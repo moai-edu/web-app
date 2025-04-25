@@ -44,11 +44,13 @@ export default {
 
     modifyProfile: 'Modify Profile',
     deleteConfirm: 'Are you sure you want to delete this? This action is permanent and cannot be undone.',
+    leaveConfirm: 'Are you sure you want to leave this? This action is permanent and cannot be undone.',
 
     minChar: 'at least {{min}} characters',
     maxChar: 'at most {{max}} characters',
     reservedValidation: 'This name is reserved',
     slugValidation: 'only lowercase letters, numbers, underscores and hyphens are allowed',
+    uuidValidation: 'please enter a valid UUID',
 
     ...en,
 

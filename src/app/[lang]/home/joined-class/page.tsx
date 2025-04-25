@@ -1,9 +1,10 @@
 import { auth } from '@/auth'
-import { ClassDomain } from '@/domain/class_domain'
 import { useServerLocale } from '@/hooks'
 import { I18nLangKeys } from '@/i18n'
-import { PlusIcon } from '@radix-ui/react-icons'
-import { Button, Dialog, Flex, Link, Table, Text, TextField } from '@radix-ui/themes'
+import { Flex, Link, Table } from '@radix-ui/themes'
+import JoinClassDlg from './join_class_dlg'
+import { UserJoinClassDomain } from '@/domain/joined_class_domain'
+import LeaveClassButton from './leave_class_button'
 
 interface Props {
     params: Promise<{ lang: I18nLangKeys }>
@@ -17,46 +18,14 @@ export default async function Page({ params }: Props) {
     if (!session || !session.user || !session.user.id) {
         return <div>Not authenticated</div>
     }
-    const domain = new ClassDomain()
+    const domain = new UserJoinClassDomain()
     const classList = await domain.getListByUserId(session.user.id)
+    const idUser = session.user.id
 
     return (
         <>
             <Flex justify="end" width="100%" pr="4">
-                <Dialog.Root>
-                    <Dialog.Trigger>
-                        <Button>
-                            <PlusIcon /> {t('routeHome.routeJoinedClass.join')}
-                        </Button>
-                    </Dialog.Trigger>
-
-                    <Dialog.Content maxWidth="450px">
-                        <Dialog.Title>Edit profile</Dialog.Title>
-                        <Dialog.Description size="2" mb="4">
-                            Make changes to your profile.
-                        </Dialog.Description>
-
-                        <Flex direction="column" gap="3">
-                            <label>
-                                <Text as="div" size="2" mb="1" weight="bold">
-                                    Name
-                                </Text>
-                                <TextField.Root defaultValue="Freja Johnsen" placeholder="Enter your full name" />
-                            </label>
-                        </Flex>
-
-                        <Flex gap="3" mt="4" justify="end">
-                            <Dialog.Close>
-                                <Button variant="soft" color="gray">
-                                    Cancel
-                                </Button>
-                            </Dialog.Close>
-                            <Dialog.Close>
-                                <Button>Save</Button>
-                            </Dialog.Close>
-                        </Flex>
-                    </Dialog.Content>
-                </Dialog.Root>
+                <JoinClassDlg />
             </Flex>
 
             <Table.Root>
@@ -74,7 +43,12 @@ export default async function Page({ params }: Props) {
                                 <Link href={`/class/${classItem.id}`}>{classItem.name}</Link>
                             </Table.RowHeaderCell>
                             <Table.Cell>
-                                <Flex gap="3">JOIN/LEAVE</Flex>
+                                <LeaveClassButton
+                                    idUser={idUser}
+                                    idClass={classItem.id}
+                                    name={classItem.name}
+                                    lang={lang}
+                                />
                             </Table.Cell>
                         </Table.Row>
                     ))}

@@ -9,6 +9,7 @@ export const routeHome = {
         create: '创建班级'
     },
     routeJoinedClass: {
-        join: '加入班级'
+        join: '加入班级',
+        inputClassCode: '请输入班级邀请码'
     }
 }

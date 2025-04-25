@@ -44,11 +44,13 @@ export default {
 
     modifyProfile: '修改账户信息',
     deleteConfirm: '确定要删除吗？此操作是永久性的，无法撤销。',
+    leaveConfirm: '确定要退出吗？此操作将会从班级中移除您，您将无法再访问该班级。',
 
     minChar: '至少需要{{min}}个字符',
     maxChar: '最多允许{{max}}个字符',
     reservedValidation: '该名称已被保留，请更换名称',
     slugValidation: '只允许使用小写字母、数字、下划线和短横线',
+    uuidValidation: '请输入有效的 UUID',
 
     ...zh,
 

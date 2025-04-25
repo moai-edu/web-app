@@ -3,7 +3,7 @@ import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import Dao from './dao'
 
 export interface ClassDao {
-    create(_class: Class): Promise<Class | null>
+    create(_class: Class): Promise<Class>
     getById(id: string): Promise<Class | null>
     getByCode(code: string): Promise<Class | null>
     update(id: string, name: string): Promise<Class>

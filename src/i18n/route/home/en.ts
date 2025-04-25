@@ -9,6 +9,7 @@ export const routeHome = {
         create: 'New Class'
     },
     routeJoinedClass: {
-        join: 'Join Class'
+        join: 'Join Class',
+        inputClassCode: 'Enter Class Invitation Code'
     }
 }
