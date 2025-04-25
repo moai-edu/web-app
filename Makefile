@@ -41,6 +41,8 @@ localstack-tf-init:
 	@echo "create and init python virtual environment"
 	python3 -m venv .venv && \
 		. .venv/bin/activate && \
+		pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/ && \
+		pip config set install.trusted-host mirrors.aliyun.com && \
 		pip install -r requirements.txt
 	@echo "init localstack"
 	. .venv/bin/activate && tflocal init
@@ -97,3 +99,11 @@ sync-remote-s3:
 	@echo because in the begining of this Makefile, .env.local is pointing aws environment variables to localstack.
 	@echo aws s3 sync data/docs s3://$(REMOTE_DATA_BUCKET_NAME)/docs --delete
 	@echo aws s3 ls s3://$(REMOTE_DATA_BUCKET_NAME)/docs/
+
+.PHONY: clean-local-s3 clean-remote-s3
+clean-local-s3:
+	$(awslocal) s3 rm --recursive s3://$(DATA_BUCKET_NAME)/
+clean-remote-s3:
+	@echo This must be done manually.
+	@echo because in the begining of this Makefile, .env.local is pointing aws environment variables to localstack.
+	@echo aws s3 rm --recursive s3://$(REMOTE_DATA_BUCKET_NAME)/

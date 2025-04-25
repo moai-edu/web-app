@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "check-env": "node script/check-env.js",
-        "dev": "npm run check-env && concurrently \"make localstack\" \"next dev --turbopack\"",
+        "dev": "npm run check-env && concurrently \"make localstack\" \"next dev --turbopack\" \"sleep 15 && cd data/docs/xin/course/dev && make local\"",
         "build": "next build",
         "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
         "start": "next start",

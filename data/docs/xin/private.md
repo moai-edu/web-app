@@ -1,3 +1,0 @@
-# Sample Document
-
-public document.
