@@ -161,7 +161,7 @@ sudo visudo
 # 输入管理员密码，以修改配置文件
 ```
 
-找到`%sudo    ALL=(ALL:ALL) ALL`这一行，将其修改为：`%sudo    ALL=(ALL) NOPASSWD:ALL`
+找到`%sudo ALL=(ALL:ALL) ALL`这一行，将其修改为：`%sudo ALL=(ALL) NOPASSWD:ALL`
 
 ![](./visudo.png)
 
@@ -256,8 +256,7 @@ tmux 基本操作，熟悉基本的窗口操作就够用了：
 
 ## 让 wsl 不要继承 Windows 的环境变量
 
-默认的 wsl 版本会继承 Windows 的环境变量，导致 wsl 无法正常工作。
-输入以下命令：
+默认的 wsl 版本会继承 Windows 的环境变量，导致 wsl 无法正常工作。输入以下命令：
 
 ```bash
 echo $PATH
@@ -382,7 +381,8 @@ sudo usermod -aG docker $USER
 
 应用修改以后，要重启 docker 服务。
 
-最后，welcome-to-docker 应用运行成功后，可以通过`docker ps`和`docker stop`命令可以关闭上面的 welcome-to-docker 容器应用。
+最后，welcome-to-docker 应用运行成功后，可以通过`docker ps`和`docker stop`命令可以关闭上面的 welcome-to-docker 容器应用
+。
 
 ![](./docker-stop.png)
 
@@ -396,7 +396,8 @@ sudo usermod -aG docker $USER
 
 ![](./locate-vscode-2.png)
 
-Windows 下的路径`C:\`，在 wsl 中用`/mnt/c`表示，所以可以用以下命令创建指向 Windows 中 vscode 和 cursor 应用程序的软链接：
+Windows 下的路径`C:\`，在 wsl 中用`/mnt/c`表示，所以可以用以下命令创建指向 Windows 中 vscode 和 cursor 应用程序的软链接
+：
 
 找到程序的 windows 路径以后，就可以使用`wslpath`命令将 windows 路径转换为 wsl 路径：
 
@@ -507,7 +508,8 @@ next.js 的应用，在某些系统上如果使用 next dev --turbopack 启动�
 Module not found: Can't resolve '@vercel/turbopack-next/internal/font/google/font'
 ```
 
-这个错误是因为在使用 next dev --turbopack 时，Turbopack 对 @next/font（或 @vercel/turbopack-next 内部字体处理）的支持尚未完全稳定或存在路径解析问题。以下是解决方案：
+这个错误是因为在使用 next dev --turbopack 时，Turbopack 对 @next/font（或 @vercel/turbopack-next 内部字体处理）的支持尚
+未完全稳定或存在路径解析问题。以下是解决方案：
 
 编辑项目目录下的`package.json`文件，建议在开发阶段暂时不使用 --turbopack，直到官方提供更稳定的支持。
 
@@ -624,12 +626,9 @@ localstack start
 
 登录 localstack 控制台，获取 token，并设置环境变量。
 
-只有当检测到下面这个环境变量才会使用 pro 服务：
-export LOCALSTACK_AUTH_TOKEN="\***\* put your token here \*\***"
+只有当检测到下面这个环境变量才会使用 pro 服务： export LOCALSTACK_AUTH_TOKEN="\***\* put your token here \*\***"
 
-只有当下面这个环境变量设置为 1 时，才会保存数据：
-export PERSISTENCE=1
-</Callout>
+只有当下面这个环境变量设置为 1 时，才会保存数据： export PERSISTENCE=1 </Callout>
 
 配置 awslocal 命令，使用 aws-cli 访问本地 localstack：
 
@@ -705,12 +704,11 @@ sudo apt install make python3-venv
 
 将`.env.local`文件放入项目源代码的根目录中。
 
-由于这个配置文件中包含密钥信息，所以没有放在代码仓库中。
-</Callout>
+由于这个配置文件中包含密钥信息，所以没有放在代码仓库中。 </Callout>
 
 运行项目中的 Makefile 脚本，在 localstack 环境中创建 DynamoDB 表和 s3 bucket：
 
-先开一个终端窗口，启动 localstack 服务：
+先开一个终端窗口，启动 localstack 服务（确保 Docker 服务已经启动）：
 
 ```bash
 make localstack
@@ -771,7 +769,8 @@ Linux 的 Shell 种类众多，常见的有：
 -   ……
 -   Z Shell（/usr/bin/zsh）
 
-本教程关注的是 Bash，也就是 Bourne Again Shell，由于易用和免费，Bash 在日常工作中被广泛使用。同时，Bash 也是大多数 Linux 系统默认的 Shell。
+本教程关注的是 Bash，也就是 Bourne Again Shell，由于易用和免费，Bash 在日常工作中被广泛使用。同时，Bash 也是大多数 Linux
+系统默认的 Shell。
 
 在一般情况下，人们并不区分 Bourne Shell 和 Bourne Again Shell，所以，像 #!/bin/sh，它同样也可以改为 #!/bin/bash。
 
@@ -779,7 +778,8 @@ Linux 的 Shell 种类众多，常见的有：
 
 ## 第一个 shell 脚本
 
-打开文本编辑器(可以使用 vi/vim 命令来创建文件)，新建一个文件 test.sh，扩展名为 sh（sh 代表 shell），扩展名并不影响脚本执行，见名知意就好，如果你用 php 写 shell 脚本，扩展名就用 php 好了。
+打开文本编辑器(可以使用 vi/vim 命令来创建文件)，新建一个文件 test.sh，扩展名为 sh（sh 代表 shell），扩展名并不影响脚本执
+行，见名知意就好，如果你用 php 写 shell 脚本，扩展名就用 php 好了。
 
 输入一些代码，第一行一般是这样：
 
@@ -803,7 +803,9 @@ chmod +x ./test.sh  #使脚本具有执行权限
 ./test.sh  #执行脚本
 ```
 
-注意，一定要写成 ./test.sh，而不是 test.sh，运行其它二进制的程序也一样，直接写 test.sh，linux 系统会去 PATH 里寻找有没有叫 test.sh 的，而只有 /bin, /sbin, /usr/bin，/usr/sbin 等在 PATH 里，你的当前目录通常不在 PATH 里，所以写成 test.sh 是会找不到命令的，要用 ./test.sh 告诉系统说，就在当前目录找。
+注意，一定要写成 ./test.sh，而不是 test.sh，运行其它二进制的程序也一样，直接写 test.sh，linux 系统会去 PATH 里寻找有没有
+叫 test.sh 的，而只有 /bin, /sbin, /usr/bin，/usr/sbin 等在 PATH 里，你的当前目录通常不在 PATH 里，所以写成 test.sh 是会
+找不到命令的，要用 ./test.sh 告诉系统说，就在当前目录找。
 
 2、作为解释器参数
 
@@ -826,15 +828,14 @@ zsh test.sh
 
 注意，变量名和等号之间不能有空格，这可能和你熟悉的所有编程语言都不一样。同时，变量名的命名须遵循如下规则：
 
-只包含字母、数字和下划线： 变量名可以包含字母（大小写敏感）、数字和下划线，不能包含其他特殊字符。
-不能以数字开头： 变量名不能以数字开头，但可以包含数字。
+只包含字母、数字和下划线： 变量名可以包含字母（大小写敏感）、数字和下划线，不能包含其他特殊字符。不能以数字开头： 变量名
+不能以数字开头，但可以包含数字。
 
 避免使用 Shell 关键字： 不要使用 Shell 的关键字（例如 if、then、else、fi、for、while 等）作为变量名，以免引起混淆。
 
-使用大写字母表示常量： 习惯上，常量的变量名通常使用大写字母，例如 `PI=3.14`
-避免使用特殊符号： 尽量避免在变量名中使用特殊符号，因为它们可能与 Shell 的语法产生冲突。
-避免使用空格： 变量名中不应该包含空格，因为空格通常用于分隔命令和参数。
-有效的 Shell 变量名示例如下：
+使用大写字母表示常量： 习惯上，常量的变量名通常使用大写字母，例如 `PI=3.14` 避免使用特殊符号： 尽量避免在变量名中使用特
+殊符号，因为它们可能与 Shell 的语法产生冲突。避免使用空格： 变量名中不应该包含空格，因为空格通常用于分隔命令和参数。有效
+的 Shell 变量名示例如下：
 
 ```bash
 RUNOOB="www.runoob.com"
@@ -877,8 +878,7 @@ for file in $(ls /etc)
 
 以上语句将 `/etc` 下目录的文件名循环出来。
 
-使用变量
-使用一个定义过的变量，只要在变量名前面加美元符号即可，如：
+使用变量使用一个定义过的变量，只要在变量名前面加美元符号即可，如：
 
 实例
 
@@ -898,7 +898,8 @@ for skill in Ada Coffe Action Java; do
 done
 ```
 
-如果不给 skill 变量加花括号，写成 `echo "I am good at $skillScript"`，解释器就会把`$skillScript` 当成一个变量（其值为空），代码执行结果就不是我们期望的样子了。
+如果不给 skill 变量加花括号，写成 `echo "I am good at $skillScript"`，解释器就会把`$skillScript` 当成一个变量（其值为空
+），代码执行结果就不是我们期望的样子了。
 
 推荐给所有变量加上花括号，这是个好的编程习惯。
 
@@ -915,8 +916,7 @@ echo $your_name
 
 这样写是合法的，但注意，第二次赋值的时候不能写`$your_name="alibaba"`，使用变量的时候才加美元符（$）。
 
-只读变量
-使用 `readonly` 命令可以将变量定义为只读变量，只读变量的值不能被改变。
+只读变量使用 `readonly` 命令可以将变量定义为只读变量，只读变量的值不能被改变。
 
 下面的例子尝试更改只读变量，结果报错：
 
@@ -934,8 +934,7 @@ myUrl="https://www.runoob.com"
 
 `/bin/sh: NAME: This variable is read only.`
 
-删除变量
-使用 unset 命令可以删除变量。语法：
+删除变量使用 unset 命令可以删除变量。语法：
 
 `unset variable_name`
 
@@ -953,8 +952,7 @@ echo $myUrl
 
 以上实例执行将没有任何输出。
 
-变量类型
-Shell 支持不同类型的变量，其中一些主要的类型包括：
+变量类型 Shell 支持不同类型的变量，其中一些主要的类型包括：
 
 字符串变量： 在 Shell 中，变量通常被视为字符串。
 
@@ -964,8 +962,7 @@ Shell 支持不同类型的变量，其中一些主要的类型包括：
 
 或者
 
-`my_string="Hello, World!"`
-整数变量： 在一些 Shell 中，你可以使用 declare 或 typeset 命令来声明整数变量。
+`my_string="Hello, World!"` 整数变量： 在一些 Shell 中，你可以使用 declare 或 typeset 命令来声明整数变量。
 
 这样的变量只包含整数值，例如：
 
@@ -999,10 +996,10 @@ associative_array["age"]=30
 
 Shell 字符串
 
-字符串是 shell 编程中最常用最有用的数据类型（除了数字和字符串，也没啥其它类型好用了），字符串可以用单引号，也可以用双引号，也可以不用引号。
+字符串是 shell 编程中最常用最有用的数据类型（除了数字和字符串，也没啥其它类型好用了），字符串可以用单引号，也可以用双引
+号，也可以不用引号。
 
-单引号
-`str='this is a string'`
+单引号 `str='this is a string'`
 
 单引号字符串的限制：
 
@@ -1073,8 +1070,7 @@ string="abcd"
 echo ${#string[0]} # 输出 4
 ```
 
-提取子字符串
-以下实例从字符串第 2 个字符开始截取 4 个字符：
+提取子字符串以下实例从字符串第 2 个字符开始截取 4 个字符：
 
 实例
 
@@ -1085,8 +1081,7 @@ echo ${string:1:4} # 输出 unoo
 
 注意：第一个字符的索引值为 0。
 
-查找子字符串
-查找字符 i 或 o 的位置(哪个字母先出现就计算哪个)：
+查找子字符串查找字符 i 或 o 的位置(哪个字母先出现就计算哪个)：
 
 实例
 
@@ -1097,19 +1092,15 @@ echo `expr index "$string" io` # 输出 4
 
 注意： 以上脚本中是反引号，而不是单引号，不要看错了哦。
 
-Shell 数组
-bash 支持一维数组（不支持多维数组），并且没有限定数组的大小。
+Shell 数组 bash 支持一维数组（不支持多维数组），并且没有限定数组的大小。
 
 类似于 C 语言，数组元素的下标由 0 开始编号。获取数组中的元素要利用下标，下标可以是整数或算术表达式，其值应大于或等于 0。
 
-定义数组
-在 Shell 中，用括号来表示数组，数组元素用"空格"符号分割开。定义数组的一般形式为：
+定义数组在 Shell 中，用括号来表示数组，数组元素用"空格"符号分割开。定义数组的一般形式为：
 
-数组名=(值 1 值 2 ... 值 n)
-例如：
+数组名=(值 1 值 2 ... 值 n) 例如：
 
-`array_name=(value0 value1 value2 value3)`
-或者
+`array_name=(value0 value1 value2 value3)` 或者
 
 ```bash
 array_name=(
@@ -1130,18 +1121,13 @@ array_name[n]=valuen
 
 可以不使用连续的下标，而且下标的范围没有限制。
 
-读取数组
-读取数组元素值的一般格式是：
+读取数组读取数组元素值的一般格式是：
 
-`${数组名[下标]}`
-例如：
+`${数组名[下标]}` 例如：
 
-`valuen=${array_name[n]}`
-使用 @ 符号可以获取数组中的所有元素，例如：
+`valuen=${array_name[n]}` 使用 @ 符号可以获取数组中的所有元素，例如：
 
-`echo ${array_name[@]}`
-获取数组的长度
-获取数组长度的方法与获取字符串长度的方法相同，例如：
+`echo ${array_name[@]}` 获取数组的长度获取数组长度的方法与获取字符串长度的方法相同，例如：
 
 实例
 
@@ -1181,10 +1167,10 @@ length=${#array_name[n]}
 
 如果在开发过程中，遇到大段的代码需要临时注释起来，过一会儿又取消注释，怎么办呢？
 
-每一行加个#符号太费力了，可以把这一段要注释的代码用一对花括号括起来，定义成一个函数，没有地方调用这个函数，这块代码就不会执行，达到了和注释一样的效果。
+每一行加个#符号太费力了，可以把这一段要注释的代码用一对花括号括起来，定义成一个函数，没有地方调用这个函数，这块代码就不
+会执行，达到了和注释一样的效果。
 
-多行注释
-使用 Here 文档
+多行注释使用 Here 文档
 
 多行注释还可以使用以下格式：
 
@@ -1196,8 +1182,8 @@ length=${#array_name[n]}
 EOF
 ```
 
-以上例子中，: 是一个空命令，用于执行后面的 Here 文档，`<<'EOF'` 表示开启 Here 文档，COMMENT 是 Here 文档的标识符，在这两个标识符之间的内容都会被视为注释，不会被执行。
-EOF 也可以使用其他符号:
+以上例子中，: 是一个空命令，用于执行后面的 Here 文档，`<<'EOF'` 表示开启 Here 文档，COMMENT 是 Here 文档的标识符，在这两
+个标识符之间的内容都会被视为注释，不会被执行。 EOF 也可以使用其他符号:
 
 实例
 

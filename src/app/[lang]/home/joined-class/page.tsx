@@ -3,7 +3,7 @@ import { ClassDomain } from '@/domain/class_domain'
 import { useServerLocale } from '@/hooks'
 import { I18nLangKeys } from '@/i18n'
 import { PlusIcon } from '@radix-ui/react-icons'
-import { Button, Flex, Link, Table } from '@radix-ui/themes'
+import { Button, Dialog, Flex, Link, Table, Text, TextField } from '@radix-ui/themes'
 
 interface Props {
     params: Promise<{ lang: I18nLangKeys }>
@@ -23,11 +23,40 @@ export default async function Page({ params }: Props) {
     return (
         <>
             <Flex justify="end" width="100%" pr="4">
-                <Button asChild>
-                    <Link href="/new/class">
-                        <PlusIcon /> {t('routeHome.routeJoinedClass.join')}
-                    </Link>
-                </Button>
+                <Dialog.Root>
+                    <Dialog.Trigger>
+                        <Button>
+                            <PlusIcon /> {t('routeHome.routeJoinedClass.join')}
+                        </Button>
+                    </Dialog.Trigger>
+
+                    <Dialog.Content maxWidth="450px">
+                        <Dialog.Title>Edit profile</Dialog.Title>
+                        <Dialog.Description size="2" mb="4">
+                            Make changes to your profile.
+                        </Dialog.Description>
+
+                        <Flex direction="column" gap="3">
+                            <label>
+                                <Text as="div" size="2" mb="1" weight="bold">
+                                    Name
+                                </Text>
+                                <TextField.Root defaultValue="Freja Johnsen" placeholder="Enter your full name" />
+                            </label>
+                        </Flex>
+
+                        <Flex gap="3" mt="4" justify="end">
+                            <Dialog.Close>
+                                <Button variant="soft" color="gray">
+                                    Cancel
+                                </Button>
+                            </Dialog.Close>
+                            <Dialog.Close>
+                                <Button>Save</Button>
+                            </Dialog.Close>
+                        </Flex>
+                    </Dialog.Content>
+                </Dialog.Root>
             </Flex>
 
             <Table.Root>
