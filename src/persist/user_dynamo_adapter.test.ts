@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { userDao } from '@/persist/db'
 import { User } from 'next-auth'
-import { clearTable, getTableRecordById } from '../../tests/lib/db_utils'
+import { clearTable } from '../../tests/lib/db_utils'
 import { faker } from '@faker-js/faker'
 
 const dao = userDao
@@ -25,7 +25,7 @@ describe('UserDynamoAdapter', () => {
 
     it('should create a User', async () => {
         const created = await dao.create(mock)
-        const existed = await getTableRecordById('USER', mock.id!)
+        const existed = await dao.getById(mock.id!)
         expect(created).toEqual(mock)
         expect(existed).toEqual(mock)
     })
@@ -48,7 +48,7 @@ describe('UserDynamoAdapter', () => {
         expect(updatedUser.name).toEqual('John Updated')
         expect(updatedUser.slug).toEqual('john-updated')
 
-        const existed = await getTableRecordById('USER', mock.id!)
+        const existed = await dao.getById(mock.id!)
         expect(existed!.name).toEqual('John Updated')
         expect(existed!.slug).toEqual('john-updated')
     })
@@ -56,7 +56,7 @@ describe('UserDynamoAdapter', () => {
     it('should delete a User', async () => {
         await dao.create(mock)
         await dao.delete(mock.id!)
-        const existed = await getTableRecordById('USER', mock.id!)
+        const existed = await dao.getById(mock.id!)
         expect(existed).toBeNull()
     })
 })

@@ -1,8 +1,11 @@
-import dotenv from "dotenv";
-import path from "path";
+import dotenv from 'dotenv'
+import path from 'path'
 
 // 加载 .env 文件
-dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') })
 
 // 加载 .env.local 文件（如果存在）
-dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local'), override: true })
+
+// 加载 .env.test 文件（如果存在）
+dotenv.config({ path: path.resolve(process.cwd(), '.env.test'), override: true })

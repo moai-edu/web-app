@@ -61,3 +61,10 @@ export interface Class {
     courseId: string
     code: string
 }
+
+export interface UserJoinClass {
+    id: string
+    userId: string
+    classId: string
+    joinedAt: Date
+}

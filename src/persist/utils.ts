@@ -1,3 +1,5 @@
+export const RECORD_PREFIX = ['USER', 'COURSE', 'CLASS', 'USER_JOIN_CLASS'] as const
+
 // https://github.com/honeinc/is-iso-date/blob/master/index.js
 const isoDateRE =
     /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/
@@ -6,8 +8,6 @@ const isoDateRE =
 export function isDate(value: unknown): value is string {
     return typeof value === 'string' && isoDateRE.test(value) && !isNaN(Date.parse(value))
 }
-
-const RECORD_PREFIX = ['USER', 'COURSE', 'CLASS']
 
 export const DaoFormat = {
     /** Takes a plain old JavaScript object and turns it into a DynamoDB object */
@@ -30,7 +30,7 @@ export const DaoFormat = {
         for (const key in object) {
             // Filter DynamoDB specific attributes so it doesn't get passed to core,
             // to avoid revealing the type of database
-            if (['pk', 'sk', 'GSI1PK', 'GSI1SK'].includes(key)) continue
+            if (['pk', 'sk', 'GSI1PK', 'GSI1SK', 'GSI2PK', 'GSI2SK'].includes(key)) continue
 
             const value = object[key]
 

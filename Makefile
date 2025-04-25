@@ -42,16 +42,19 @@ localstack-tf-init:
 	python3 -m venv .venv && \
 		. .venv/bin/activate && \
 		pip install -r requirements.txt
-	@echo "setup localstack"
+	@echo "init localstack"
 	. .venv/bin/activate && tflocal init
 localstack-tf-setup:
 	@echo "setup localstack"
-	. .venv/bin/activate && tflocal plan $(TF_USE_VARS) && \
+	. .venv/bin/activate && tflocal init && \
+		tflocal plan $(TF_USE_VARS) && \
 		tflocal apply -auto-approve $(TF_USE_VARS)
 .PHONY: localstack-tf-teardown
 localstack-tf-teardown:
+	-$(awslocal) s3 rm --recursive s3://$(DATA_BUCKET_NAME)/
+	-$(awslocal) s3 rm --recursive s3://$(DATA_BUCKET_NAME)-test/
 	. .venv/bin/activate && tflocal destroy $(TF_USE_VARS)
-	rm -rf terraform.tfstate* .terraform.lock.hcl
+	echo rm -rf terraform.tfstate* .terraform.lock.hcl
 
 .PHONY: localstack-show
 localstack-show:

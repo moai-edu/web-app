@@ -1,12 +1,14 @@
 import { BatchWriteCommandInput, DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { DaoFormat, generateUpdateExpression } from './utils'
+import { DaoFormat, generateUpdateExpression, RECORD_PREFIX } from './utils'
+
+type DaoType = (typeof RECORD_PREFIX)[number]
 
 export default class Dao {
     client: DynamoDBDocument
     tableName: string
-    type: string
+    type: DaoType
 
-    constructor(client: DynamoDBDocument, tableName: string, type: string) {
+    constructor(client: DynamoDBDocument, tableName: string, type: DaoType) {
         this.tableName = tableName
         this.client = client
         this.type = type
@@ -31,6 +33,21 @@ export default class Dao {
             type: this.type,
             GSI1PK: `${this.type}#${idGSI1}`,
             GSI1SK: `${this.type}#${idGSI1}`
+        })
+
+        await this.client.put({ TableName: this.tableName, Item })
+    }
+
+    async createWithGSI12(obj: any, idGSI1: string, idGSI2: string) {
+        const Item = DaoFormat.to({
+            ...obj,
+            pk: `${this.type}#${obj.id}`,
+            sk: `${this.type}#${obj.id}`,
+            type: this.type,
+            GSI1PK: `${this.type}#${idGSI1}`,
+            GSI1SK: `${this.type}#${idGSI1}`,
+            GSI2PK: `${this.type}#${idGSI2}`,
+            GSI2SK: `${this.type}#${idGSI2}`
         })
 
         await this.client.put({ TableName: this.tableName, Item })
@@ -204,6 +221,19 @@ export default class Dao {
             ExpressionAttributeValues: {
                 ':gsi1pk': `${this.type}#${idGSI1}`,
                 ':gsi1sk': `${this.type}#${idGSI1}`
+            }
+        })
+        return Items ? Items.map((item) => DaoFormat.from<T>(item)!).filter(Boolean) : []
+    }
+
+    async getListByGSI2<T>(idGSI2: string): Promise<T[]> {
+        const { Items } = await this.client.query({
+            TableName: this.tableName,
+            IndexName: 'GSI2',
+            KeyConditionExpression: 'GSI2PK = :gsi2pk AND GSI2SK = :gsi2sk',
+            ExpressionAttributeValues: {
+                ':gsi2pk': `${this.type}#${idGSI2}`,
+                ':gsi2sk': `${this.type}#${idGSI2}`
             }
         })
         return Items ? Items.map((item) => DaoFormat.from<T>(item)!).filter(Boolean) : []
