@@ -38,6 +38,7 @@ export default {
     cancel: '取消',
     confirm: '确认',
     save: '保存',
+    copy: '复制',
     submitting: '提交中...',
     submit: '提交',
     occupied: '已被占用',

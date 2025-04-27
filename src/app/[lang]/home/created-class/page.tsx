@@ -6,6 +6,7 @@ import { PlusIcon } from '@radix-ui/react-icons'
 import { Button, Flex, Link, Table } from '@radix-ui/themes'
 import EditNameButton from './edit_name_button'
 import DeleteClassButton from './delete_class_button'
+import CopyCodeButton from './copy_code_button'
 
 interface Props {
     params: Promise<{ lang: I18nLangKeys }>
@@ -47,7 +48,9 @@ export default async function Page({ params }: Props) {
                             <Table.RowHeaderCell>
                                 <Link href={`/class/${classItem.id}`}>{classItem.name}</Link>
                             </Table.RowHeaderCell>
-                            <Table.Cell>{classItem.code}</Table.Cell>
+                            <Table.Cell>
+                                <CopyCodeButton code={classItem.code} />
+                            </Table.Cell>
                             <Table.Cell>
                                 <Flex gap="3">
                                     <EditNameButton id={classItem.id} name={classItem.name} lang={lang} />

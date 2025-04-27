@@ -38,6 +38,7 @@ export default {
     cancel: 'Cancel',
     confirm: 'Confirm',
     save: 'Save',
+    copy: 'Copy',
     submitting: 'Submitting...',
     submit: 'Submit',
     occupied: 'it is occupied',

@@ -1,6 +1,6 @@
 'use server'
 
-import { UserJoinClassDomain } from '@/domain/joined_class_domain'
+import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
 import { uuidZodSchema } from '@/domain/schemas'
 import { get_t } from '@/hooks'
 import { I18nLangKeys } from '@/i18n'

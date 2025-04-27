@@ -3,7 +3,7 @@ import { useServerLocale } from '@/hooks'
 import { I18nLangKeys } from '@/i18n'
 import { Flex, Link, Table } from '@radix-ui/themes'
 import JoinClassDlg from './join_class_dlg'
-import { UserJoinClassDomain } from '@/domain/joined_class_domain'
+import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
 import LeaveClassButton from './leave_class_button'
 
 interface Props {

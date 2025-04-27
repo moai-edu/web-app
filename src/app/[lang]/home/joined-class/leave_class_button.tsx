@@ -1,4 +1,4 @@
-import { UserJoinClassDomain } from '@/domain/joined_class_domain'
+import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
 import { useServerLocale } from '@/hooks'
 import { I18nLangKeys } from '@/i18n'
 import { Cross1Icon } from '@radix-ui/react-icons'
