@@ -1,4 +1,4 @@
-import { classDao, userJoinClassDao } from '@/persist/db'
+import { classDao, userDao, userJoinClassDao } from '@/persist/db'
 import { Class, UserJoinClass } from './types'
 
 export class UserJoinClassDomain {
@@ -48,5 +48,11 @@ export class UserJoinClassDomain {
         } else {
             return null
         }
+    }
+
+    async getCourseUrlById(id: string): Promise<string> {
+        const _class = await classDao.getById(id)
+        const user = await userDao.getById(_class!.userId)
+        return `/u/${user!.slug}/course/${_class!.courseId}`
     }
 }

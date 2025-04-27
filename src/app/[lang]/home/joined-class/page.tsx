@@ -40,7 +40,7 @@ export default async function Page({ params }: Props) {
                     {classList.map((classItem) => (
                         <Table.Row key={classItem.id}>
                             <Table.RowHeaderCell>
-                                <Link href={`/class/${classItem.id}`}>{classItem.name}</Link>
+                                <Link href={`/joined-class/${classItem.id}`}>{classItem.name}</Link>
                             </Table.RowHeaderCell>
                             <Table.Cell>
                                 <LeaveClassButton
