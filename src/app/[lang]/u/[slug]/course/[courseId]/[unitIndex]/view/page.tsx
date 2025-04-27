@@ -1,19 +1,18 @@
 export const dynamic = 'force-dynamic'
 
 import { auth } from '@/auth'
-import { Box, Button, Flex, Link } from '@radix-ui/themes'
+import { Box, Button, Flex } from '@radix-ui/themes'
 import TaskSteps from './task_steps'
-import { useMDXComponents as getMDXComponents } from '@/mdx-components'
 
 import { compileMdx } from 'nextra/compile'
 import { evaluate } from 'nextra/evaluate'
 import MobileDrawerTaskSteps from './mobile_drawer_task_steps'
 import { CourseDomain } from '@/domain/course_domain'
 import { ExitIcon } from '@radix-ui/react-icons'
-import { redirect } from 'next/navigation'
+import { useMDXComponents } from '@/mdx-components'
 
 // 直接使用 Nextra 的组件，排除 wrapper
-const { wrapper, ...components } = getMDXComponents()
+const { wrapper, ...components } = useMDXComponents()
 
 type PageProps = Readonly<{
     params: Promise<{ slug: string; courseId: string; unitIndex: string }>

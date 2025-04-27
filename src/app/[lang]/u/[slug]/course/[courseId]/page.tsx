@@ -1,7 +1,5 @@
 export const dynamic = 'force-dynamic'
 
-import { PracticeExerciseSvg } from '@/components/Svgs'
-import Link from 'next/link'
 import { UnitSection } from './unit_section'
 import { ScrollHandler } from './scroll_handler'
 import { CourseDomain } from '@/domain/course_domain'

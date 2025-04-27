@@ -1,4 +1,4 @@
-import { useMDXComponents } from '@/mdx-components'
+import { useMDXComponents } from '@/app/[lang]/u/[slug]/course/[courseId]/[unitIndex]/view/mdx-components'
 import { generateStaticParamsFor, importPage } from 'nextra/pages'
 
 const SSG_PATH_PREFIX = 'static'
