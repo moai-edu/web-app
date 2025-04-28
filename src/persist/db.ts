@@ -5,6 +5,7 @@ import { Resource } from 'sst'
 import { UserDynamoAdapter } from './user_dynamo_adapter'
 import { ClassDynamoAdapter } from './class_dynamo_adapter'
 import { UserJoinClassDynamoAdapter } from './user_join_class_dynamo_adapter'
+import { CourseQuizSubmitDynamoAdapter } from './course_quiz_submit_dynamo_adapter'
 
 const dbConf: DynamoDBClientConfig = ['development', 'test'].includes(process.env.NODE_ENV)
     ? {
@@ -35,3 +36,4 @@ export const DB_TABLE_NAME: string = ['test', 'development'].includes(process.en
 export const userDao = UserDynamoAdapter(dynamoClient, DB_TABLE_NAME)
 export const classDao = ClassDynamoAdapter(dynamoClient, DB_TABLE_NAME)
 export const userJoinClassDao = UserJoinClassDynamoAdapter(dynamoClient, DB_TABLE_NAME)
+export const courseQuizSubmitDao = CourseQuizSubmitDynamoAdapter(dynamoClient, DB_TABLE_NAME)

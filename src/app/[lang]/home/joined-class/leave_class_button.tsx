@@ -1,3 +1,4 @@
+import { UserJoinClass } from '@/domain/types'
 import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
 import { useServerLocale } from '@/hooks'
 import { I18nLangKeys } from '@/i18n'
@@ -6,13 +7,11 @@ import { AlertDialog, Em, Flex, Button } from '@radix-ui/themes'
 import { revalidatePath } from 'next/cache'
 
 interface Props {
-    idUser: string
-    idClass: string
-    name: string
+    model: UserJoinClass
     lang: I18nLangKeys
 }
 
-export default async function LeaveClassButton({ idUser, idClass, name, lang }: Props) {
+export default async function LeaveClassButton({ model, lang }: Props) {
     const { t } = await useServerLocale(lang)
 
     return (
@@ -24,7 +23,7 @@ export default async function LeaveClassButton({ idUser, idClass, name, lang }: 
             </AlertDialog.Trigger>
             <AlertDialog.Content maxWidth="500px">
                 <AlertDialog.Title>
-                    {t('leave')}: <Em>{name}</Em>
+                    {t('leave')}: <Em>{model.class!.name}</Em>
                 </AlertDialog.Title>
                 <AlertDialog.Description size="2">{t('leaveConfirm')}</AlertDialog.Description>
                 <Flex gap="3" justify="end">
@@ -39,7 +38,7 @@ export default async function LeaveClassButton({ idUser, idClass, name, lang }: 
                                 'use server'
                                 const domain = new UserJoinClassDomain()
                                 try {
-                                    const joinedClass = await domain.leave(idUser, idClass)
+                                    const joinedClass = await domain.delete(model.id)
                                     if (joinedClass) {
                                         console.log('left class:', joinedClass)
                                         revalidatePath('/home/joined-class')
@@ -47,7 +46,7 @@ export default async function LeaveClassButton({ idUser, idClass, name, lang }: 
                                         throw new Error('failed to leave class')
                                     }
                                 } catch (e) {
-                                    console.log('failed to leave class', idUser, idClass)
+                                    console.log('failed to leave class', model)
                                     console.error(e)
                                 }
                             }}

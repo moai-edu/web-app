@@ -14,10 +14,9 @@ export default async function JoinedClassPage({ params }: Props) {
     if (!session || !session.user || !session.user.id) {
         return <div>Not authenticated</div>
     }
-    const idUser = session.user.id
 
-    const domain = new UserJoinClassDomain()
-    const url = await domain.getCourseUrlById(id)
-    console.log(url)
-    redirect(url)
+    // const domain = new UserJoinClassDomain()
+    // const url = await domain.getCourseUrlById(id)
+    // console.log(url)
+    // redirect(url)
 }

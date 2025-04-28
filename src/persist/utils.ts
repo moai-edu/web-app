@@ -1,4 +1,4 @@
-export const RECORD_PREFIX = ['USER', 'COURSE', 'CLASS', 'USER_JOIN_CLASS'] as const
+export const RECORD_PREFIX = ['USER', 'COURSE', 'CLASS', 'USER_JOIN_CLASS', 'COURSE_QUIZ_SUBMIT'] as const
 
 // https://github.com/honeinc/is-iso-date/blob/master/index.js
 const isoDateRE =

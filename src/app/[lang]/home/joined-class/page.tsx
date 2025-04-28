@@ -18,9 +18,9 @@ export default async function Page({ params }: Props) {
     if (!session || !session.user || !session.user.id) {
         return <div>Not authenticated</div>
     }
+
     const domain = new UserJoinClassDomain()
-    const classList = await domain.getListByUserId(session.user.id)
-    const idUser = session.user.id
+    const list = await domain.getListByUser(session.user)
 
     return (
         <>
@@ -37,18 +37,15 @@ export default async function Page({ params }: Props) {
                 </Table.Header>
 
                 <Table.Body>
-                    {classList.map((classItem) => (
-                        <Table.Row key={classItem.id}>
+                    {list.map((model) => (
+                        <Table.Row key={model.id}>
                             <Table.RowHeaderCell>
-                                <Link href={`/joined-class/${classItem.id}`}>{classItem.name}</Link>
+                                <Link href={`/u/${session.user!.slug}/course/${model.class!.courseId}`}>
+                                    {model.class!.name}
+                                </Link>
                             </Table.RowHeaderCell>
                             <Table.Cell>
-                                <LeaveClassButton
-                                    idUser={idUser}
-                                    idClass={classItem.id}
-                                    name={classItem.name}
-                                    lang={lang}
-                                />
+                                <LeaveClassButton model={model} lang={lang} />
                             </Table.Cell>
                         </Table.Row>
                     ))}

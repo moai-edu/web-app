@@ -1,5 +1,6 @@
 import { classDao, userDao, userJoinClassDao } from '@/persist/db'
-import { Class, UserJoinClass } from './types'
+import { UserJoinClass } from './types'
+import { User } from 'next-auth'
 
 export class UserJoinClassDomain {
     constructor() {}
@@ -25,34 +26,21 @@ export class UserJoinClassDomain {
         return await userJoinClassDao.create(join)
     }
 
-    async getListByUserId(userId: string): Promise<Class[]> {
-        const joinedClasses = await userJoinClassDao.getListByUserId(userId)
-        const classPromises = joinedClasses.map(async (joinedClass) => {
-            return await classDao.getById(joinedClass.classId)
-        })
-
-        // 等待所有Promise完成，并过滤掉null值
-        const classes = await Promise.all(classPromises)
-        return classes.filter((classObj) => classObj !== null)
+    async getListByUser(user: User): Promise<UserJoinClass[]> {
+        const joinedClasses = await userJoinClassDao.getListByUserId(user.id!)
+        for (const joinedClass of joinedClasses) {
+            const _class = await classDao.getById(joinedClass.classId)
+            joinedClass.class = _class!
+            joinedClass.user = user
+        }
+        return joinedClasses
     }
 
     async getListByClassId(classId: string): Promise<UserJoinClass[]> {
         return await userJoinClassDao.getListByClassId(classId)
     }
 
-    async leave(userId: string, idClass: string): Promise<UserJoinClass | null> {
-        const joinedClasses = await userJoinClassDao.getListByUserId(userId)
-        const joinedClass = joinedClasses.find((c) => c.classId === idClass)
-        if (joinedClass) {
-            return await userJoinClassDao.delete(joinedClass.id)
-        } else {
-            return null
-        }
-    }
-
-    async getCourseUrlById(id: string): Promise<string> {
-        const _class = await classDao.getById(id)
-        const user = await userDao.getById(_class!.userId)
-        return `/u/${user!.slug}/course/${_class!.courseId}`
+    async delete(id: string): Promise<UserJoinClass | null> {
+        return await userJoinClassDao.delete(id)
     }
 }

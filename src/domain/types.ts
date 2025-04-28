@@ -36,6 +36,12 @@ export interface CourseStep {
     name: string
     description: string
     content: string
+    quizes?: CourseQuiz[]
+}
+
+export interface CourseQuiz {
+    id: string
+    type: 'QuizImgPaste'
 }
 
 export type TileStatus = 'LOCKED' | 'ACTIVE' | 'COMPLETE'
@@ -87,4 +93,13 @@ export interface UserJoinClass {
 
     user?: User
     class?: Class
+}
+
+export interface CourseQuizSubmit {
+    id: string
+    userJoinClassId: string
+    quizId: string
+    status: 'SUBMITTED' | 'PASSED' | 'FAILED'
+
+    userJoinClass?: UserJoinClass
 }
