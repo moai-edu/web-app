@@ -1,14 +1,21 @@
 'use client'
 
-import { Image } from 'antd'
+import { Container, Flex } from '@radix-ui/themes'
+import { Collapse, CollapseProps, Image } from 'antd'
 import { useState } from 'react'
 
 interface ImageData {
     src: string
 }
 
+interface Props {
+    id: string
+    title: string
+    children?: React.ReactNode
+}
+
 // 导出一个默认的函数组件Page
-export default function ImgPaste() {
+export default function QuizImgPaste({ id, title, children }: Props) {
     const [imageData, setImageData] = useState<ImageData | null>(null)
     const [placeHolderText, setPlaceHolderText] = useState<string>('')
 
@@ -32,7 +39,7 @@ export default function ImgPaste() {
         }
         const ext = imageType.split('/')[1]
 
-        const uploadFileName = `image.${ext}`
+        const uploadFileName = `${id}.${ext}`
 
         // 创建一个新的 Blob 对象，使用新的文件名
         const blob = new Blob([file], { type: imageType })
@@ -62,17 +69,27 @@ export default function ImgPaste() {
             })
     }
 
-    return (
-        <div className="flex flex-col">
-            {/* 一个textarea，用于粘贴图片，当粘贴时调用handlePaste函数，当改变时清空placeholderText的值，初始值为空字符串 */}
-            <textarea
-                placeholder="使用Ctrl+V在这里粘贴图片"
-                onPaste={handlePaste}
-                onChange={() => setPlaceHolderText('')}
-                value={placeHolderText}
-            ></textarea>
-            {/* 一个Image组件，alt属性为空字符串，src属性为一个图片链接 */}
-            <Image alt="剪贴板图片" width={500} height={400} src={imageData?.src || '/placeholder.svg'} />
-        </div>
-    )
+    const items: CollapseProps['items'] = [
+        {
+            key: '1',
+            label: title,
+            children: (
+                <Flex direction="column" gap="3">
+                    <Container>{children}</Container>
+                    {/* 一个textarea，用于粘贴图片，当粘贴时调用handlePaste函数，当改变时清空placeholderText的值，初始值为空字符串 */}
+                    <textarea
+                        placeholder="使用Ctrl+V在这里粘贴图片"
+                        onPaste={handlePaste}
+                        onChange={() => setPlaceHolderText('')}
+                        value={placeHolderText}
+                        className="h-10 w-full"
+                    ></textarea>
+                    {/* 一个Image组件，alt属性为空字符串，src属性为一个图片链接 */}
+                    <Image alt="pasted image" width={150} height={150} src={imageData?.src || '/img/placeholder.svg'} />
+                </Flex>
+            )
+        }
+    ]
+
+    return <Collapse items={items} defaultActiveKey={['1']} />
 }

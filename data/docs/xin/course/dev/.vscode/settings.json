@@ -4,7 +4,7 @@
             {
                 // Run whenever any file is saved
                 "match": "index\\.md$",
-                "cmd": "make all"
+                "cmd": "make local"
             }
         ]
     }

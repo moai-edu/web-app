@@ -11,7 +11,14 @@ cover: cover.png
 
 开始菜单中，使用管理员打开`notepad`记事本程序。
 
-<ImgPaste />
+<QuizImgPaste id='test' title="完成任务并截图上传">
+  <h1>xxx</h1>
+  <p>yyy</p>
+  <Code><Pre>{`public void main() {
+    System.out.println("Hello, world!");
+    System.out.println("Hello, world!");
+} `}</Pre></Code>
+</QuizImgPaste>
 
 <Callout emoji="✅">
 将要修改的文件是受Windows系统保护的，所以需要使用管理员权限打开记事本程序，才能在修改后保存文件。

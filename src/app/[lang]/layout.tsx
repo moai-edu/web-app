@@ -112,7 +112,8 @@ export default async function RootLayout({ children, params }: Props) {
                                             colorBgElevated: 'var(--color-background)',
                                             colorText: 'var(--color-foreground)',
                                             colorTextSecondary: 'var(--color-secondary-foreground)',
-                                            colorTextDescription: 'var(--color-secondary-foreground)'
+                                            colorTextDescription: 'var(--color-secondary-foreground)',
+                                            colorBgContainer: 'var(--color-background)'
                                         }
                                     }}
                                 >

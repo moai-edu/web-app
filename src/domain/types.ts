@@ -1,3 +1,5 @@
+import { User } from 'next-auth'
+
 export interface CourseMetadata {
     title?: string
     description?: string
@@ -54,17 +56,35 @@ export type TileType = Tile['type']
 // 注意：目前这里只能是4，没有处理其它进度比例的方案，其它值会显示进度异常；
 export const STEPS_PER_TILE = 4
 
+// 注意：用户User已经定义在next-auth中，这里不再重复定义
+/* file: global.d.ts
+
+import 'next-auth' // 确保引入原始类型声明
+
+declare module 'next-auth' {
+    interface User {
+        slug?: string | null
+    }
+}
+*/
+
 export interface Class {
     id: string
-    userId: string
     name: string
-    courseId: string
     code: string
+    userId: string
+    courseId: string
+
+    user?: User
+    course?: Course
 }
 
 export interface UserJoinClass {
     id: string
+    joinedAt: Date
     userId: string
     classId: string
-    joinedAt: Date
+
+    user?: User
+    class?: Class
 }
