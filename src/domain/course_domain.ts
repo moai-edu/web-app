@@ -131,6 +131,7 @@ export class CourseDomain {
         ]
         let currentStyleIndex = 0
         for (const unit of course.units) {
+            unit.course = course
             const steps = this.getStepsFromContent(unit.content)
             if (steps && steps.length > 0) {
                 unit.steps = steps

@@ -7,18 +7,19 @@ export interface CourseMetadata {
     access?: string
 }
 
-export interface Course {
-    id: string
-    metadata: CourseMetadata
-    content: string
-    units: CourseUnit[] | null
-    coverUrl: string | null | undefined
-}
-
 export interface UnitStyle {
     backgroundColor: `bg-${string}`
     textColor: `text-${string}`
     borderColor: `border-${string}`
+}
+
+export interface Course {
+    id: string
+    metadata: CourseMetadata
+    content: string
+    coverUrl: string | null | undefined
+
+    units?: CourseUnit[]
 }
 
 export type CourseUnit = {
@@ -26,9 +27,12 @@ export type CourseUnit = {
     name: string
     description: string
     content: string
-    steps: CourseStep[] | null
     tiles: Tile[] | null
     style: UnitStyle | null
+
+    steps?: CourseStep[]
+
+    course?: Course
 }
 
 export interface CourseStep {
@@ -36,12 +40,18 @@ export interface CourseStep {
     name: string
     description: string
     content: string
+
     quizes?: CourseQuiz[]
+
+    unit?: CourseUnit
 }
 
 export interface CourseQuiz {
     id: string
+    index: number
     type: 'QuizImgPaste'
+
+    step?: CourseStep
 }
 
 export type TileStatus = 'LOCKED' | 'ACTIVE' | 'COMPLETE'

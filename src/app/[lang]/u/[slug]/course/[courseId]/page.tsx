@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
-import { UnitSection } from './unit_section'
-import { ScrollHandler } from './scroll_handler'
+import { UnitSection } from '@/components/course_unit/unit_section'
+import { ScrollHandler } from '@/components/course_unit/scroll_handler'
 import { CourseDomain } from '@/domain/course_domain'
 
 type PageProps = Readonly<{
@@ -21,10 +21,10 @@ export default async function Page({ params }: PageProps) {
         return <div>Error: Course has no units</div>
     }
     return (
-        <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
+        <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 lg:gap-12">
             <div className="flex max-w-2xl grow flex-col">
                 {units.map((unit, index) => (
-                    <UnitSection course={course} unitIndex={index} key={index} />
+                    <UnitSection unit={unit} units={units} id={courseId} key={index} />
                 ))}
                 <div className="sticky bottom-28 left-0 right-0 flex items-end justify-between">
                     {/* <Link

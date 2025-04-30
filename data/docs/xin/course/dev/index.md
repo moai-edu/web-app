@@ -11,6 +11,8 @@ cover: cover.png
 
 开始菜单中，使用管理员打开`notepad`记事本程序。
 
+<Test />
+
 <QuizImgPaste id='test' title="完成任务并截图上传">
   <h1>xxx</h1>
   <p>yyy</p>

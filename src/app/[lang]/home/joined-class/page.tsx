@@ -40,9 +40,7 @@ export default async function Page({ params }: Props) {
                     {list.map((model) => (
                         <Table.Row key={model.id}>
                             <Table.RowHeaderCell>
-                                <Link href={`/u/${session.user!.slug}/course/${model.class!.courseId}`}>
-                                    {model.class!.name}
-                                </Link>
+                                <Link href={`/c/${model.id}`}>{model.class!.name}</Link>
                             </Table.RowHeaderCell>
                             <Table.Cell>
                                 <LeaveClassButton model={model} lang={lang} />
