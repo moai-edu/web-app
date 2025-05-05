@@ -11,14 +11,19 @@ import { CourseDomain } from '@/domain/course_domain'
 import { ExitIcon } from '@radix-ui/react-icons'
 import { useMDXComponents } from '@/mdx-components'
 import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
+import { I18nLangKeys } from '@/i18n'
 
 type PageProps = Readonly<{
-    params: Promise<{ joinedClassId: string; unitIndex: string }>
+    params: Promise<{
+        lang: I18nLangKeys
+        joinedClassId: string
+        unitIndex: string
+    }>
     searchParams: Promise<{ tileIndex?: string; stepIndex?: string }>
 }>
 
 export default async function Page({ params, searchParams }: PageProps) {
-    const { joinedClassId, unitIndex } = await params
+    const { lang, joinedClassId, unitIndex } = await params
     const { tileIndex, stepIndex } = await searchParams
     console.log('params:', joinedClassId, unitIndex, tileIndex, stepIndex)
 
@@ -54,7 +59,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
         const rawJs = await compileMdx(currentStepContent, { filePath: 's3://foobar' })
         // 直接使用 Nextra 的组件，排除 wrapper以后，余下成员放入components中
-        const { wrapper, ...components } = useMDXComponents(model)
+        const { wrapper, ...components } = useMDXComponents(lang, model)
         const { default: MDXContent } = evaluate(rawJs, components)
         return (
             <Flex direction="column" gap="4">

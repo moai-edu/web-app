@@ -39,9 +39,20 @@ export default {
     confirm: 'Confirm',
     save: 'Save',
     copy: 'Copy',
+    howToPaste: 'use Ctrl+V to paste and upload the image',
+
+    loading: 'Loading...',
+    uploading: 'Uploading...',
     submitting: 'Submitting...',
     submit: 'Submit',
     occupied: 'it is occupied',
+
+    submitted: 'Submitted',
+    notSubmitted: 'Not Submitted',
+    toBeReviewed: 'To be reviewed',
+    passed: 'Passed',
+    failed: 'Failed',
+    passRate: 'Pass Rate',
 
     modifyProfile: 'Modify Profile',
     deleteConfirm: 'Are you sure you want to delete this? This action is permanent and cannot be undone.',

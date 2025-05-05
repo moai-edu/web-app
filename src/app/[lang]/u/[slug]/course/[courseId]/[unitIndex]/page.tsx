@@ -10,14 +10,20 @@ import MobileDrawerTaskSteps from '@/components/task_step/mobile_drawer_task_ste
 import { CourseDomain } from '@/domain/course_domain'
 import { ExitIcon } from '@radix-ui/react-icons'
 import { useMDXComponents } from '@/mdx-components'
+import { I18nLangKeys } from '@/i18n'
 
 type PageProps = Readonly<{
-    params: Promise<{ slug: string; courseId: string; unitIndex: string }>
+    params: Promise<{
+        lang: I18nLangKeys
+        slug: string
+        courseId: string
+        unitIndex: string
+    }>
     searchParams: Promise<{ tileIndex?: string; stepIndex?: string }>
 }>
 
 export default async function Page({ params, searchParams }: PageProps) {
-    const { slug, courseId, unitIndex } = await params
+    const { lang, slug, courseId, unitIndex } = await params
     const { tileIndex, stepIndex } = await searchParams
     console.log('params:', slug, courseId, unitIndex, tileIndex, stepIndex)
 
@@ -44,7 +50,7 @@ export default async function Page({ params, searchParams }: PageProps) {
             const rawJs = await compileMdx(currentStepContent, { filePath: 's3://foobar' })
 
             // 直接使用 Nextra 的组件，排除 wrapper以后，余下成员放入components中
-            const { wrapper, ...components } = useMDXComponents()
+            const { wrapper, ...components } = useMDXComponents(lang)
             const { default: MDXContent } = evaluate(rawJs, components)
             return (
                 <Flex direction="column" gap="4">

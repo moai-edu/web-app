@@ -39,9 +39,20 @@ export default {
     confirm: '确认',
     save: '保存',
     copy: '复制',
+    howToPaste: '使用Ctrl+V粘贴并上传图片',
+
+    loading: '加载中...',
+    uploading: '上传中...',
     submitting: '提交中...',
     submit: '提交',
     occupied: '已被占用',
+
+    submitted: '已提交',
+    notSubmitted: '未提交',
+    toBeReviewed: '待批阅',
+    passed: '通过',
+    failed: '未通过',
+    passRate: '通过率',
 
     modifyProfile: '修改账户信息',
     deleteConfirm: '确定要删除吗？此操作是永久性的，无法撤销。',
