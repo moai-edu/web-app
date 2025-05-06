@@ -15,7 +15,7 @@ export default async function Test({ lang, model }: Props) {
             <code>
                 <pre>{JSON.stringify(model, null, 4)}</pre>
             </code>
-            <Button onClick={() => alert('Hello')}>{t('badgeTitle')}</Button>
+            <Button>{t('badgeTitle')}</Button>
         </div>
     )
 }

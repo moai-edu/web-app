@@ -1,7 +1,5 @@
 import { courseQuizSubmitDao } from '@/persist/db'
-import { CourseQuizSubmit, UserJoinClass } from './types'
-import { User } from 'next-auth'
-import { BoxModelIcon } from '@radix-ui/react-icons'
+import { CourseQuizSubmit } from './types'
 
 export class CourseQuizSubmitDomain {
     constructor() {}
