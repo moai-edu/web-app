@@ -3,8 +3,9 @@
 import { use } from 'react'
 import { I18nLangKeys } from '@/i18n'
 import React from 'react'
-import { ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons'
-import { Card, Image, Space } from 'antd'
+import { EditOutlined, EllipsisOutlined, SettingOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons'
+import { Avatar, Card, Image, Space, Upload } from 'antd'
+import { CheckIcon, Cross1Icon, UploadIcon } from '@radix-ui/react-icons'
 const { Meta } = Card
 
 type PageProps = Readonly<{
@@ -28,7 +29,7 @@ export default function Page({ params }: PageProps) {
                 preview={{
                     toolbarRender: (_, { transform: { scale }, actions: { onZoomOut, onZoomIn } }) => (
                         <Space size={12} className="toolbar-wrapper">
-                            {current} / 当前
+                            {current}
                             <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
                             <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
                         </Space>
@@ -43,7 +44,7 @@ export default function Page({ params }: PageProps) {
                     {Array.from({ length: 16 }, (_, i) => (
                         <div key={i} className="px-2 py-2">
                             <Card
-                                title={'学生' + (i + 1)}
+                                title={'张三'}
                                 hoverable
                                 style={{ width: 140, paddingLeft: 1, paddingRight: 1 }}
                                 cover={
@@ -53,8 +54,13 @@ export default function Page({ params }: PageProps) {
                                         onClick={() => setCurrent(i)}
                                     />
                                 }
+                                actions={[
+                                    <UploadIcon key="submitted" />,
+                                    <CheckIcon key="passed" />,
+                                    <Cross1Icon key="failed" />
+                                ]}
                             >
-                                <Meta title={'得分'} description={i + 1} />
+                                <Meta avatar={<UploadIcon />} description="已提交" />
                             </Card>
                         </div>
                     ))}
