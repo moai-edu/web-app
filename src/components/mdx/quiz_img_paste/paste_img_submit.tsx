@@ -4,7 +4,7 @@ import { Image, Alert } from 'antd'
 import { useState, useEffect } from 'react'
 import { useLocale } from '@/hooks'
 import { getQuizImgPasteSubmit, submitQuizImgPaste } from './actions'
-import { UserJoinClass } from '@/domain/types'
+import { Class, UserJoinClass } from '@/domain/types'
 
 interface ImageData {
     src: string

@@ -52,6 +52,7 @@ export default {
     toBeReviewed: '待批阅',
     passed: '通过',
     failed: '未通过',
+    submitRate: '提交率',
     passRate: '通过率',
 
     modifyProfile: '修改账户信息',

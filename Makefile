@@ -86,9 +86,9 @@ scan-remote-db:
 
 .PHONY: clean-local-db clean-remote-db
 clean-local-db:
-	LOCAL=1 TABLE_NAME=$(DB_TABLE_NAME) python script/clear-table.py
+	. .venv/bin/activate && LOCAL=1 TABLE_NAME=$(DB_TABLE_NAME) python script/clear-table.py
 clean-remote-db:
-	TABLE_NAME=$(REMOTE_DB_TABLE_NAME) python script/clear-table.py
+	. .venv/bin/activate && TABLE_NAME=$(REMOTE_DB_TABLE_NAME) python script/clear-table.py
 
 .PHONY: sync-local-s3 sync-remote-s3
 sync-local-s3:

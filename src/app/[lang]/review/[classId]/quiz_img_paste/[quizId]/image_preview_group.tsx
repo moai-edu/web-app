@@ -7,7 +7,7 @@ import Meta from 'antd/es/card/Meta'
 import { CourseQuizSubmit, CourseQuizSubmitStatus } from '@/domain/types'
 import { useLocale } from '@/hooks'
 import { useState, useTransition } from 'react'
-import { create, updateStatus } from './actions'
+import { createWithStatus, updateStatus } from './actions'
 import { Button } from '@radix-ui/themes'
 
 interface Props {
@@ -24,9 +24,7 @@ export default function ImagePreviewGroup({ submissions }: Props) {
     const submitAction = async (index: number, submit: CourseQuizSubmit, status: CourseQuizSubmitStatus) => {
         startTransition(async () => {
             if (submit.id === '') {
-                submit.id = crypto.randomUUID()
-                submit.status = status
-                const { success, data, error } = await create(submit)
+                const { success, data, error } = await createWithStatus(submit, status)
                 if (success && data) {
                     list[index].id = data.id
                     list[index].status = status

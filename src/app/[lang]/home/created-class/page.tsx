@@ -46,13 +46,19 @@ export default async function Page({ params }: Props) {
                     {classList.map((classItem) => (
                         <Table.Row key={classItem.id}>
                             <Table.RowHeaderCell>
-                                <Link href={`/class/${classItem.id}`}>{classItem.name}</Link>
+                                <Link href={`/c/created/${classItem.id}`}>{classItem.name}</Link>
                             </Table.RowHeaderCell>
                             <Table.Cell>
                                 <CopyCodeButton code={classItem.code} />
                             </Table.Cell>
                             <Table.Cell>
                                 <Flex gap="3">
+                                    <Link href={`/c/created/${classItem.id}`}>
+                                        <Button variant="soft">{t('routeHome.routeCreatedClass.member')}</Button>
+                                    </Link>
+                                    <Link href={`/c/created/${classItem.id}`}>
+                                        <Button variant="soft">{t('routeHome.routeCreatedClass.review')}</Button>
+                                    </Link>
                                     <EditNameButton id={classItem.id} name={classItem.name} lang={lang} />
                                     <DeleteClassButton id={classItem.id} name={classItem.name} lang={lang} />
                                 </Flex>

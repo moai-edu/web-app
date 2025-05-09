@@ -1,5 +1,5 @@
 import { courseQuizSubmitDao, userJoinClassDao } from '@/persist/db'
-import { CourseQuizSubmit, CourseQuizSubmitStatus, UserJoinClass } from './types'
+import { Class, CourseQuizSubmit, CourseQuizSubmitStatus, UserJoinClass } from './types'
 import { UserJoinClassDomain } from './user_join_class_domain'
 
 export class CourseQuizSubmitDomain {
@@ -44,19 +44,27 @@ export class CourseQuizSubmitDomain {
         return await courseQuizSubmitDao.getByUserJoinClassIdAndQuizId(userJoinClassId, quizId)
     }
 
-    async getQuizStatistics(userJoinClass: UserJoinClass, quizId: string) {
-        // 首先，获取当前班级的所有加入学生，以及当前班级的所有提交记录
-        const d1 = new UserJoinClassDomain()
-        const joinedUserList = await d1.getListByClassId(userJoinClass.classId)
+    async getListByClassId(classId: string, quizId: string): Promise<CourseQuizSubmit[]> {
+        const submitList = await courseQuizSubmitDao.getListByClassId(classId)
+        return submitList.filter((submit) => submit.quizId === quizId)
+    }
 
-        // 然后，用一个循环遍历所有加入学生，获取每个学生的提交记录
-        const d2 = new CourseQuizSubmitDomain()
-        const submitList = await Promise.all(
-            joinedUserList.map(async (userJoinClass) => {
-                const submit = await d2.getSubmit(userJoinClass.id, quizId)
-                return submit
-            })
-        )
+    async getQuizStatistics(klass: Class, quizId: string) {
+        // 首先，获取当前班级的所有加入学生，以及当前班级这个quizId的所有提交记录
+        const d1 = new UserJoinClassDomain()
+        const joinedUserList = await d1.getListByClassId(klass.id)
+        const submittedList = await this.getListByClassId(klass.id, quizId)
+        // 然后，用一个循环遍历所有加入学生，生成一个新数组submitList，其中每个元素是对应学生的提交记录
+        const submitList = []
+        for (const joinedUser of joinedUserList) {
+            const submit = submittedList.find((submit) => submit.userJoinClassId === joinedUser.id)
+            if (submit) {
+                submitList.push(submit)
+            } else {
+                submitList.push(null)
+            }
+        }
+
         // 最后，根据每个加入学生的提交记录的状态进行统计
         const totalStudents = joinedUserList.length
         const submitted = submitList.filter((submit) => submit != null).length

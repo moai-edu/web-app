@@ -1,5 +1,5 @@
 import { CourseQuizSubmitDomain } from '@/domain/course_quiz_submit_domain'
-import { UserJoinClass } from '@/domain/types'
+import { Class, UserJoinClass } from '@/domain/types'
 import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
 import { useServerLocale } from '@/hooks'
 import { I18nLangKeys, LocaleKeys } from '@/i18n'
@@ -8,15 +8,15 @@ import { Statistic } from 'antd'
 
 interface Props {
     lang: I18nLangKeys
-    userJoinClass: UserJoinClass
+    klass: Class
     quizId: string
 }
 
-export default async function PasteImgStat({ lang, userJoinClass, quizId }: Props) {
+export default async function PasteImgStat({ lang, klass, quizId }: Props) {
     const { t } = await useServerLocale(lang)
 
     const domain = new CourseQuizSubmitDomain()
-    const stats = await domain.getQuizStatistics(userJoinClass, quizId)
+    const stats = await domain.getQuizStatistics(klass, quizId)
 
     const displayStats = [
         { title: 'submitted', value: stats.submitted, suffixValue: `/ ${stats.totalStudents}` },
@@ -29,7 +29,7 @@ export default async function PasteImgStat({ lang, userJoinClass, quizId }: Prop
     ]
 
     return (
-        <Link href={`/review/${userJoinClass?.classId}/quiz_img_paste/${quizId}`}>
+        <Link href={`/review/${klass.id}/quiz_img_paste/${quizId}`}>
             <Grid columns="3" gap="3" rows="repeat(2, 64px)" width="auto">
                 {displayStats.map((stat, index) => (
                     <Statistic

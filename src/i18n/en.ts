@@ -52,6 +52,7 @@ export default {
     toBeReviewed: 'To be reviewed',
     passed: 'Passed',
     failed: 'Failed',
+    submitRate: 'Submit Rate',
     passRate: 'Pass Rate',
 
     modifyProfile: 'Modify Profile',

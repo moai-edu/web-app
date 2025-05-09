@@ -1,6 +1,7 @@
 'use server'
 
 import { CourseQuizSubmitDomain } from '@/domain/course_quiz_submit_domain'
+import { UserJoinClass } from '@/domain/types'
 import { s3DataClient } from '@/persist/s3'
 
 export type ServerActionResponse = {
@@ -10,7 +11,7 @@ export type ServerActionResponse = {
 }
 
 export async function submitQuizImgPaste(
-    userJoinClassId: string,
+    userJoinClass: UserJoinClass,
     quizId: string,
     file: File
 ): Promise<ServerActionResponse> {
@@ -24,9 +25,9 @@ export async function submitQuizImgPaste(
         }
 
         const domain = new CourseQuizSubmitDomain()
-        const submit = await domain.submit(userJoinClassId, quizId, [])
+        const submit = await domain.submit(userJoinClass, quizId, [])
         // 上传文件到 S3
-        const path = domain.getQuizImgPastePath(userJoinClassId, submit.id)
+        const path = domain.getQuizImgPastePath(userJoinClass.id, submit.id)
         await s3DataClient.uploadFile(file, path)
         const url = await s3DataClient.getSignedUrl(path)
         return { success: true, data: { url, submitId: submit.id } }

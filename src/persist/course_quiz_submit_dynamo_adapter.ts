@@ -7,6 +7,7 @@ export interface CourseQuizSubmitDao {
     update(id: string, status: CourseQuizSubmitStatus): Promise<CourseQuizSubmit>
     getById(id: string): Promise<CourseQuizSubmit | null>
     getByUserJoinClassIdAndQuizId(userJoinClassId: string, quizId: string): Promise<CourseQuizSubmit | null>
+    getListByClassId(classId: string): Promise<CourseQuizSubmit[]>
 }
 
 export function CourseQuizSubmitDynamoAdapter(client: DynamoDBDocument, tableName: string): CourseQuizSubmitDao {
@@ -26,6 +27,9 @@ export function CourseQuizSubmitDynamoAdapter(client: DynamoDBDocument, tableNam
             //TODO: 这里查询可以优化吗？因为这里userJoinClassId和quizId都作为GSI1和GSI2，能不能一条查询就搞定？
             const all_user_quiz_submits = await dao.getListByGSI1<CourseQuizSubmit>(userJoinClassId)
             return all_user_quiz_submits.find((submit) => submit.quizId === quizId) || null
+        },
+        async getListByClassId(classId: string): Promise<CourseQuizSubmit[]> {
+            return dao.getListByGSI3<CourseQuizSubmit>(classId)
         }
     }
 }
