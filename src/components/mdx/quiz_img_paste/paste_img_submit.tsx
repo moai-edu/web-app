@@ -81,7 +81,7 @@ export default function PasteImgSubmit({ userJoinClass, quizId }: Props) {
             })
 
             // 调用 server action 上传文件
-            const result = await submitQuizImgPaste(userJoinClass.id, quizId, uploadFileObj)
+            const result = await submitQuizImgPaste(userJoinClass, quizId, uploadFileObj)
 
             if (result.success) {
                 console.log(`上传图片成功: ${uploadFileName}`)

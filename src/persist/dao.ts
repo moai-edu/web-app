@@ -53,7 +53,7 @@ export default class Dao {
         await this.client.put({ TableName: this.tableName, Item })
     }
 
-    async createWithGSI123(obj: any, idGSI1: string, idGSI2: string， idGSI3: string) {
+    async createWithGSI123(obj: any, idGSI1: string, idGSI2: string, idGSI3: string) {
         const Item = DaoFormat.to({
             ...obj,
             pk: `${this.type}#${obj.id}`,
