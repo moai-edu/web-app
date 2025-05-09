@@ -12,6 +12,7 @@ const PROVIDER = 'cognito'
 const cognitoOptions =
     process.env.NODE_ENV === 'development'
         ? {
+              allowDangerousEmailAccountLinking: true,
               clientId: process.env.COGNITO_WEB_CLIENT_ID,
               clientSecret: process.env.COGNITO_WEB_CLIENT_SECRET,
               issuer:
