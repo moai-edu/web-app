@@ -11,6 +11,8 @@ endif
 # 如果环境变量STAGE未定义，则使用dev作为默认值；否则，使用环境变量STAGE中的值
 STAGE?=dev
 SECRET_NAME:=NextAuthSecret
+SECRET_VALUE:=$(NEXT_AUTH_SECRET_$(shell echo $(STAGE) | tr '[:lower:]' '[:upper:]'))
+
 awslocal:=aws --profile localstack
 
 .PHONY: dev setup teardown
@@ -21,11 +23,13 @@ dev:
 	npx sst dev --stage dev
 
 setup:
-	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(NEXT_AUTH_SECRET)
+	@echo "setup $(STAGE) $(SECRET_NAME)=$(SECRET_VALUE)"
+	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(SECRET_VALUE)
 	-npx sst unlock --stage $(STAGE)
 	npx sst deploy --stage $(STAGE)
 
 teardown:
+	-npx sst unlock --stage $(STAGE)
 	npx sst remove --stage $(STAGE)
 	npx sst secret remove $(SECRET_NAME) --stage $(STAGE)
 
