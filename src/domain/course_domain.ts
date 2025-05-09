@@ -79,7 +79,6 @@ export class CourseDomain {
                     id: courseId,
                     metadata,
                     content,
-                    units: null,
                     coverUrl
                 }
             } else {
@@ -315,7 +314,6 @@ export class CourseDomain {
                         name: titleMatch[1].trim(),
                         description: titleMatch[2] ? titleMatch[2].trim() : '',
                         content: '',
-                        steps: null,
                         tiles: null,
                         style: null
                     }

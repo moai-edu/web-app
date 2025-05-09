@@ -30,13 +30,13 @@ export const DaoFormat = {
         for (const key in object) {
             // Filter DynamoDB specific attributes so it doesn't get passed to core,
             // to avoid revealing the type of database
-            if (['pk', 'sk', 'GSI1PK', 'GSI1SK', 'GSI2PK', 'GSI2SK'].includes(key)) continue
+            if (['pk', 'sk', 'GSI1PK', 'GSI1SK', 'GSI2PK', 'GSI2SK', 'GSI3PK', 'GSI3SK'].includes(key)) continue
 
             const value = object[key]
 
             if (isDate(value)) newObject[key] = new Date(value)
             // hack to keep type property in account
-            else if (key === 'type' && RECORD_PREFIX.includes(value as string)) continue
+            else if (key === 'type' && RECORD_PREFIX.includes(value as any)) continue
             // The expires property is stored as a UNIX timestamp in seconds, but
             // JavaScript needs it in milliseconds, so multiply by 1000.
             else if (key === 'expires' && typeof value === 'number') newObject[key] = new Date(value * 1000)
