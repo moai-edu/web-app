@@ -17,7 +17,8 @@ def clear_dynamodb_table(table_name, pk_attr="pk", sk_attr="sk"):
             )
         )
     else:
-        dynamodb = boto3.client('dynamodb')
+        session = boto3.Session()
+        dynamodb = session.client('dynamodb')
 
     try:
         # 1. 扫描所有记录的主键（仅需 pk 和 sk）

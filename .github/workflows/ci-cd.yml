@@ -34,7 +34,7 @@ jobs:
                   if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
                     if [ -f "TEARDOWN" ]; then
                       echo "Tearing down the Development environment..."
-                      STAGE="prod" make teardown  # 开发环境拆除
+                      STAGE="prod" make teardown  # 生产环境拆除
                     fi
                     if [ -f "SETUP" ]; then
                       echo "Deploying to Production environment..."
