@@ -4,6 +4,10 @@ import { Class } from './types'
 export class ClassDomain {
     constructor() {}
 
+    async getById(id: string): Promise<Class | null> {
+        return await classDao.getById(id)
+    }
+
     async create(userId: string, name: string, courseId: string): Promise<Class> {
         // 创建新班级
         const _class: Class = {

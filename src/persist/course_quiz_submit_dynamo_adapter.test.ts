@@ -3,14 +3,23 @@ import { clearTable } from '../../tests/lib/db_utils'
 import { CourseQuizSubmit } from '@/domain/types'
 import { courseQuizSubmitDao } from './db'
 import { faker } from '@faker-js/faker'
+import { userJoinClass } from '@/app/[lang]/home/joined-class/actions'
 
 const dao = courseQuizSubmitDao
 function newMockModel(): CourseQuizSubmit {
+    const userJoinClassId = faker.string.uuid()
     return {
         id: faker.string.uuid(),
-        userJoinClassId: faker.string.uuid(),
+        userJoinClassId,
         quizId: faker.helpers.slugify(faker.lorem.words(6)),
-        status: 'SUBMITTED'
+        status: 'SUBMITTED',
+
+        userJoinClass: {
+            id: userJoinClassId,
+            userId: faker.string.uuid(),
+            classId: faker.string.uuid(),
+            joinedAt: new Date()
+        }
     }
 }
 

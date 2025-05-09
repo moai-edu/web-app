@@ -105,11 +105,14 @@ export interface UserJoinClass {
     class?: Class
 }
 
+export type CourseQuizSubmitStatus = 'NOT_SUBMITTED' | 'SUBMITTED' | 'PASSED' | 'FAILED'
 export interface CourseQuizSubmit {
     id: string
-    userJoinClassId: string
-    quizId: string
-    status: 'SUBMITTED' | 'PASSED' | 'FAILED'
+    userJoinClassId: string // gsi1
+    quizId: string // gsi2
+    classId: string // gsi3
+    status: CourseQuizSubmitStatus
 
     userJoinClass?: UserJoinClass
+    url?: string
 }

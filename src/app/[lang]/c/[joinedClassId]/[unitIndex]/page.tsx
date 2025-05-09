@@ -36,8 +36,8 @@ export default async function Page({ params, searchParams }: PageProps) {
     try {
         // 从joinedClassId获取slug和courseId
         const userJoinClassDomain = new UserJoinClassDomain()
-        const model = await userJoinClassDomain.getById(joinedClassId)
-        if (!model || model.userId !== session.user.id) {
+        const userJoinClass = await userJoinClassDomain.getById(joinedClassId)
+        if (!userJoinClass || userJoinClass.userId !== session.user.id) {
             return <h1>Document is not authorized for access</h1>
         }
 
@@ -45,8 +45,8 @@ export default async function Page({ params, searchParams }: PageProps) {
         const _tileIndex = tileIndex ? parseInt(tileIndex) : -1
         const _stepIndex = stepIndex ? parseInt(stepIndex) : -1
         const result = await courseDomain.getCourseUnitTileSteps(
-            model!.class!.user!.slug!,
-            model!.class!.courseId,
+            userJoinClass!.class!.user!.slug!,
+            userJoinClass!.class!.courseId,
             _unitIndex,
             _tileIndex,
             _stepIndex
@@ -59,7 +59,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
         const rawJs = await compileMdx(currentStepContent, { filePath: 's3://foobar' })
         // 直接使用 Nextra 的组件，排除 wrapper以后，余下成员放入components中
-        const { wrapper, ...components } = useMDXComponents(lang, model)
+        const { wrapper, ...components } = useMDXComponents(lang, userJoinClass)
         const { default: MDXContent } = evaluate(rawJs, components)
         return (
             <Flex direction="column" gap="4">

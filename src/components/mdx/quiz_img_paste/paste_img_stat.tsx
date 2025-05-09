@@ -1,4 +1,5 @@
 import { CourseQuizSubmitDomain } from '@/domain/course_quiz_submit_domain'
+import { UserJoinClass } from '@/domain/types'
 import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
 import { useServerLocale } from '@/hooks'
 import { I18nLangKeys, LocaleKeys } from '@/i18n'
@@ -7,26 +8,24 @@ import { Statistic } from 'antd'
 
 interface Props {
     lang: I18nLangKeys
-    userJoinClassId: string
+    userJoinClass: UserJoinClass
     quizId: string
 }
 
-export default async function PasteImgStat({ lang, userJoinClassId, quizId }: Props) {
+export default async function PasteImgStat({ lang, userJoinClass, quizId }: Props) {
     const { t } = await useServerLocale(lang)
 
-    const d1 = new UserJoinClassDomain()
-    const userJoinClass = await d1.getById(userJoinClassId)
-
-    const d2 = new CourseQuizSubmitDomain()
-    const stats = await d2.getQuizStatistics(userJoinClassId, quizId)
+    const domain = new CourseQuizSubmitDomain()
+    const stats = await domain.getQuizStatistics(userJoinClass, quizId)
 
     const displayStats = [
-        { title: 'submitted', value: stats.submitted, suffixValue: stats.totalStudents },
-        { title: 'notSubmitted', value: stats.notSubmitted, suffixValue: stats.totalStudents },
-        { title: 'toBeReviewed', value: stats.toBeReviewed, suffixValue: stats.totalStudents },
-        { title: 'passed', value: stats.passed, suffixValue: stats.submitted },
-        { title: 'failed', value: stats.failed, suffixValue: stats.submitted },
-        { title: 'passRate', value: (stats.passed / stats.totalStudents) * 100, suffixValue: '%' }
+        { title: 'submitted', value: stats.submitted, suffixValue: `/ ${stats.totalStudents}` },
+        { title: 'notSubmitted', value: stats.notSubmitted, suffixValue: `/ ${stats.totalStudents}` },
+        { title: 'submitRate', value: stats.submitRate * 100, suffixValue: '%' },
+        { title: 'passed', value: stats.passed, suffixValue: `/ ${stats.submitted}` },
+        { title: 'failed', value: stats.failed, suffixValue: `/ ${stats.submitted}` },
+        { title: 'passRate', value: stats.passRate * 100, suffixValue: '%' },
+        { title: 'toBeReviewed', value: stats.toBeReviewed, suffixValue: `/ ${stats.submitted}` }
     ]
 
     return (
@@ -37,7 +36,7 @@ export default async function PasteImgStat({ lang, userJoinClassId, quizId }: Pr
                         key={index}
                         title={t(stat.title as LocaleKeys) as string}
                         value={stat.value}
-                        suffix={`/ ${stat.suffixValue}`}
+                        suffix={stat.suffixValue}
                     />
                 ))}
             </Grid>

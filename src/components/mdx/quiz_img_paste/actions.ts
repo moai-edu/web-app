@@ -1,7 +1,6 @@
 'use server'
 
 import { CourseQuizSubmitDomain } from '@/domain/course_quiz_submit_domain'
-import { UserJoinClass } from '@/domain/types'
 import { s3DataClient } from '@/persist/s3'
 
 export type ServerActionResponse = {

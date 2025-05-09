@@ -53,6 +53,23 @@ export default class Dao {
         await this.client.put({ TableName: this.tableName, Item })
     }
 
+    async createWithGSI123(obj: any, idGSI1: string, idGSI2: string， idGSI3: string) {
+        const Item = DaoFormat.to({
+            ...obj,
+            pk: `${this.type}#${obj.id}`,
+            sk: `${this.type}#${obj.id}`,
+            type: this.type,
+            GSI1PK: `${this.type}#${idGSI1}`,
+            GSI1SK: `${this.type}#${idGSI1}`,
+            GSI2PK: `${this.type}#${idGSI2}`,
+            GSI2SK: `${this.type}#${idGSI2}`,
+            GSI3PK: `${this.type}#${idGSI3}`,
+            GSI3SK: `${this.type}#${idGSI3}`
+        })
+
+        await this.client.put({ TableName: this.tableName, Item })
+    }
+
     async getById<T>(id: string): Promise<T | null> {
         const { Item } = await this.client.get({
             TableName: this.tableName,
@@ -84,6 +101,20 @@ export default class Dao {
             ExpressionAttributeValues: {
                 ':gsi2pk': `${this.type}#${idGSI2}`,
                 ':gsi2sk': `${this.type}#${idGSI2}`
+            }
+        })
+
+        return Items?.[0] ? DaoFormat.from<T>(Items[0]) : null
+    }
+
+    async getByGSI3<T>(idGSI3: string): Promise<T | null> {
+        const { Items } = await this.client.query({
+            TableName: this.tableName,
+            IndexName: 'GSI3', // 使用全局二级索引查询
+            KeyConditionExpression: 'GSI3PK = :gsi3pk AND GSI3SK = :gsi3sk',
+            ExpressionAttributeValues: {
+                ':gsi3pk': `${this.type}#${idGSI3}`,
+                ':gsi3sk': `${this.type}#${idGSI3}`
             }
         })
 
@@ -234,6 +265,19 @@ export default class Dao {
             ExpressionAttributeValues: {
                 ':gsi2pk': `${this.type}#${idGSI2}`,
                 ':gsi2sk': `${this.type}#${idGSI2}`
+            }
+        })
+        return Items ? Items.map((item) => DaoFormat.from<T>(item)!).filter(Boolean) : []
+    }
+
+    async getListByGSI3<T>(idGSI3: string): Promise<T[]> {
+        const { Items } = await this.client.query({
+            TableName: this.tableName,
+            IndexName: 'GSI3',
+            KeyConditionExpression: 'GSI3PK = :gsi3pk AND GSI3SK = :gsi3sk',
+            ExpressionAttributeValues: {
+                ':gsi3pk': `${this.type}#${idGSI3}`,
+                ':gsi3sk': `${this.type}#${idGSI3}`
             }
         })
         return Items ? Items.map((item) => DaoFormat.from<T>(item)!).filter(Boolean) : []

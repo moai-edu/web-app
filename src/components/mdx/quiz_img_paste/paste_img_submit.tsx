@@ -4,6 +4,7 @@ import { Image, Alert } from 'antd'
 import { useState, useEffect } from 'react'
 import { useLocale } from '@/hooks'
 import { getQuizImgPasteSubmit, submitQuizImgPaste } from './actions'
+import { UserJoinClass } from '@/domain/types'
 
 interface ImageData {
     src: string
@@ -11,11 +12,11 @@ interface ImageData {
 }
 
 interface Props {
-    userJoinClassId: string
+    userJoinClass: UserJoinClass
     quizId: string
 }
 
-export default function PasteImgSubmit({ userJoinClassId, quizId }: Props) {
+export default function PasteImgSubmit({ userJoinClass, quizId }: Props) {
     const [imageData, setImageData] = useState<ImageData | null>(null)
     const [placeHolderText, setPlaceHolderText] = useState<string>('')
     const [isUploading, setIsUploading] = useState(false)
@@ -27,7 +28,7 @@ export default function PasteImgSubmit({ userJoinClassId, quizId }: Props) {
     useEffect(() => {
         const loadLastImage = async () => {
             try {
-                const result = await getQuizImgPasteSubmit(userJoinClassId, quizId)
+                const result = await getQuizImgPasteSubmit(userJoinClass.id, quizId)
 
                 if (result.success && result.data?.url) {
                     setImageData({
@@ -43,7 +44,7 @@ export default function PasteImgSubmit({ userJoinClassId, quizId }: Props) {
         }
 
         loadLastImage()
-    }, [userJoinClassId, quizId])
+    }, [userJoinClass, quizId])
 
     async function handlePaste(event: React.ClipboardEvent<HTMLTextAreaElement>) {
         const items = event.clipboardData.items
@@ -80,7 +81,7 @@ export default function PasteImgSubmit({ userJoinClassId, quizId }: Props) {
             })
 
             // 调用 server action 上传文件
-            const result = await submitQuizImgPaste(userJoinClassId, quizId, uploadFileObj)
+            const result = await submitQuizImgPaste(userJoinClass.id, quizId, uploadFileObj)
 
             if (result.success) {
                 console.log(`上传图片成功: ${uploadFileName}`)

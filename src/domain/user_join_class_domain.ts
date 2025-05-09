@@ -49,7 +49,12 @@ export class UserJoinClassDomain {
     }
 
     async getListByClassId(classId: string): Promise<UserJoinClass[]> {
-        return await userJoinClassDao.getListByClassId(classId)
+        const joinedUsers = await userJoinClassDao.getListByClassId(classId)
+        for (const joinedUser of joinedUsers) {
+            const user = await userDao.getById(joinedUser.userId)
+            joinedUser.user = user!
+        }
+        return joinedUsers
     }
 
     async delete(id: string): Promise<UserJoinClass | null> {

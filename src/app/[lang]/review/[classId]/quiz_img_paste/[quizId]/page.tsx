@@ -1,12 +1,12 @@
-'use client'
+export const dynamic = 'force-dynamic'
 
-import { use } from 'react'
 import { I18nLangKeys } from '@/i18n'
 import React from 'react'
-import { EditOutlined, EllipsisOutlined, SettingOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons'
-import { Avatar, Card, Image, Space, Upload } from 'antd'
-import { CheckIcon, Cross1Icon, UploadIcon } from '@radix-ui/react-icons'
-const { Meta } = Card
+import { CourseQuizSubmitDomain } from '@/domain/course_quiz_submit_domain'
+import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
+import { s3DataClient } from '@/persist/s3'
+import ImagePreviewGroup from './image_preview_group'
+import { ClassDomain } from '@/domain/class_domain'
 
 type PageProps = Readonly<{
     params: Promise<{
@@ -16,56 +16,47 @@ type PageProps = Readonly<{
     }>
 }>
 
-export default function Page({ params }: PageProps) {
-    const { lang, classId, quizId } = use(params)
-    const [current, setCurrent] = React.useState(0)
+export default async function Page({ params }: PageProps) {
+    const { lang, classId, quizId } = await params
+
+    const d0 = new ClassDomain()
+    const classInfo = await d0.getById(classId)
+
+    const d1 = new UserJoinClassDomain()
+    const userJoinClassList = await d1.getListByClassId(classId)
+
+    const results = []
+    for (const userJoinClass of userJoinClassList) {
+        const d2 = new CourseQuizSubmitDomain()
+        const submit = await d2.getByUserJoinClassAndQuiz(userJoinClass.id, quizId)
+        if (submit) {
+            submit.userJoinClass = userJoinClass
+            const path = d2.getQuizImgPastePath(userJoinClass.id, submit.id)
+            if (await s3DataClient.isFileExists(path)) {
+                submit.url = await s3DataClient.getSignedUrl(path)
+            } else {
+                submit.url = '/img/placeholder.svg'
+            }
+            results.push(submit)
+        } else {
+            results.push({
+                id: '',
+                userJoinClassId: userJoinClass.id,
+                quizId: quizId,
+                classId: classId,
+                status: 'NOT_SUBMITTED' as const,
+                userJoinClass: userJoinClass,
+                url: '/img/todo.png'
+            })
+        }
+    }
 
     return (
         <div>
             <h1>
-                班级：{classId} 题号：{quizId}{' '}
+                班级：{classInfo?.name} 题号：{quizId}
             </h1>
-            <Image.PreviewGroup
-                preview={{
-                    toolbarRender: (_, { transform: { scale }, actions: { onZoomOut, onZoomIn } }) => (
-                        <Space size={12} className="toolbar-wrapper">
-                            {current}
-                            <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
-                            <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
-                        </Space>
-                    ),
-                    onChange: (current, prev) => {
-                        setCurrent(current)
-                        console.log(`current index: ${current}, prev index: ${prev}`)
-                    }
-                }}
-            >
-                <div className="flex flex-wrap justify-center">
-                    {Array.from({ length: 16 }, (_, i) => (
-                        <div key={i} className="px-2 py-2">
-                            <Card
-                                title={'张三'}
-                                hoverable
-                                style={{ width: 140, paddingLeft: 1, paddingRight: 1 }}
-                                cover={
-                                    <Image
-                                        alt=""
-                                        src="https://gw.alipayobjects.com/zos/antfincdn/x43I27A55%26/photo-1438109491414-7198515b166b.webp"
-                                        onClick={() => setCurrent(i)}
-                                    />
-                                }
-                                actions={[
-                                    <UploadIcon key="submitted" />,
-                                    <CheckIcon key="passed" />,
-                                    <Cross1Icon key="failed" />
-                                ]}
-                            >
-                                <Meta avatar={<UploadIcon />} description="已提交" />
-                            </Card>
-                        </div>
-                    ))}
-                </div>
-            </Image.PreviewGroup>
+            <ImagePreviewGroup submissions={results} />
         </div>
     )
 }

@@ -68,4 +68,20 @@ export default class S3DataClient {
         })
         return url
     }
+
+    async isFileExists(key: string): Promise<boolean> {
+        try {
+            const command = new GetObjectCommand({
+                Bucket: this.bucketName,
+                Key: key
+            })
+            await this.s3Client.send(command)
+            return true // 文件存在
+        } catch (error) {
+            if ((error as { name: string }).name === 'NoSuchKey') {
+                return false // 文件不存在
+            }
+            throw error // 其他错误
+        }
+    }
 }

@@ -7,14 +7,14 @@ import { I18nLangKeys } from '@/i18n'
 
 interface Props {
     lang: I18nLangKeys
-    model?: UserJoinClass
-    id: string
+    userJoinClass?: UserJoinClass
+    quizId: string
     title: string
     children?: React.ReactNode
 }
 
-export default function QuizImgPaste({ lang, model, id, title, children }: Props) {
-    const isClassCreator = model?.userId === model?.class?.userId
+export default function QuizImgPaste({ lang, userJoinClass, quizId, title, children }: Props) {
+    const isClassCreator = userJoinClass?.userId === userJoinClass?.class?.userId
     const items: CollapseProps['items'] = [
         {
             key: '1',
@@ -22,8 +22,10 @@ export default function QuizImgPaste({ lang, model, id, title, children }: Props
             children: (
                 <Flex direction="column" gap="3">
                     <Container>{children}</Container>
-                    {model && <PasteImgSubmit userJoinClassId={model.id} quizId={id} />}
-                    {model && isClassCreator && <PasteImgStat lang={lang} userJoinClassId={model.id} quizId={id} />}
+                    {userJoinClass && <PasteImgSubmit userJoinClass={userJoinClass} quizId={quizId} />}
+                    {userJoinClass && isClassCreator && (
+                        <PasteImgStat lang={lang} userJoinClass={userJoinClass} quizId={quizId} />
+                    )}
                 </Flex>
             )
         }

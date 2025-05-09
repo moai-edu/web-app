@@ -39,7 +39,9 @@ resource "aws_dynamodb_table" "PortalSiteDb" {
       { name = "GSI1PK", type = "S" },
       { name = "GSI1SK", type = "S" },
       { name = "GSI2PK", type = "S" },
-      { name = "GSI2SK", type = "S" }
+      { name = "GSI2SK", type = "S" },
+      { name = "GSI3PK", type = "S" },
+      { name = "GSI3SK", type = "S" }
     ]
     content {
       name = attribute.value.name
@@ -50,7 +52,8 @@ resource "aws_dynamodb_table" "PortalSiteDb" {
   dynamic "global_secondary_index" {
     for_each = [
       { name = "GSI1", hash_key = "GSI1PK", range_key = "GSI1SK" },
-      { name = "GSI2", hash_key = "GSI2PK", range_key = "GSI2SK" }
+      { name = "GSI2", hash_key = "GSI2PK", range_key = "GSI2SK" },
+      { name = "GSI3", hash_key = "GSI3PK", range_key = "GSI3SK" }
     ]
     content {
       name            = global_secondary_index.value.name
