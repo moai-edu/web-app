@@ -22,6 +22,7 @@ const cognitoOptions =
                   process.env.COGNITO_USER_POOL_ID
           }
         : {
+              allowDangerousEmailAccountLinking: true,
               clientId: Resource.WebClient.id,
               clientSecret: Resource.WebClient.secret,
               issuer: 'https://cognito-idp.' + process.env.NEXT_PUBLIC_REGION + '.amazonaws.com/' + Resource.UserPool.id

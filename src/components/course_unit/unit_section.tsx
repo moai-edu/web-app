@@ -152,7 +152,7 @@ export const UnitSection = ({ id, units, unit }: Props): JSX.Element => {
 
     const closeTooltip = useCallback(() => setSelectedTile(null), [])
 
-    const lessonsCompleted = 24
+    const lessonsCompleted = -1
     const increaseLessonsCompleted = (i: number) => {
         console.log(i)
     }
