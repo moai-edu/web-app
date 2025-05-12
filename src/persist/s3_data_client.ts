@@ -66,7 +66,24 @@ export default class S3DataClient {
         const url = await getSignedUrl(this.s3Client, command, {
             expiresIn
         })
-        return url
+
+        // console.log('Signed url:', url)
+        if (['test', 'development'].includes(process.env.NODE_ENV)) {
+            // 测试和开发环境，返回真实 s3 URL
+            // console.log('Returning real url', url)
+            return url
+        } else {
+            if (process.env.PROXY_NGX_SERVER) {
+                //# 注意：这个domain域名是用来代理s3访问的。getSignedUrl方法中，所有生成的aws的域名都全部用这个PROXY_DOMAIN环境变量中的域名替换掉，由这个环境变量的nginx服务器将客户端访问反向代理到s3的aws域名。目前使用这种办法解决aws s3域名被墙的问题。
+                const domainRegex = /^https?:\/\/([^\/]+)/
+                const proxy_url = url.replace(domainRegex, process.env.PROXY_NGX_SERVER)
+                // console.log('Returning proxy url', proxy_url)
+                return proxy_url
+            } else {
+                console.error('Error: No proxy is set.', url)
+                return url
+            }
+        }
     }
 
     async isFileExists(key: string): Promise<boolean> {
