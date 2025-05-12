@@ -80,7 +80,7 @@ export default class S3DataClient {
                 // console.log('Returning proxy url', proxy_url)
                 return proxy_url
             } else {
-                console.error('Error: No proxy is set.', url)
+                // console.error('Error: No proxy is set.', url)
                 return url
             }
         }
