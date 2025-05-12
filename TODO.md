@@ -1,12 +1,14 @@
 # TODO
 
 -   gsi 的定义、使用和排除在 2 个文件中，容易遗漏
-
+-   通过代理解决 s3 被墙和缓存的问题；
+-   当 quiz 的 id 改变时，原来的 id 的 quiz 的结果应该被清除或者被 save 到新的 id 的 quiz 中
+-   统计结果的比率保留小数点后 2 位
 -   查看班级成员页面
 -   查看单个成员的作业页面
 -   班级统计信息
 
-## DONE
+# DONE
 
 1. 参考 duolingo 的课程（主要考虑英文与技术的双向学习），结合上课的实际情况（截图上传可能更可行？），设计每个 step 的练
    习题的类型，并在学习时显示；
@@ -48,3 +50,9 @@ wsl 下 localstack 无法保存数据；
 1. ant design step 样式切换；
 1. 完成文档类型 step-task；
 1. 重写 replace markdown resource url with presigned url；
+
+# Bugs
+
+-   https://www.sanyedu.org/zh/u/xin/course/python/0?stepIndex=2 无法查看 step
+
+# Fixed
