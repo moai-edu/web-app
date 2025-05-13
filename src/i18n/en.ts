@@ -18,6 +18,8 @@ export default {
 
     course: 'Course',
     class: 'Class',
+    unit: 'Unit',
+    guidebook: 'Guidebook',
     student: 'Student',
     teacher: 'Teacher',
     name: 'Name',

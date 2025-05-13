@@ -21,15 +21,15 @@ export default async function PasteImgStat({ lang, klass, quizId }: Props) {
     const displayStats = [
         { title: 'submitted', value: stats.submitted, suffixValue: `/ ${stats.totalStudents}` },
         { title: 'notSubmitted', value: stats.notSubmitted, suffixValue: `/ ${stats.totalStudents}` },
-        { title: 'submitRate', value: stats.submitRate * 100, suffixValue: '%' },
+        { title: 'submitRate', value: (stats.submitRate * 100).toFixed(2), suffixValue: '%' },
         { title: 'passed', value: stats.passed, suffixValue: `/ ${stats.submitted}` },
         { title: 'failed', value: stats.failed, suffixValue: `/ ${stats.submitted}` },
-        { title: 'passRate', value: stats.passRate * 100, suffixValue: '%' },
+        { title: 'passRate', value: (stats.passRate * 100).toFixed(2), suffixValue: '%' },
         { title: 'toBeReviewed', value: stats.toBeReviewed, suffixValue: `/ ${stats.submitted}` }
     ]
 
     return (
-        <Link href={`/review/${klass.id}/quiz_img_paste/${quizId}`}>
+        <Link href={`/review/${klass.id}/quiz_img_paste/${quizId}`} target="_blank">
             <Grid columns="3" gap="3" rows="repeat(2, 64px)" width="auto">
                 {displayStats.map((stat, index) => (
                     <Statistic

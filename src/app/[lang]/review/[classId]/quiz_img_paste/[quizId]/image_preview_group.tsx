@@ -8,7 +8,7 @@ import { CourseQuizSubmit, CourseQuizSubmitStatus } from '@/domain/types'
 import { useLocale } from '@/hooks'
 import { useState, useTransition } from 'react'
 import { createWithStatus, updateStatus } from './actions'
-import { Button } from '@radix-ui/themes'
+import { Badge, Button } from '@radix-ui/themes'
 
 interface Props {
     submissions: CourseQuizSubmit[]
@@ -45,28 +45,36 @@ export default function ImagePreviewGroup({ submissions }: Props) {
         })
     }
 
-    function getStatusIcon(status: string) {
-        switch (status) {
-            case 'SUBMITTED':
-                return <CircleIcon />
-            case 'PASSED':
-                return <CheckIcon />
-            case 'FAILED':
-                return <Cross1Icon />
-            default:
-                return <CircleBackslashIcon />
-        }
-    }
     function getStatusText(status: string) {
         switch (status) {
             case 'SUBMITTED':
-                return t('submitted')
+                return (
+                    <Badge variant="solid" color="indigo">
+                        <CircleIcon />
+                        {t('submitted')}
+                    </Badge>
+                )
             case 'PASSED':
-                return t('passed')
+                return (
+                    <Badge variant="solid" color="green">
+                        <CheckIcon />
+                        {t('passed')}
+                    </Badge>
+                )
             case 'FAILED':
-                return t('failed')
+                return (
+                    <Badge variant="solid" color="red">
+                        <Cross1Icon />
+                        {t('failed')}
+                    </Badge>
+                )
             default:
-                return t('notSubmitted')
+                return (
+                    <Badge variant="solid" color="crimson">
+                        <CircleBackslashIcon />
+                        {t('notSubmitted')}
+                    </Badge>
+                )
         }
     }
     return (
@@ -151,7 +159,7 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                                 </Button>
                             ]}
                         >
-                            <Meta avatar={getStatusIcon(item.status)} description={getStatusText(item.status)} />
+                            <Meta description={getStatusText(item.status)} />
                         </Card>
                     </div>
                 ))}

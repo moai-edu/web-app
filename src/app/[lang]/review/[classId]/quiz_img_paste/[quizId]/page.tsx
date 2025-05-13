@@ -7,6 +7,7 @@ import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
 import { s3DataClient } from '@/persist/s3'
 import ImagePreviewGroup from './image_preview_group'
 import { ClassDomain } from '@/domain/class_domain'
+import { useServerLocale } from '@/hooks'
 
 type PageProps = Readonly<{
     params: Promise<{
@@ -18,6 +19,7 @@ type PageProps = Readonly<{
 
 export default async function Page({ params }: PageProps) {
     const { lang, classId, quizId } = await params
+    const { t } = await useServerLocale(lang)
 
     const d0 = new ClassDomain()
     const classInfo = await d0.getById(classId)
@@ -46,16 +48,14 @@ export default async function Page({ params }: PageProps) {
                 classId: classId,
                 status: 'NOT_SUBMITTED' as const,
                 userJoinClass: userJoinClass,
-                url: '/img/todo.png'
+                url: '/img/blank.png'
             })
         }
     }
 
     return (
         <div>
-            <h1>
-                班级：{classInfo?.name} 题号：{quizId}
-            </h1>
+            <h1>{`${t('class')}: ${classInfo?.name}  ${t('id')}: ${quizId}`}</h1>
             <ImagePreviewGroup submissions={results} />
         </div>
     )

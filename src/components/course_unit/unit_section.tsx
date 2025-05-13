@@ -1,7 +1,8 @@
 'use client'
-import { Tile, TileStatus, TileType, CourseUnit, STEPS_PER_TILE, Course } from '@/domain/types'
+
+import { Tile, TileStatus, TileType, CourseUnit, STEPS_PER_TILE } from '@/domain/types'
 import { UnitHeader } from './unit_header'
-import { Fragment, JSX, useCallback, useEffect, useRef, useState } from 'react'
+import { Fragment, JSX, useCallback, useEffect, useState } from 'react'
 import {
     ActiveBookSvg,
     LockedBookSvg,
@@ -24,6 +25,7 @@ import { HoverLabel } from './hover_label'
 import { LessonCompletionSvg } from './lesson_completion_svg'
 import { TileTooltip } from './tile_tooltip'
 import { useRouter } from 'next/navigation'
+import { useLocale } from '@/hooks'
 
 const tileStatus = (units: CourseUnit[], tile: Tile, lessonsCompleted: number): TileStatus => {
     const lessonsPerTile = STEPS_PER_TILE
@@ -141,6 +143,7 @@ interface Props {
 
 export const UnitSection = ({ id, units, unit }: Props): JSX.Element => {
     const router = useRouter()
+    const { t } = useLocale()
 
     const [selectedTile, setSelectedTile] = useState<null | number>(null)
 
@@ -152,7 +155,11 @@ export const UnitSection = ({ id, units, unit }: Props): JSX.Element => {
 
     const closeTooltip = useCallback(() => setSelectedTile(null), [])
 
-    const lessonsCompleted = -1
+    // TODO：这里简单地把所有的step都标记为完成了，允许用户随意在每个step中跳转和选择
+    const lessonsCompleted = units.reduce((totalSteps, unit) => {
+        return totalSteps + unit.steps!.length
+    }, 0)
+
     const increaseLessonsCompleted = (i: number) => {
         console.log(i)
     }
@@ -164,7 +171,7 @@ export const UnitSection = ({ id, units, unit }: Props): JSX.Element => {
     return (
         <>
             <UnitHeader
-                title={`Unit ${unitNumber}`}
+                title={`${t('unit')} ${unitNumber}`}
                 description={unit.name}
                 href={`${id}/${unit.index}`}
                 backgroundColor={unit.style!.backgroundColor}
@@ -185,57 +192,67 @@ export const UnitSection = ({ id, units, unit }: Props): JSX.Element => {
                                         if (tile.type === 'trophy' && status === 'COMPLETE') {
                                             return (
                                                 <div className="relative">
-                                                    <TileIcon tileType={tile.type} status={status} />
-                                                    <div className="absolute left-0 right-0 top-6 flex justify-center text-lg font-bold text-yellow-700">
-                                                        {unitNumber}
-                                                    </div>
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedTile(i)
+                                                        }}
+                                                    >
+                                                        <TileIcon tileType={tile.type} status={status} />
+                                                        <div className="absolute left-0 right-0 top-6 flex justify-center text-lg font-bold text-yellow-700">
+                                                            {unitNumber}
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            )
+                                        } else {
+                                            return (
+                                                <div
+                                                    className={[
+                                                        'relative -mb-4 h-[93px] w-[98px]',
+                                                        getTileLeftClassName({
+                                                            index: i,
+                                                            unitNumber,
+                                                            tilesLength: unit.tiles!.length
+                                                        })
+                                                    ].join(' ')}
+                                                >
+                                                    {tile.type === 'fast-forward' && status === 'LOCKED' ? (
+                                                        <HoverLabel
+                                                            text="Jump here?"
+                                                            textColor={unit.style!.textColor}
+                                                        />
+                                                    ) : selectedTile !== i && status === 'ACTIVE' ? (
+                                                        <HoverLabel text="Start" textColor={unit.style!.textColor} />
+                                                    ) : null}
+                                                    <LessonCompletionSvg
+                                                        lessonsCompleted={lessonsCompleted}
+                                                        status={status}
+                                                    />
+                                                    <button
+                                                        className={[
+                                                            'absolute m-3 rounded-full border-b-8 p-4',
+                                                            getTileColors({
+                                                                tileType: tile.type,
+                                                                status,
+                                                                defaultColors: `${unit.style!.borderColor} ${
+                                                                    unit.style!.backgroundColor
+                                                                }`
+                                                            })
+                                                        ].join(' ')}
+                                                        onClick={() => {
+                                                            if (tile.type === 'fast-forward' && status === 'LOCKED') {
+                                                                void router.push(`/lesson?fast-forward=${unitNumber}`)
+                                                                return
+                                                            }
+                                                            setSelectedTile(i)
+                                                        }}
+                                                    >
+                                                        <TileIcon tileType={tile.type} status={status} />
+                                                        <span className="sr-only">Show lesson</span>
+                                                    </button>
                                                 </div>
                                             )
                                         }
-                                        return (
-                                            <div
-                                                className={[
-                                                    'relative -mb-4 h-[93px] w-[98px]',
-                                                    getTileLeftClassName({
-                                                        index: i,
-                                                        unitNumber,
-                                                        tilesLength: unit.tiles!.length
-                                                    })
-                                                ].join(' ')}
-                                            >
-                                                {tile.type === 'fast-forward' && status === 'LOCKED' ? (
-                                                    <HoverLabel text="Jump here?" textColor={unit.style!.textColor} />
-                                                ) : selectedTile !== i && status === 'ACTIVE' ? (
-                                                    <HoverLabel text="Start" textColor={unit.style!.textColor} />
-                                                ) : null}
-                                                <LessonCompletionSvg
-                                                    lessonsCompleted={lessonsCompleted}
-                                                    status={status}
-                                                />
-                                                <button
-                                                    className={[
-                                                        'absolute m-3 rounded-full border-b-8 p-4',
-                                                        getTileColors({
-                                                            tileType: tile.type,
-                                                            status,
-                                                            defaultColors: `${unit.style!.borderColor} ${
-                                                                unit.style!.backgroundColor
-                                                            }`
-                                                        })
-                                                    ].join(' ')}
-                                                    onClick={() => {
-                                                        if (tile.type === 'fast-forward' && status === 'LOCKED') {
-                                                            void router.push(`/lesson?fast-forward=${unitNumber}`)
-                                                            return
-                                                        }
-                                                        setSelectedTile(i)
-                                                    }}
-                                                >
-                                                    <TileIcon tileType={tile.type} status={status} />
-                                                    <span className="sr-only">Show lesson</span>
-                                                </button>
-                                            </div>
-                                        )
                                     case 'treasure':
                                         return (
                                             <div

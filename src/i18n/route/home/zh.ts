@@ -7,8 +7,8 @@ export const routeHome = {
     createdClassEditDlgDesc: '修改你的班级信息',
     routeCreatedClass: {
         create: '创建班级',
-        member: '班级成员',
-        review: '作业评审'
+        members: '成员管理',
+        submits: '提交管理'
     },
     routeJoinedClass: {
         join: '加入班级',

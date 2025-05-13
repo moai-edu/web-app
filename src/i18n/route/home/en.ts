@@ -7,8 +7,8 @@ export const routeHome = {
     createdClassEditDlgDesc: 'Make changes to your class.',
     routeCreatedClass: {
         create: 'New Class',
-        member: 'Members',
-        review: 'Review'
+        members: 'Members',
+        submits: 'Submits'
     },
     routeJoinedClass: {
         join: 'Join Class',

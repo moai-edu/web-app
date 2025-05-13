@@ -18,6 +18,8 @@ export default {
 
     course: '课程',
     class: '班级',
+    unit: '单元',
+    guidebook: '概览',
     student: '学生',
     teacher: '教师',
     name: '名称',

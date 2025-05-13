@@ -1,4 +1,5 @@
 import { GuidebookSvg } from '@/components/Svgs'
+import { useLocale } from '@/hooks'
 import Link from 'next/link'
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
     borderColor: `border-${string}`
 }
 export const UnitHeader = ({ title, description, href, backgroundColor, borderColor }: Props) => {
+    const { t } = useLocale()
     return (
         <article className={['max-w-2xl text-white sm:rounded-xl', backgroundColor].join(' ')}>
             <header className="flex items-center justify-between gap-4 p-4">
@@ -24,7 +26,7 @@ export const UnitHeader = ({ title, description, href, backgroundColor, borderCo
                     ].join(' ')}
                 >
                     <GuidebookSvg />
-                    <span className="sr-only font-bold uppercase lg:not-sr-only">Guidebook</span>
+                    <span className="sr-only font-bold uppercase lg:not-sr-only">{t('guidebook')}</span>
                 </Link>
             </header>
         </article>
