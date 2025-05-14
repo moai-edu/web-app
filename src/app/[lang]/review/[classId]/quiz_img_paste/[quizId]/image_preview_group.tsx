@@ -8,7 +8,7 @@ import { CourseQuizSubmit, CourseQuizSubmitStatus } from '@/domain/types'
 import { useLocale } from '@/hooks'
 import { useState, useTransition } from 'react'
 import { createWithStatus, updateStatus } from './actions'
-import { Badge, Button } from '@radix-ui/themes'
+import { Badge, Button, Text } from '@radix-ui/themes'
 
 interface Props {
     submissions: CourseQuizSubmit[]
@@ -83,8 +83,14 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                 toolbarRender: (_, { transform: { scale }, actions: { onZoomOut, onZoomIn } }) => (
                     <>
                         <Space size={12} className="toolbar-wrapper">
-                            {list.length &&
-                                `${list[current].userJoinClass!.user!.name} - ${getStatusText(list[current].status)}`}
+                            {list.length && (
+                                <>
+                                    <Badge variant="solid" color="gray" highContrast>
+                                        {list[current].userJoinClass!.user!.name}
+                                    </Badge>
+                                    {getStatusText(list[current].status)}
+                                </>
+                            )}
                             <Button
                                 asChild
                                 variant="ghost"
@@ -118,7 +124,7 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                 ),
                 onChange: (current, prev) => {
                     setCurrent(current)
-                    console.log(`current index: ${current}, prev index: ${prev}`)
+                    // console.log(`current index: ${current}, prev index: ${prev}`)
                 }
             }}
         >
@@ -128,9 +134,9 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                         <Card
                             title={item.userJoinClass!.user!.name}
                             hoverable
-                            style={{ width: 140, paddingLeft: 1, paddingRight: 1 }}
+                            style={{ width: 120, paddingLeft: 1, paddingRight: 1 }}
                             cover={
-                                <Image alt="" src={item.url} onClick={() => setCurrent(idx)} style={{ height: 130 }} />
+                                <Image alt="" src={item.url} onClick={() => setCurrent(idx)} style={{ height: 100 }} />
                             }
                             actions={[
                                 <Button
