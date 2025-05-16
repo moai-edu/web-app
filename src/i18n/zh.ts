@@ -51,11 +51,13 @@ export default {
 
     submitted: '已提交',
     notSubmitted: '未提交',
+    reviewed: '已批阅',
     toBeReviewed: '待批阅',
     passed: '通过',
     failed: '未通过',
     submitRate: '提交率',
     passRate: '通过率',
+    reviewRate: '批阅率',
 
     modifyProfile: '修改账户信息',
     deleteConfirm: '确定要删除吗？此操作是永久性的，无法撤销。',

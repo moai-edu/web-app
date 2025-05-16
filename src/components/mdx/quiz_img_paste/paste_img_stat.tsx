@@ -1,45 +1,40 @@
-import { CourseQuizSubmitDomain } from '@/domain/course_quiz_submit_domain'
-import { Class, UserJoinClass } from '@/domain/types'
-import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
-import { useServerLocale } from '@/hooks'
-import { I18nLangKeys, LocaleKeys } from '@/i18n'
-import { Grid, Link } from '@radix-ui/themes'
+'use client'
+
+import { CourseQuizStat } from '@/domain/course_quiz_submit_domain'
+import { useLocale } from '@/hooks'
+import { LocaleKeys } from '@/i18n'
+import { Grid } from '@radix-ui/themes'
 import { Statistic } from 'antd'
 
 interface Props {
-    lang: I18nLangKeys
-    klass: Class
-    quizId: string
+    stat: CourseQuizStat
 }
 
-export default async function PasteImgStat({ lang, klass, quizId }: Props) {
-    const { t } = await useServerLocale(lang)
-
-    const domain = new CourseQuizSubmitDomain()
-    const stats = await domain.getQuizStatistics(klass, quizId)
+export default function PasteImgStat({ stat }: Props) {
+    const { t } = useLocale()
 
     const displayStats = [
-        { title: 'submitted', value: stats.submitted, suffixValue: `/ ${stats.totalStudents}` },
-        { title: 'notSubmitted', value: stats.notSubmitted, suffixValue: `/ ${stats.totalStudents}` },
-        { title: 'submitRate', value: (stats.submitRate * 100).toFixed(2), suffixValue: '%' },
-        { title: 'passed', value: stats.passed, suffixValue: `/ ${stats.submitted}` },
-        { title: 'failed', value: stats.failed, suffixValue: `/ ${stats.submitted}` },
-        { title: 'passRate', value: (stats.passRate * 100).toFixed(2), suffixValue: '%' },
-        { title: 'toBeReviewed', value: stats.toBeReviewed, suffixValue: `/ ${stats.submitted}` }
+        { title: 'submitted', value: stat.submitted, suffixValue: `/ ${stat.total}` },
+        { title: 'notSubmitted', value: stat.notSubmitted, suffixValue: `/ ${stat.total}` },
+        { title: 'submitRate', value: (stat.submitRate * 100).toFixed(0), suffixValue: '%' },
+        { title: 'passed', value: stat.passed, suffixValue: `/ ${stat.submitted}` },
+        { title: 'failed', value: stat.failed, suffixValue: `/ ${stat.submitted}` },
+        { title: 'passRate', value: (stat.passRate * 100).toFixed(0), suffixValue: '%' },
+        { title: 'reviewed', value: stat.reviewed, suffixValue: `/ ${stat.submitted}` },
+        { title: 'toBeReviewed', value: stat.toBeReviewed, suffixValue: `/ ${stat.submitted}` },
+        { title: 'reviewRate', value: (stat.reviewRate * 100).toFixed(0), suffixValue: '%' }
     ]
 
     return (
-        <Link href={`/review/${klass.id}/quiz_img_paste/${quizId}`} target="_blank">
-            <Grid columns="3" gap="3" rows="repeat(2, 64px)" width="auto">
-                {displayStats.map((stat, index) => (
-                    <Statistic
-                        key={index}
-                        title={t(stat.title as LocaleKeys) as string}
-                        value={stat.value}
-                        suffix={stat.suffixValue}
-                    />
-                ))}
-            </Grid>
-        </Link>
+        <Grid columns="3" gap="3" rows="repeat(2, 64px)" width="auto">
+            {displayStats.map((stat, index) => (
+                <Statistic
+                    key={index}
+                    title={t(stat.title as LocaleKeys) as string}
+                    value={stat.value}
+                    suffix={stat.suffixValue}
+                />
+            ))}
+        </Grid>
     )
 }

@@ -51,11 +51,13 @@ export default {
 
     submitted: 'Submitted',
     notSubmitted: 'Not Submitted',
+    reviewed: 'Reviewed',
     toBeReviewed: 'To be reviewed',
     passed: 'Passed',
     failed: 'Failed',
     submitRate: 'Submit Rate',
     passRate: 'Pass Rate',
+    reviewRate: 'Review Rate',
 
     modifyProfile: 'Modify Profile',
     deleteConfirm: 'Are you sure you want to delete this? This action is permanent and cannot be undone.',
