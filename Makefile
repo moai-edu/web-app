@@ -111,3 +111,9 @@ clean-remote-s3:
 	@echo This must be done manually.
 	@echo because in the begining of this Makefile, .env.local is pointing aws environment variables to localstack.
 	@echo aws s3 rm --recursive s3://$(REMOTE_DATA_BUCKET_NAME)/
+
+.PHONY: cors-local-s3
+cors-local-s3:
+	$(awslocal) s3api put-bucket-cors \
+		--bucket $(DATA_BUCKET_NAME) \
+		--cors-configuration '{ "CORSRules": [ { "AllowedHeaders": [ "*" ], "AllowedMethods": [ "GET" ], "AllowedOrigins": [ "*" ], "ExposeHeaders": [ "ETag" ] } ] }'

@@ -36,21 +36,26 @@ export default class S3DataClient {
         return resFiles.map((file) => file.Key!)
     }
 
-    async getMdDataContent(key: string): Promise<{
-        data: any | null | undefined
-        content: string
-    }> {
-        // console.log('Getting markdown content for key:', key)
-        // 获取 markdown 文件的内容
+    async getTextContent(key: string): Promise<string> {
         const command = new GetObjectCommand({
             Bucket: this.bucketName,
             Key: key
         })
+
         const response = await this.s3Client.send(command)
         const source = await response.Body?.transformToString('utf-8')
         if (!source) {
             throw new Error(`Key not found in s3 bucket: ${key}`)
         }
+        return source
+    }
+
+    async getMdDataContent(key: string): Promise<{
+        data: any | null | undefined
+        content: string
+    }> {
+        // console.log('Getting markdown content for key:', key)
+        const source = await this.getTextContent(key)
         const { data, content } = matter(source)
         return { data, content }
     }
@@ -64,7 +69,8 @@ export default class S3DataClient {
             Key: key
         })
         const url = await getSignedUrl(this.s3Client, command, {
-            expiresIn
+            expiresIn,
+            signableHeaders: new Set(['Origin']) // 允许 CORS 头
         })
 
         // console.log('Signed url:', url)
