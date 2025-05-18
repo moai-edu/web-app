@@ -75,12 +75,15 @@ export default class S3DataClient {
 
         // console.log('Signed url:', url)
         if (['test', 'development'].includes(process.env.NODE_ENV)) {
-            // 测试和开发环境，返回真实 s3 URL
+            // 在本地测试和本地开发环境中，返回真实 s3 URL
             // console.log('Returning real url', url)
             return url
         } else {
+            // 注意：这个domain域名是用来代理s3访问的。
+            // 在getSignedUrl方法中，所有生成的aws的域名都全部用这个域名替换掉，再由后者将客户端访问代理到s3的aws域名。
+            // 目前使用这种办法解决aws s3域名被墙的问题。
+            // 在云端dev和prod环境中部署的时候，这个环境变量的取值是不一样的，分别设置在.env.dev.sh和.env.prod.sh中，在ci-cd.yaml中加载
             if (process.env.PROXY_NGX_SERVER) {
-                //# 注意：这个domain域名是用来代理s3访问的。getSignedUrl方法中，所有生成的aws的域名都全部用这个PROXY_DOMAIN环境变量中的域名替换掉，由这个环境变量的nginx服务器将客户端访问反向代理到s3的aws域名。目前使用这种办法解决aws s3域名被墙的问题。
                 const domainRegex = /^https?:\/\/([^\/]+)/
                 const proxy_url = url.replace(domainRegex, process.env.PROXY_NGX_SERVER)
                 // console.log('Returning proxy url', proxy_url)

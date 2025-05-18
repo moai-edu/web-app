@@ -65,21 +65,21 @@ jobs:
                   if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
                     if [ "${{ steps.commit-message.outputs.should_teardown }}" == "true" ]; then
                       echo "Tearing down the Production environment..."
-                      STAGE="prod" make teardown  # 生产环境拆除
+                      source .env.prod.sh && make teardown  # 生产环境拆除
                     fi
                     if [ "${{ steps.commit-message.outputs.should_setup }}" == "true" ]; then
                       echo "Deploying to Production environment..."
-                      STAGE="prod" make setup  # 生产环境部署
+                      source .env.prod.sh && make setup  # 生产环境部署
                     fi
                   fi
                   if [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
                     if [ "${{ steps.commit-message.outputs.should_teardown }}" == "true" ]; then
                       echo "Tearing down the Development environment..."
-                      STAGE="dev" make teardown  # 开发环境拆除
+                      source .env.dev.sh && make teardown  # 开发环境拆除
                     fi
                     if [ "${{ steps.commit-message.outputs.should_setup }}" == "true" ]; then
                       echo "Deploying to Development environment..."
-                      STAGE="dev" make setup  # 开发环境部署
+                      source .env.dev.sh && make setup  # 开发环境部署
                     fi
                   fi
 
