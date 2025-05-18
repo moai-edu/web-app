@@ -6,11 +6,12 @@ import { Space, Card, Image } from 'antd'
 import Meta from 'antd/es/card/Meta'
 import { CourseQuizSubmit, CourseQuizSubmitStatus } from '@/domain/types'
 import { useLocale } from '@/hooks'
-import { useState, useTransition, useMemo } from 'react'
+import { useState, useTransition, useMemo, useEffect } from 'react' // 添加了 useEffect
 import { createWithStatus, updateStatus } from './actions'
 import { Badge, Button } from '@radix-ui/themes'
 import PasteImgStat from '@/components/mdx/quiz_img_paste/paste_img_stat'
 import { CourseQuizStat } from '@/domain/course_quiz_submit_domain'
+import { getStatFromSubmitList } from '@/domain/shared'
 
 interface Props {
     submissions: CourseQuizSubmit[]
@@ -23,33 +24,38 @@ export default function ImagePreviewGroup({ submissions }: Props) {
     const [error, setError] = useState('')
     const [isPending, startTransition] = useTransition()
 
+    // 添加键盘事件监听
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (isPending) return // 如果正在处理中，不响应快捷键
+
+            switch (e.key.toLowerCase()) {
+                case 's':
+                    e.preventDefault()
+                    submitAction(current, list[current], 'SUBMITTED')
+                    break
+                case 'p':
+                    e.preventDefault()
+                    submitAction(current, list[current], 'PASSED')
+                    break
+                case 'f':
+                    e.preventDefault()
+                    submitAction(current, list[current], 'FAILED')
+                    break
+                default:
+                    break
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [current, list, isPending]) // 依赖项确保回调函数能获取最新状态
+
     // 使用 useMemo 计算 stat，当 list 变化时重新计算
     const stat = useMemo<CourseQuizStat>(() => {
-        const total = list.length
-        const submitted = list.filter((item) => item.status === 'SUBMITTED').length
-        const passed = list.filter((item) => item.status === 'PASSED').length
-        const failed = list.filter((item) => item.status === 'FAILED').length
-        const notSubmitted = list.filter((item) => !item.status || item.status === 'NOT_SUBMITTED').length
-        const reviewed = passed + failed
-        const toBeReviewed = submitted
-
-        // 计算比率，避免除以零的情况
-        const submitRate = total > 0 ? (submitted + passed + failed) / total : 0
-        const passRate = reviewed > 0 ? passed / reviewed : 0
-        const reviewRate = submitted + passed + failed > 0 ? reviewed / (submitted + passed + failed) : 0
-
-        return {
-            total,
-            submitted,
-            notSubmitted,
-            passed,
-            failed,
-            reviewed,
-            toBeReviewed,
-            submitRate,
-            passRate,
-            reviewRate
-        }
+        return getStatFromSubmitList(list)
     }, [list]) // 依赖于 list，当 list 变化时重新计算
 
     const submitAction = async (index: number, submit: CourseQuizSubmit, status: CourseQuizSubmitStatus) => {
@@ -130,6 +136,7 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                                     variant="ghost"
                                     disabled={isPending}
                                     onClick={() => submitAction(current, list[current], 'SUBMITTED')}
+                                    title="快捷键: S"
                                 >
                                     <CircleIcon />
                                 </Button>
@@ -138,6 +145,7 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                                     variant="ghost"
                                     disabled={isPending}
                                     onClick={() => submitAction(current, list[current], 'PASSED')}
+                                    title="快捷键: P"
                                 >
                                     <CheckIcon />
                                 </Button>
@@ -146,6 +154,7 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                                     variant="ghost"
                                     disabled={isPending}
                                     onClick={() => submitAction(current, list[current], 'FAILED')}
+                                    title="快捷键: F"
                                 >
                                     <Cross1Icon />
                                 </Button>
@@ -183,6 +192,7 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                                         variant="ghost"
                                         disabled={isPending}
                                         onClick={() => submitAction(idx, item, 'SUBMITTED')}
+                                        title="快捷键: S"
                                     >
                                         <CircleIcon />
                                     </Button>,
@@ -191,6 +201,7 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                                         variant="ghost"
                                         disabled={isPending}
                                         onClick={() => submitAction(idx, item, 'PASSED')}
+                                        title="快捷键: P"
                                     >
                                         <CheckIcon />
                                     </Button>,
@@ -199,6 +210,7 @@ export default function ImagePreviewGroup({ submissions }: Props) {
                                         variant="ghost"
                                         disabled={isPending}
                                         onClick={() => submitAction(idx, item, 'FAILED')}
+                                        title="快捷键: F"
                                     >
                                         <Cross1Icon />
                                     </Button>
