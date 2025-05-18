@@ -34,10 +34,7 @@ const webConfig = {
         // AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
         // AWS_REGION: process.env.AWS_REGION!,
         AUTH_SECRET: secret.nextAuthSecret.value, //next-auth 使用这个环境变量设置secret: https://authjs.dev/reference/core/errors#missingsecret
-        NEXT_PUBLIC_REGION: aws.getRegionOutput().name,
-        // 这些变量没有定义在.env中，而是放在.env.dev.sh和.end.prod.sh中，所以Next.js运行时不会自动加载
-        // 所以，这里需要显示的从build time传递到runtime中；
-        PROXY_NGX_SERVER: process.env.PROXY_NGX_SERVER
+        NEXT_PUBLIC_REGION: aws.getRegionOutput().name
     }
 }
 
