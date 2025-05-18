@@ -71,7 +71,8 @@ jobs:
                       echo "Deploying to Production environment..."
                       STAGE="prod" make setup  # 生产环境部署
                     fi
-                  elif [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
+                  fi
+                  if [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
                     if [ "${{ steps.commit-message.outputs.should_teardown }}" == "true" ]; then
                       echo "Tearing down the Development environment..."
                       STAGE="dev" make teardown  # 开发环境拆除

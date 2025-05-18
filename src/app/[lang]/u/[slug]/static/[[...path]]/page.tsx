@@ -8,13 +8,11 @@ type PageProps = Readonly<{
 }>
 
 export default async function Page({ params }: PageProps) {
-    const { slug, path = [] } = await params // 默认空数组
-    const resourcePath = ['static', slug, ...path].join('/')
-    const htmlFilePath = `${resourcePath}.html` // 自动添加.html后缀
-    console.log('htmlFilePath', htmlFilePath)
+    const { slug, path } = await params
+    if (!path) return notFound()
 
     const domain = new StaticResourceDomain()
-    const html = await domain.getStaticResource(htmlFilePath)
+    const html = await domain.getStaticResource(slug, path.join('/'))
     if (!html) return notFound()
 
     const dataUrl = `data:text/html;charset=utf-8;base64,${Buffer.from(html, 'utf-8').toString('base64')}`
@@ -23,7 +21,7 @@ export default async function Page({ params }: PageProps) {
         <div className="h-screen w-screen">
             <iframe
                 src={dataUrl}
-                sandbox="allow-same-origin allow-scripts allow-popups"
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals allow-downloads"
                 className="w-full h-full border-0"
                 allow="fullscreen"
             />

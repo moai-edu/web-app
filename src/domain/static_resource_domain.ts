@@ -9,15 +9,19 @@ export class StaticResourceDomain {
         this.s3DataClient = s3DataClient
     }
 
-    async getStaticResource(fullPath: string): Promise<string | null> {
-        // console.log('Loading static resource:', htmlFilePath)
+    async getStaticResource(slug: string, path: string): Promise<string | null> {
+        let resourcePath = ['docs', slug, 'static', path].join('/')
+        if (!resourcePath.endsWith('.html')) {
+            resourcePath = `${resourcePath}.html`
+        }
+        // 从包含文件名的完整路径中提取出文件所在的基路径。通过使用正则表达式和 replace 方法，它能够有效地去除路径中的文件名部分，只保留文件所在的目录路径。
+        const basePath = resourcePath.replace(/\/[^/]+$/, '')
+
         // 返回html页面代码，将所有引用资源 URL 转换为 S3 signed url
         try {
             // 1. 获取原始HTML内容
-            const htmlContent = await this.s3DataClient.getTextContent(fullPath)
+            const htmlContent = await this.s3DataClient.getTextContent(resourcePath)
             // 2. 处理HTML中的资源引用
-            // 从包含文件名的完整路径中提取出文件所在的基路径。通过使用正则表达式和 replace 方法，它能够有效地去除路径中的文件名部分，只保留文件所在的目录路径。
-            const basePath = fullPath.replace(/\/[^/]+$/, '')
             const processedHtml = await this.processHtmlResources(htmlContent, basePath)
             return processedHtml
         } catch (error) {

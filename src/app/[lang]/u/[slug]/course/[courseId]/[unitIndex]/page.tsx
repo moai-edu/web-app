@@ -25,7 +25,7 @@ type PageProps = Readonly<{
 export default async function Page({ params, searchParams }: PageProps) {
     const { lang, slug, courseId, unitIndex } = await params
     const { tileIndex, stepIndex } = await searchParams
-    console.log('params:', slug, courseId, unitIndex, tileIndex, stepIndex)
+    // console.log('params:', slug, courseId, unitIndex, tileIndex, stepIndex)
 
     const courseDomain = new CourseDomain()
     let isAuthorized = false
