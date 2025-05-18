@@ -1,6 +1,6 @@
 # TODO
 
-- nginx反向代理要加入CORS头；为dev环境部署增加反向代理；
+- review的大图预览界面中pass/fail/unsubmit增加快捷键；
 - startup 门户网站的功能：
 - 不刷新直接加载新提交的截图；
 - cognito 注册发送验证邮件有每天 50 封的限制；
@@ -12,6 +12,7 @@
 
 # DONE
 
+- nginx反向代理要加入CORS头(nginx反向代理配置默认就允许cors跨域访问)；为dev环境部署增加反向代理；
 - 让develop分支部署的时候不代理s3，只有生产环境部署时才代理s3;
 - 我的静态html文档（论文、申请介绍材料、项目报告、个人简介简历、作品介绍展示）
 - 修改 ci，仅当提交 message 中有 setup 或 teardown 关键字时才触发部署
