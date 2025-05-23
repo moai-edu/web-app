@@ -8,7 +8,7 @@ import { CourseQuizSubmit, CourseQuizSubmitStatus } from '@/domain/types'
 import { useLocale } from '@/hooks'
 import { useState, useTransition, useMemo, useEffect } from 'react' // 添加了 useEffect
 import { createWithStatus, updateStatus } from './actions'
-import { Badge, Button } from '@radix-ui/themes'
+import { Badge, Button, Flex, Kbd } from '@radix-ui/themes'
 import PasteImgStat from '@/components/mdx/quiz_img_paste/paste_img_stat'
 import { CourseQuizStat } from '@/domain/course_quiz_submit_domain'
 import { getStatFromSubmitList } from '@/domain/shared'
@@ -118,6 +118,11 @@ export default function ImagePreviewGroup({ submissions }: Props) {
     }
     return (
         <>
+            <Flex direction="row" justify="center" align="start" gap="3">
+                <Kbd size="3">P: {t('passed')}</Kbd>
+                <Kbd size="3">F: {t('failed')}</Kbd>
+                <Kbd size="3">S: {t('submitted')}</Kbd>
+            </Flex>
             <Image.PreviewGroup
                 preview={{
                     toolbarRender: (_, { transform: { scale }, actions: { onZoomOut, onZoomIn } }) => (
