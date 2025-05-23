@@ -1,25 +1,33 @@
+# BUGs
+
+# Fixed
+
+-   在用户的 Course 查看页面中 quiz 显示为 error；
+
 # TODO
 
-- startup 门户网站的功能：
-- 不刷新直接加载新提交的截图；
-- cognito 注册发送验证邮件有每天 50 封的限制；
-- 提交管理页面：针对一个班级课程中已提交的 quiz 的管理，id 重命名等等。注意：当 quiz 的 id 改变时，原来的 id 的 quiz
+-   成员管理页面：查看班级成员页面，成员统计、排名、查看单个成员的作业页面；整个班级的统计信息
+-   startup 门户网站的功能；
+-   不刷新直接加载新提交的截图；
+-   cognito 注册发送验证邮件有每天 50 封的限制；
+-   提交管理页面：针对一个班级课程中已提交的 quiz 的管理，id 重命名等等。注意：当 quiz 的 id 改变时，原来的 id 的 quiz
     的结果应该被清除或者被 save 到新的 id 的 quiz 中；
-- 成员管理页面：查看班级成员页面，成员统计、排名、查看单个成员的作业页面；整个班级的统计信息
-- gsi 的定义、使用和排除，分散在 2 个文件中，容易遗漏和错配
-- s3 bucket要处理cors，允许跨域访问；本地环境localstack中的s3是make脚本中手动解决，则在云部署环境中的s3 bucket的cors还没有实现自动配置；因为gfw的存在，目前对s3的访问都被反向代理了，所以目前在云部署环境中s3 bucket不设置cors没有关系，因为已经在反向代理的ngx中设置了cors；
+-   gsi 的定义、使用和排除，分散在 2 个文件中，容易遗漏和错配
+-   s3 bucket 要处理 cors，允许跨域访问；本地环境 localstack 中的 s3 是 make 脚本中手动解决，则在云部署环境中的 s3
+    bucket 的 cors 还没有实现自动配置；因为 gfw 的存在，目前对 s3 的访问都被反向代理了，所以目前在云部署环境中 s3 bucket
+    不设置 cors 没有关系，因为已经在反向代理的 ngx 中设置了 cors；
 
 # DONE
 
-- review的大图预览界面中pass/fail/unsubmit增加快捷键；
-- nginx反向代理要加入CORS头(nginx反向代理配置默认就允许cors跨域访问)；为dev环境部署增加反向代理；
-- 让develop分支部署的时候不代理s3，只有生产环境部署时才代理s3;
-- 我的静态html文档（论文、申请介绍材料、项目报告、个人简介简历、作品介绍展示）
-- 修改 ci，仅当提交 message 中有 setup 或 teardown 关键字时才触发部署
-- review 页面中显示该 submit 的统计信息（学生数、提交数、未提交数、提交率；通过数、未通过数、通过率）
-- 通过代理解决 s3 被墙和缓存的问题；
-- 统计结果的比率保留小数点后 2 位
-- 截图的大图预览页面姓名后面的 status 显示不正确，显示为 object:object
+-   review 的大图预览界面中 pass/fail/unsubmit 增加快捷键；
+-   nginx 反向代理要加入 CORS 头(nginx 反向代理配置默认就允许 cors 跨域访问)；为 dev 环境部署增加反向代理；
+-   让 develop 分支部署的时候不代理 s3，只有生产环境部署时才代理 s3;
+-   我的静态 html 文档（论文、申请介绍材料、项目报告、个人简介简历、作品介绍展示）
+-   修改 ci，仅当提交 message 中有 setup 或 teardown 关键字时才触发部署
+-   review 页面中显示该 submit 的统计信息（学生数、提交数、未提交数、提交率；通过数、未通过数、通过率）
+-   通过代理解决 s3 被墙和缓存的问题；
+-   统计结果的比率保留小数点后 2 位
+-   截图的大图预览页面姓名后面的 status 显示不正确，显示为 object:object
 
 1. 参考 duolingo 的课程（主要考虑英文与技术的双向学习），结合上课的实际情况（截图上传可能更可行？），设计每个 step 的练
    习题的类型，并在学习时显示；
@@ -61,9 +69,3 @@ wsl 下 localstack 无法保存数据；
 1. ant design step 样式切换；
 1. 完成文档类型 step-task；
 1. 重写 replace markdown resource url with presigned url；
-
-# Bugs
-
-- <https://www.sanyedu.org/zh/u/xin/course/python/0?stepIndex=2> 无法查看 step
-
-# Fixed

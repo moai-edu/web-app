@@ -18,43 +18,34 @@ interface Props {
 
 export default async function QuizImgPaste({ lang, klass, userJoinClass, id, title, children }: Props) {
     const { t } = await useServerLocale(lang)
-    if (userJoinClass) {
-        // 如果加入了班级，显示提交
-        const items: CollapseProps['items'] = [
-            {
-                key: '1',
-                label: title,
-                children: (
-                    <Flex direction="column" gap="3">
-                        <Container>{children}</Container>
-                        <PasteImgSubmit userJoinClass={userJoinClass} quizId={id} />
-                    </Flex>
-                )
-            }
-        ]
+    console.log(`lang: ${lang}, klass: ${klass}, userJoinClass: ${userJoinClass}, id: ${id}`)
 
-        return <Collapse items={items} defaultActiveKey={['1']} />
+    let extraComponents = null // 默认只显示quiz信息，而不显示任何额外组件
+    if (userJoinClass) {
+        // 如果加入了班级，额外要显示提交控件
+        extraComponents = <PasteImgSubmit userJoinClass={userJoinClass} quizId={id} />
     } else if (klass) {
-        // 如果访问者没加入班级并且是班级是创建者，显示链接到review的统计信息
+        // 如果访问者没加入班级并且是班级是创建者，额外显示链接到review的统计信息
         const domain = new CourseQuizSubmitDomain()
         const stat = await domain.getQuizStatistics(klass, id)
-        const items: CollapseProps['items'] = [
-            {
-                key: '1',
-                label: `${title}(${t('id')}: ${id})`,
-                children: (
-                    <Flex direction="column" gap="3">
-                        <Container>{children}</Container>
-                        <Link href={`/review/${klass.id}/quiz_img_paste/${id}`} target="_blank">
-                            <PasteImgStat stat={stat} />
-                        </Link>
-                    </Flex>
-                )
-            }
-        ]
-
-        return <Collapse items={items} defaultActiveKey={['1']} />
-    } else {
-        return <div>Error</div>
+        extraComponents = (
+            <Link href={`/review/${klass.id}/quiz_img_paste/${id}`} target="_blank">
+                <PasteImgStat stat={stat} />
+            </Link>
+        )
     }
+
+    const items: CollapseProps['items'] = [
+        {
+            key: '1',
+            label: `${title}(${t('id')}: ${id})`,
+            children: (
+                <Flex direction="column" gap="3">
+                    <Container>{children}</Container>
+                    {extraComponents}
+                </Flex>
+            )
+        }
+    ]
+    return <Collapse items={items} defaultActiveKey={['1']} />
 }
