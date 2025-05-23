@@ -2,6 +2,7 @@
 
 # Fixed
 
+-   课程的退出链接错误；
 -   在用户的 Course 查看页面中 quiz 显示为 error；
 
 # TODO
