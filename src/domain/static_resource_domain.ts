@@ -1,6 +1,12 @@
 import { s3DataClient } from '@/persist/s3'
 import S3DataClient from '@/persist/s3_data_client'
+import { base } from '@faker-js/faker'
 import * as cheerio from 'cheerio'
+
+export interface StaticHtmlResource {
+    headHtml: string
+    bodyHtml: string
+}
 
 export class StaticResourceDomain {
     s3DataClient: S3DataClient
@@ -9,36 +15,36 @@ export class StaticResourceDomain {
         this.s3DataClient = s3DataClient
     }
 
-    async getStaticResource(slug: string, path: string): Promise<string | null> {
-        let resourcePath = ['docs', slug, 'static', path].join('/')
+    async getStaticHtmlResource(slug: string, path: string): Promise<StaticHtmlResource | null> {
+        let resourcePath = ['static', slug, path].join('/')
         if (!resourcePath.endsWith('.html')) {
             resourcePath = `${resourcePath}.html`
         }
         // 从包含文件名的完整路径中提取出文件所在的基路径。通过使用正则表达式和 replace 方法，它能够有效地去除路径中的文件名部分，只保留文件所在的目录路径。
         const basePath = resourcePath.replace(/\/[^/]+$/, '')
+        console.log('Fetching static resource:', resourcePath, basePath)
 
         // 返回html页面代码，将所有引用资源 URL 转换为 S3 signed url
         try {
             // 1. 获取原始HTML内容
             const htmlContent = await this.s3DataClient.getTextContent(resourcePath)
             // 2. 处理HTML中的资源引用
-            const processedHtml = await this.processHtmlResources(htmlContent, basePath)
-            return processedHtml
+
+            const $ = cheerio.load(htmlContent)
+            const resourceElements = this.collectResourceElements($)
+
+            // 批量生成签名URL
+            await this.replaceResourceUrls($, resourceElements, basePath)
+
+            // 提取head部分的HTML
+            const headHtml = $('head').html() || ''
+            // 提取body部分的HTML
+            const bodyHtml = $('body').html() || ''
+            return { headHtml, bodyHtml }
         } catch (error) {
             console.error('Failed to load static resource:', error)
             return null
         }
-    }
-
-    private async processHtmlResources(html: string, basePath: string) {
-        const $ = cheerio.load(html)
-        const resourceElements = this.collectResourceElements($)
-
-        // 批量生成签名URL
-        await this.replaceResourceUrls($, resourceElements, basePath)
-
-        // 返回处理后的HTML
-        return $.html()
     }
 
     private collectResourceElements($: cheerio.CheerioAPI) {
@@ -61,6 +67,7 @@ export class StaticResourceDomain {
 
         return elements
     }
+
     private async replaceResourceUrls(
         $: cheerio.CheerioAPI,
         elements: Array<{

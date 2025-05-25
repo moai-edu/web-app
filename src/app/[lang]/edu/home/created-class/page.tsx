@@ -27,7 +27,7 @@ export default async function Page({ params }: Props) {
         <>
             <Flex justify="end" width="100%" pr="4">
                 <Button asChild>
-                    <Link href="/new/class">
+                    <Link href="../new/class">
                         <PlusIcon /> {t('routeHome.routeCreatedClass.create')}
                     </Link>
                 </Button>
@@ -46,7 +46,7 @@ export default async function Page({ params }: Props) {
                     {classList.map((classItem) => (
                         <Table.Row key={classItem.id}>
                             <Table.RowHeaderCell>
-                                <Link href={`/c/created/${classItem.id}`} target="_blank">
+                                <Link href={`../c/created/${classItem.id}`} target="_blank">
                                     {classItem.name}
                                 </Link>
                             </Table.RowHeaderCell>
@@ -55,10 +55,10 @@ export default async function Page({ params }: Props) {
                             </Table.Cell>
                             <Table.Cell>
                                 <Flex gap="3">
-                                    <Link href={`/c/created/${classItem.id}`} target="_blank">
+                                    <Link href={`../c/created/${classItem.id}`} target="_blank">
                                         <Button variant="soft">{t('routeHome.routeCreatedClass.members')}</Button>
                                     </Link>
-                                    <Link href={`/c/created/${classItem.id}`} target="_blank">
+                                    <Link href={`../c/created/${classItem.id}`} target="_blank">
                                         <Button variant="soft">{t('routeHome.routeCreatedClass.submits')}</Button>
                                     </Link>
                                     <EditNameButton id={classItem.id} name={classItem.name} lang={lang} />

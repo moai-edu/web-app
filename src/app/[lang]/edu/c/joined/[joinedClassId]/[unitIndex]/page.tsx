@@ -12,21 +12,20 @@ import { ExitIcon } from '@radix-ui/react-icons'
 import { useMDXComponents } from '@/mdx-components'
 import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
 import { I18nLangKeys } from '@/i18n'
-import { ClassDomain } from '@/domain/class_domain'
 
 type PageProps = Readonly<{
     params: Promise<{
         lang: I18nLangKeys
-        classId: string
+        joinedClassId: string
         unitIndex: string
     }>
     searchParams: Promise<{ tileIndex?: string; stepIndex?: string }>
 }>
 
 export default async function Page({ params, searchParams }: PageProps) {
-    const { lang, classId, unitIndex } = await params
+    const { lang, joinedClassId, unitIndex } = await params
     const { tileIndex, stepIndex } = await searchParams
-    console.log('params:', classId, unitIndex, tileIndex, stepIndex)
+    console.log('params:', joinedClassId, unitIndex, tileIndex, stepIndex)
 
     const session = await auth()
     if (!session || !session.user || !session.user.id) {
@@ -36,9 +35,9 @@ export default async function Page({ params, searchParams }: PageProps) {
     const courseDomain = new CourseDomain()
     try {
         // 从joinedClassId获取slug和courseId
-        const domain = new ClassDomain()
-        const klass = await domain.getById(classId)
-        if (!klass || klass.userId !== session.user.id) {
+        const userJoinClassDomain = new UserJoinClassDomain()
+        const userJoinClass = await userJoinClassDomain.getById(joinedClassId)
+        if (!userJoinClass || userJoinClass.userId !== session.user.id) {
             return <h1>Document is not authorized for access</h1>
         }
 
@@ -46,8 +45,8 @@ export default async function Page({ params, searchParams }: PageProps) {
         const _tileIndex = tileIndex ? parseInt(tileIndex) : -1
         const _stepIndex = stepIndex ? parseInt(stepIndex) : -1
         const result = await courseDomain.getCourseUnitTileSteps(
-            session.user!.slug!,
-            klass.courseId,
+            userJoinClass!.class!.user!.slug!,
+            userJoinClass!.class!.courseId,
             _unitIndex,
             _tileIndex,
             _stepIndex
@@ -60,7 +59,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
         const rawJs = await compileMdx(currentStepContent, { filePath: 's3://foobar' })
         // 直接使用 Nextra 的组件，排除 wrapper以后，余下成员放入components中
-        const { wrapper, ...components } = useMDXComponents(lang, klass)
+        const { wrapper, ...components } = useMDXComponents(lang, undefined, userJoinClass)
         const { default: MDXContent } = evaluate(rawJs, components)
         return (
             <Flex direction="column" gap="4">
@@ -76,7 +75,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                     <Flex direction="column" gap="4" width="100%">
                         {/* 桌面端显示的退出按钮 - 在移动端隐藏 */}
                         <Flex justify="end" width="100%" pt="2" pr="4" display={{ initial: 'none', md: 'flex' }}>
-                            <form action="..">
+                            <form action=".">
                                 <Button type="submit" color="crimson">
                                     <ExitIcon /> 退出
                                 </Button>

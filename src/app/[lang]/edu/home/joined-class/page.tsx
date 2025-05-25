@@ -40,7 +40,7 @@ export default async function Page({ params }: Props) {
                     {list.map((model) => (
                         <Table.Row key={model.id}>
                             <Table.RowHeaderCell>
-                                <Link href={`/c/joined/${model.id}`} target="_blank">
+                                <Link href={`../c/joined/${model.id}`} target="_blank">
                                     {model.class!.name}
                                 </Link>
                             </Table.RowHeaderCell>

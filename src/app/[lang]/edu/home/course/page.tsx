@@ -23,7 +23,7 @@ export default async function Page({ params }: PageProps) {
         <Flex direction="column" gap="5" p="5">
             <Flex gap="3" wrap="wrap">
                 {courseList.map((course, i) => (
-                    <CourseCard key={i} urlPrefix={`/${lang}/u/${slug}`} course={course} />
+                    <CourseCard key={i} urlPrefix={`../u/${slug}`} course={course} />
                 ))}
             </Flex>
         </Flex>

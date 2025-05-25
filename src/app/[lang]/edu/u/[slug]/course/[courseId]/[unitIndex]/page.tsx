@@ -66,7 +66,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                         <Flex direction="column" gap="4" width="100%">
                             {/* 桌面端显示的退出按钮 - 在移动端隐藏 */}
                             <Flex justify="end" width="100%" pt="2" pr="4" display={{ initial: 'none', md: 'flex' }}>
-                                <form action="..">
+                                <form action=".">
                                     <Button type="submit" color="crimson">
                                         <ExitIcon /> 退出
                                     </Button>

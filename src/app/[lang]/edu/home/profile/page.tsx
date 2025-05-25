@@ -45,7 +45,7 @@ export default async function Page({ params }: Props) {
                 </DataList.Root>
                 <Flex justify="start">
                     <Button asChild>
-                        <Link href="/edit/profile">
+                        <Link href="../edit/profile">
                             <Pencil2Icon /> {t('modifyProfile')}
                         </Link>
                     </Button>

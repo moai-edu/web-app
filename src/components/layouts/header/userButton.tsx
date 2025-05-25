@@ -45,7 +45,7 @@ const UserButton: React.FC<UserButtonProps> = async ({ session, lang }) => {
                                 <DataList.Item>
                                     <DataList.Label minWidth="88px">{t('userHomePage')}</DataList.Label>
                                     <DataList.Value>
-                                        <Link href={`/${lang}/home/profile`}>{t('enter')}</Link>
+                                        <Link href={`/${lang}/edu/home/profile`}>{t('enter')}</Link>
                                     </DataList.Value>
                                 </DataList.Item>
                             </DataList.Root>
