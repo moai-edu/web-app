@@ -29,7 +29,7 @@ export default async function QuizImgPaste({ lang, klass, userJoinClass, id, tit
         const domain = new CourseQuizSubmitDomain()
         const stat = await domain.getQuizStatistics(klass, id)
         extraComponents = (
-            <Link href={`/review/${klass.id}/quiz_img_paste/${id}`} target="_blank">
+            <Link href={`/edu/review/${klass.id}/quiz_img_paste/${id}`} target="_blank">
                 <PasteImgStat stat={stat} />
             </Link>
         )
