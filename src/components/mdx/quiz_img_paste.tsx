@@ -18,7 +18,7 @@ interface Props {
 
 export default async function QuizImgPaste({ lang, klass, userJoinClass, id, title, children }: Props) {
     const { t } = await useServerLocale(lang)
-    console.log(`lang: ${lang}, klass: ${klass}, userJoinClass: ${userJoinClass}, id: ${id}`)
+    // console.log(`lang: ${lang}, klass: ${klass}, userJoinClass: ${userJoinClass}, id: ${id}`)
 
     let extraComponents = null // 默认只显示quiz信息，而不显示任何额外组件
     if (userJoinClass) {
@@ -38,7 +38,7 @@ export default async function QuizImgPaste({ lang, klass, userJoinClass, id, tit
     const items: CollapseProps['items'] = [
         {
             key: '1',
-            label: `${title}(${t('id')}: ${id})`,
+            label: `${t('quiz_img_paste')} : ${title} (${t('id')}: ${id})`,
             children: (
                 <Flex direction="column" gap="3">
                     <Container>{children}</Container>

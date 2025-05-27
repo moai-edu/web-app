@@ -69,6 +69,7 @@ export default {
     slugValidation: '只允许使用小写字母、数字、下划线和短横线',
     uuidValidation: '请输入有效的 UUID',
 
+    quiz_img_paste: '完成任务并截图上传',
     ...zh,
 
     featureList: [

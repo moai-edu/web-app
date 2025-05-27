@@ -80,9 +80,20 @@ export class StaticResourceDomain {
         // 并行处理所有资源URL
         await Promise.all(
             elements.map(async ({ element, attr, originalUrl }) => {
+                // console.log('originalUrl:', originalUrl)
+                if (
+                    originalUrl.startsWith('#') ||
+                    originalUrl.startsWith('http://') ||
+                    originalUrl.startsWith('https://') ||
+                    originalUrl.endsWith('.html')
+                ) {
+                    console.log('ignore:', originalUrl)
+                    return
+                }
                 const resourceKey = `${basePath}/${originalUrl.replace(/^\//, '')}`
                 try {
                     const signedUrl = await this.s3DataClient.getSignedUrl(resourceKey)
+                    console.log('get signedUrl:', resourceKey, signedUrl)
                     $(element).attr(attr, signedUrl)
                 } catch (error) {
                     console.error(`Failed to sign URL for ${resourceKey}:`, error)

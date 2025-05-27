@@ -12,6 +12,7 @@ import { ExitIcon } from '@radix-ui/react-icons'
 import { useMDXComponents } from '@/mdx-components'
 import { UserJoinClassDomain } from '@/domain/user_join_class_domain'
 import { I18nLangKeys } from '@/i18n'
+import MdxError from '@/components/MdxError'
 
 type PageProps = Readonly<{
     params: Promise<{
@@ -33,30 +34,30 @@ export default async function Page({ params, searchParams }: PageProps) {
     }
 
     const courseDomain = new CourseDomain()
+    // 从joinedClassId获取slug和courseId
+    const userJoinClassDomain = new UserJoinClassDomain()
+    const userJoinClass = await userJoinClassDomain.getById(joinedClassId)
+    if (!userJoinClass || userJoinClass.userId !== session.user.id) {
+        return <h1>Document is not authorized for access</h1>
+    }
+
+    const _unitIndex = parseInt(unitIndex)
+    const _tileIndex = tileIndex ? parseInt(tileIndex) : -1
+    const _stepIndex = stepIndex ? parseInt(stepIndex) : -1
+    const result = await courseDomain.getCourseUnitTileSteps(
+        userJoinClass!.class!.user!.slug!,
+        userJoinClass!.class!.courseId,
+        _unitIndex,
+        _tileIndex,
+        _stepIndex
+    )
+    if (!result) {
+        throw new Error('Course unit step not found')
+    }
+
+    const { metadata, steps, currentStepIndex, currentStepContent } = result
+
     try {
-        // 从joinedClassId获取slug和courseId
-        const userJoinClassDomain = new UserJoinClassDomain()
-        const userJoinClass = await userJoinClassDomain.getById(joinedClassId)
-        if (!userJoinClass || userJoinClass.userId !== session.user.id) {
-            return <h1>Document is not authorized for access</h1>
-        }
-
-        const _unitIndex = parseInt(unitIndex)
-        const _tileIndex = tileIndex ? parseInt(tileIndex) : -1
-        const _stepIndex = stepIndex ? parseInt(stepIndex) : -1
-        const result = await courseDomain.getCourseUnitTileSteps(
-            userJoinClass!.class!.user!.slug!,
-            userJoinClass!.class!.courseId,
-            _unitIndex,
-            _tileIndex,
-            _stepIndex
-        )
-        if (!result) {
-            throw new Error('Course unit step not found')
-        }
-
-        const { metadata, steps, currentStepIndex, currentStepContent } = result
-
         const rawJs = await compileMdx(currentStepContent, { filePath: 's3://foobar' })
         // 直接使用 Nextra 的组件，排除 wrapper以后，余下成员放入components中
         const { wrapper, ...components } = useMDXComponents(lang, undefined, userJoinClass)
@@ -87,7 +88,7 @@ export default async function Page({ params, searchParams }: PageProps) {
             </Flex>
         )
     } catch (error) {
-        console.error(error)
-        return <h1>Error: Document or step is not found.</h1>
+        // console.error(error)
+        return <MdxError error={JSON.stringify(error, null, 4)} mdContent={currentStepContent} />
     }
 }

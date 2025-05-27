@@ -69,6 +69,7 @@ export default {
     slugValidation: 'only lowercase letters, numbers, underscores and hyphens are allowed',
     uuidValidation: 'please enter a valid UUID',
 
+    quiz_img_paste: 'Complete the task by pasting the screenshot',
     ...en,
 
     featureList: [
