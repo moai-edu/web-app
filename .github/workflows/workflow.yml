@@ -1,0 +1,98 @@
+name: CI/CD Pipeline
+
+on:
+    push:
+        branches:
+            - main # 监听 main 分支的推送，进行生产环境部署
+            - develop # 监听 develop 分支的推送，进行开发环境部署
+
+jobs:
+    prepare:
+        runs-on: ubuntu-latest
+        outputs:
+            should_setup: ${{ steps.parse-commit.outputs.should_setup }}
+            should_teardown: ${{ steps.parse-commit.outputs.should_teardown }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - id: parse-commit
+              run: |
+                  MESSAGE=$(git log -1 --pretty=%B)
+                  echo "Commit message: $MESSAGE"
+                  if [[ "$MESSAGE" == *"SETUP"* ]]; then
+                      echo "should_deploy=true" >> $GITHUB_OUTPUT
+                  fi
+                  if [[ "$MESSAGE" == *"TEARDOWN"* ]]; then
+                      echo "should_teardown=true" >> $GITHUB_OUTPUT
+                  fi
+
+    environment:
+        needs: prepare
+        if: ${{ needs.prepare.outputs.should_setup == 'true' || needs.prepare.outputs.should_teardown == 'true' }}
+        runs-on: ubuntu-latest # 使用最新的 Ubuntu 环境来运行任务
+        steps:
+            - name: Set up Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: '21' # 使用 Node.js 版本 21，您可以根据项目需要修改版本
+
+            - name: Install Make (if not already installed)
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y make  # 安装 GNU make
+
+            - name: Install dependencies
+              run: |
+                  npm install -g pnpm
+                  pnpm install --frozen-lockfile # 根据pnpm-lock.json安装项目依赖
+
+    setup:
+        needs: [prepare, environment]
+        if: ${{ needs.prepare.outputs.should_setup == 'true' }}
+        runs-on: ubuntu-latest # 使用最新的 Ubuntu 环境来运行任务
+        steps:
+            - name: Deploy to AWS (Development or Production)
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # 从 GitHub Secrets 获取 AWS 访问密钥
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # 从 GitHub Secrets 获取 AWS 秘密访问密钥
+                  AWS_REGION: 'us-east-1' # 设定 AWS 区域，您可以根据需要修改
+                  NEXT_AUTH_SECRET_DEV: ${{ secrets.NEXT_AUTH_SECRET_DEV }} # 从 GitHub Secrets 获取 auth.js 密钥
+                  NEXT_AUTH_SECRET_PROD: ${{ secrets.NEXT_AUTH_SECRET_PROD }} # 从 GitHub Secrets 获取 auth.js 密钥
+              run: |
+                  if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
+                    echo "Deploying to Production environment..."
+                    source .env.prod.sh && make setup  # 生产环境部署
+                  fi
+                  if [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
+                    echo "Deploying to Development environment..."
+                    source .env.dev.sh && make setup  # 开发环境部署
+                  fi
+
+            - name: Always check the content of sst-env.d.ts
+              if: always() # 确保该步骤无论成功或失败都会执行
+              run: |
+                  echo "Checking content of sst-env.d.ts:"
+                  cat ./sst-env.d.ts  # 输出 sst-env.d.ts 文件的内容
+
+    teardown:
+        needs: [prepare, environment]
+        if: ${{ needs.prepare.outputs.should_teardown == 'true' }}
+        runs-on: ubuntu-latest # 使用最新的 Ubuntu 环境来运行任务
+        steps:
+            - name: Deploy to AWS (Development or Production)
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # 从 GitHub Secrets 获取 AWS 访问密钥
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # 从 GitHub Secrets 获取 AWS 秘密访问密钥
+                  AWS_REGION: 'us-east-1' # 设定 AWS 区域，您可以根据需要修改
+                  NEXT_AUTH_SECRET_DEV: ${{ secrets.NEXT_AUTH_SECRET_DEV }} # 从 GitHub Secrets 获取 auth.js 密钥
+                  NEXT_AUTH_SECRET_PROD: ${{ secrets.NEXT_AUTH_SECRET_PROD }} # 从 GitHub Secrets 获取 auth.js 密钥
+              run: |
+                  if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
+                    echo "Tearing down the Production environment..."
+                    source .env.prod.sh && make teardown  # 生产环境拆除
+                  fi
+                  if [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
+                    echo "Tearing down the Development environment..."
+                    source .env.dev.sh && make teardown  # 开发环境拆除
+                  fi
