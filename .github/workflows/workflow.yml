@@ -87,7 +87,7 @@ jobs:
                       ${{ runner.os }}-python-
 
             # 安装项目依赖
-            - name: Install dependencies
+            - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
 
             # 安装 Python 依赖（如果有 requirements.txt）
@@ -182,7 +182,7 @@ jobs:
                       ${{ runner.os }}-python-
 
             # 安装项目依赖
-            - name: Install dependencies
+            - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
 
             # 安装 Python 依赖（如果有 requirements.txt）
