@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /* deno-fmt-ignore-file */
+
 declare module 'sst' {
     export interface Resource {
         DataBucket: {
@@ -36,5 +37,6 @@ declare module 'sst' {
     }
 }
 /// <reference path="sst-env.d.ts" />
+
 import 'sst'
 export {}
