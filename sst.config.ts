@@ -17,7 +17,8 @@ export default $config({
             cognitoUserPoolClientId: infra.webClient.id,
             authUrl: infra.authUrl,
             staticSiteUrl: infra.static_site.url,
-            staticSiteS3BucketName: infra.static_site.nodes.assets?.name
+            staticSiteS3BucketName: infra.static_site.nodes.assets?.name,
+            staticSiteCloudfrontDistributionId: infra.static_site.nodes.cdn?.get()?.nodes.distribution.id
         }
         // 注意：这里一定记得同步更新sst-end.d.ts文件，否则编译可能失败。
     }
