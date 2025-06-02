@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 /* deno-fmt-ignore-file */
-
 declare module 'sst' {
     export interface Resource {
         DataBucket: {
@@ -16,6 +15,10 @@ declare module 'sst' {
         NextAuthSecret: {
             type: 'sst.sst.Secret'
             value: string
+        }
+        StaticSite: {
+            type: 'sst.aws.StaticSite'
+            url: string
         }
         UserPool: {
             id: string
@@ -33,6 +36,5 @@ declare module 'sst' {
     }
 }
 /// <reference path="sst-env.d.ts" />
-
 import 'sst'
 export {}
