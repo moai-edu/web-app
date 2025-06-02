@@ -13,13 +13,12 @@ export default $config({
         return {
             webUrl: infra.web.url,
             dataBucketName: infra.dataBucket.name,
-            dbDynamoName: infra.dbDynamo.name
-            // clientId: infra.webClient.id,
-            // authUrl: infra.authUrl,
-            // static_site_url: infra.static_site.url,
-            // static_site_s3_bucket_name: infra.static_site.nodes.assets?.name,
-            // static_site_cloudfront_distribution_id:
-            //     infra.static_site.nodes.cdn?.nodes.distribution.id,
+            dbDynamoName: infra.dbDynamo.name,
+            cognitoUserPoolClientId: infra.webClient.id,
+            authUrl: infra.authUrl,
+            staticSiteUrl: infra.static_site.url,
+            staticSiteS3BucketName: infra.static_site.nodes.assets?.name,
+            staticSiteCloudfrontDistributionId: infra.static_site.nodes.cdn?.nodes.distribution.id
         }
     }
 })

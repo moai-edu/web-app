@@ -22,16 +22,21 @@ awslocal:=aws --profile localstack
 dev:
 	npx sst dev --stage dev
 
-setup:
+setup: _site/index.html
 	@echo "setup $(STAGE) $(SECRET_NAME)=$(SECRET_VALUE)"
 	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(SECRET_VALUE)
 	-npx sst unlock --stage $(STAGE)
 	npx sst deploy --stage $(STAGE)
 
+_site/index.html: index.html
+	mkdir -p _site
+	jinja2 -D portal_domain=$(shell if [ "$(STAGE)" = "prod" ]; then echo $(PORTAL_SUBDOMAIN).$(DOMAIN); else echo $(STAGE)-$(PORTAL_SUBDOMAIN).$(DOMAIN); fi) $< > $@
+
 teardown:
 	-npx sst unlock --stage $(STAGE)
 	npx sst remove --stage $(STAGE)
 	npx sst secret remove $(SECRET_NAME) --stage $(STAGE)
+
 
 .PHONY: localstack
 localstack:

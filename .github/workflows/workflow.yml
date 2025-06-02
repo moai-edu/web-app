@@ -3,8 +3,8 @@ name: CI/CD Pipeline
 on:
     push:
         branches:
-            - main # 监听 main 分支的推送，进行生产环境部署
-            - develop # 监听 develop 分支的推送，进行开发环境部署
+            - main
+            - develop
 
 jobs:
     prepare:
@@ -30,81 +30,170 @@ jobs:
     setup:
         needs: [prepare]
         if: ${{ needs.prepare.outputs.should_setup == 'true' }}
-        runs-on: ubuntu-latest # 使用最新的 Ubuntu 环境来运行任务
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: Set up Node.js
-              uses: actions/setup-node@v2
-              with:
-                  node-version: '21' # 使用 Node.js 版本 21，您可以根据项目需要修改版本
 
-            - name: Install Make (if not already installed)
+            # 设置 Node.js 环境
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '21'
+                  cache: 'pnpm'
+
+            # 设置 Python 环境
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: '3.12'
+                  cache: 'pip'
+
+            # 安装系统工具
+            - name: Install system dependencies
               run: |
                   sudo apt-get update
-                  sudo apt-get install -y make  # 安装 GNU make
+                  sudo apt-get install -y make
 
+            # 安装 pnpm 全局
+            - name: Install pnpm globally
+              run: npm install -g pnpm
+
+            # 缓存 pnpm 依赖
+            - name: Cache pnpm dependencies
+              uses: actions/cache@v3
+              with:
+                  path: |
+                      ~/.pnpm-store
+                      node_modules
+                  key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-
+
+            # 缓存 Python 依赖
+            - name: Cache Python dependencies
+              uses: actions/cache@v3
+              with:
+                  path: |
+                      ~/.cache/pip
+                      **/__pycache__
+                  key: ${{ runner.os }}-python-${{ hashFiles('requirements.txt') }}
+                  restore-keys: |
+                      ${{ runner.os }}-python-
+
+            # 安装项目依赖
             - name: Install dependencies
-              run: |
-                  npm install -g pnpm
-                  pnpm install --frozen-lockfile # 根据pnpm-lock.json安装项目依赖
+              run: pnpm install --frozen-lockfile
 
+            # 安装 Python 依赖（如果有 requirements.txt）
+            - name: Install Python dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  if [ -f requirements.txt ]; then
+                      pip install -r requirements.txt
+                  fi
+
+            # 部署到 AWS
             - name: Deploy to AWS (Development or Production)
               env:
-                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # 从 GitHub Secrets 获取 AWS 访问密钥
-                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # 从 GitHub Secrets 获取 AWS 秘密访问密钥
-                  AWS_REGION: 'us-east-1' # 设定 AWS 区域，您可以根据需要修改
-                  NEXT_AUTH_SECRET_DEV: ${{ secrets.NEXT_AUTH_SECRET_DEV }} # 从 GitHub Secrets 获取 auth.js 密钥
-                  NEXT_AUTH_SECRET_PROD: ${{ secrets.NEXT_AUTH_SECRET_PROD }} # 从 GitHub Secrets 获取 auth.js 密钥
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_REGION: 'us-east-1'
+                  NEXT_AUTH_SECRET_DEV: ${{ secrets.NEXT_AUTH_SECRET_DEV }}
+                  NEXT_AUTH_SECRET_PROD: ${{ secrets.NEXT_AUTH_SECRET_PROD }}
               run: |
                   if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
                     echo "Deploying to Production environment..."
-                    source .env.prod.sh && make setup  # 生产环境部署
+                    source .env.prod.sh && make setup
                   fi
                   if [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
                     echo "Deploying to Development environment..."
-                    source .env.dev.sh && make setup  # 开发环境部署
+                    source .env.dev.sh && make setup
                   fi
 
             - name: Always check the content of sst-env.d.ts
-              if: always() # 确保该步骤无论成功或失败都会执行
+              if: always()
               run: |
                   echo "Checking content of sst-env.d.ts:"
-                  cat ./sst-env.d.ts  # 输出 sst-env.d.ts 文件的内容
+                  cat ./sst-env.d.ts
 
     teardown:
         needs: [prepare]
         if: ${{ needs.prepare.outputs.should_teardown == 'true' }}
-        runs-on: ubuntu-latest # 使用最新的 Ubuntu 环境来运行任务
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: Set up Node.js
-              uses: actions/setup-node@v2
-              with:
-                  node-version: '21' # 使用 Node.js 版本 21，您可以根据项目需要修改版本
 
-            - name: Install Make (if not already installed)
+            # 设置 Node.js 环境
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '21'
+                  cache: 'pnpm'
+
+            # 设置 Python 环境
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: '3.12'
+                  cache: 'pip'
+
+            # 安装系统工具
+            - name: Install system dependencies
               run: |
                   sudo apt-get update
-                  sudo apt-get install -y make  # 安装 GNU make
+                  sudo apt-get install -y make
 
+            # 安装 pnpm 全局
+            - name: Install pnpm globally
+              run: npm install -g pnpm
+
+            # 缓存 pnpm 依赖
+            - name: Cache pnpm dependencies
+              uses: actions/cache@v3
+              with:
+                  path: |
+                      ~/.pnpm-store
+                      node_modules
+                  key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-
+
+            # 缓存 Python 依赖
+            - name: Cache Python dependencies
+              uses: actions/cache@v3
+              with:
+                  path: |
+                      ~/.cache/pip
+                      **/__pycache__
+                  key: ${{ runner.os }}-python-${{ hashFiles('requirements.txt') }}
+                  restore-keys: |
+                      ${{ runner.os }}-python-
+
+            # 安装项目依赖
             - name: Install dependencies
-              run: |
-                  npm install -g pnpm
-                  pnpm install --frozen-lockfile # 根据pnpm-lock.json安装项目依赖
+              run: pnpm install --frozen-lockfile
 
-            - name: Deploy to AWS (Development or Production)
+            # 安装 Python 依赖（如果有 requirements.txt）
+            - name: Install Python dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  if [ -f requirements.txt ]; then
+                      pip install -r requirements.txt
+                  fi
+
+            - name: Teardown from AWS (Development or Production)
               env:
-                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # 从 GitHub Secrets 获取 AWS 访问密钥
-                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # 从 GitHub Secrets 获取 AWS 秘密访问密钥
-                  AWS_REGION: 'us-east-1' # 设定 AWS 区域，您可以根据需要修改
-                  NEXT_AUTH_SECRET_DEV: ${{ secrets.NEXT_AUTH_SECRET_DEV }} # 从 GitHub Secrets 获取 auth.js 密钥
-                  NEXT_AUTH_SECRET_PROD: ${{ secrets.NEXT_AUTH_SECRET_PROD }} # 从 GitHub Secrets 获取 auth.js 密钥
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_REGION: 'us-east-1'
+                  NEXT_AUTH_SECRET_DEV: ${{ secrets.NEXT_AUTH_SECRET_DEV }}
+                  NEXT_AUTH_SECRET_PROD: ${{ secrets.NEXT_AUTH_SECRET_PROD }}
               run: |
                   if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
                     echo "Tearing down the Production environment..."
-                    source .env.prod.sh && make teardown  # 生产环境拆除
+                    source .env.prod.sh && make teardown
                   fi
                   if [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
                     echo "Tearing down the Development environment..."
-                    source .env.dev.sh && make teardown  # 开发环境拆除
+                    source .env.dev.sh && make teardown
                   fi
