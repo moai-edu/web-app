@@ -34,17 +34,14 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            # 设置 Node.js 环境
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
+            # 安装 pnpm
+            - uses: pnpm/action-setup@v4
+              name: Install pnpm
               with:
-                  node-version: '21'
+                  version: 10
+                  run_install: false
 
-            # 安装 pnpm 全局
-            - name: Install pnpm globally
-              run: npm install -g pnpm
-
-            # 重新配置 Node.js 并启用 pnpm 缓存
+            # 配置 Node.js 并启用 pnpm 缓存
             - name: Configure Node.js with pnpm cache
               uses: actions/setup-node@v4
               with:
@@ -64,29 +61,7 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install -y make
 
-            # 缓存 pnpm 依赖
-            - name: Cache pnpm dependencies
-              uses: actions/cache@v3
-              with:
-                  path: |
-                      ~/.pnpm-store
-                      node_modules
-                  key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-                  restore-keys: |
-                      ${{ runner.os }}-pnpm-
-
-            # 缓存 Python 依赖
-            - name: Cache Python dependencies
-              uses: actions/cache@v3
-              with:
-                  path: |
-                      ~/.cache/pip
-                      **/__pycache__
-                  key: ${{ runner.os }}-python-${{ hashFiles('requirements.txt') }}
-                  restore-keys: |
-                      ${{ runner.os }}-python-
-
-            # 安装项目依赖
+            # 安装Node.js项目依赖
             - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
 
@@ -129,18 +104,15 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            # 设置 Node.js 环境
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
+            # 安装 pnpm
+            - uses: pnpm/action-setup@v4
+              name: Install pnpm
               with:
-                  node-version: '21'
+                  version: 10
+                  run_install: false
 
-            # 安装 pnpm 全局
-            - name: Install pnpm globally
-              run: npm install -g pnpm
-
-            # 重新配置 Node.js 并启用 pnpm 缓存
-            - name: Configure Node.js with pnpm cache
+            # 设置 Node.js 环境并启用 pnpm 缓存
+            - name: Set up Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: '21'
@@ -159,29 +131,7 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install -y make
 
-            # 缓存 pnpm 依赖
-            - name: Cache pnpm dependencies
-              uses: actions/cache@v3
-              with:
-                  path: |
-                      ~/.pnpm-store
-                      node_modules
-                  key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-                  restore-keys: |
-                      ${{ runner.os }}-pnpm-
-
-            # 缓存 Python 依赖
-            - name: Cache Python dependencies
-              uses: actions/cache@v3
-              with:
-                  path: |
-                      ~/.cache/pip
-                      **/__pycache__
-                  key: ${{ runner.os }}-python-${{ hashFiles('requirements.txt') }}
-                  restore-keys: |
-                      ${{ runner.os }}-python-
-
-            # 安装项目依赖
+            # 安装Node.js项目依赖
             - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
 

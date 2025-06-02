@@ -17,8 +17,9 @@ export default $config({
             cognitoUserPoolClientId: infra.webClient.id,
             authUrl: infra.authUrl,
             staticSiteUrl: infra.static_site.url,
-            staticSiteS3BucketName: infra.static_site.nodes.assets!.name,
-            staticSiteCloudfrontDistributionId: infra.static_site.nodes.cdn!.nodes.distribution.id
+            staticSiteS3BucketName: infra.static_site.nodes.assets!.name
+            // 这里这个cdn!返回null，所以无法取得distributionId，需要进一步研究
+            // staticSiteCloudfrontDistributionId: infra.static_site.nodes.cdn!.nodes.distribution.id
         }
     }
 })
