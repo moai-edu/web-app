@@ -128,7 +128,17 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: '21'
-                  cache: 'pnpm'
+
+            # 安装 pnpm 全局
+            - name: Install pnpm globally
+              run: npm install -g pnpm
+
+            # 重新配置 Node.js 并启用 pnpm 缓存
+            - name: Configure Node.js with pnpm cache
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '21'
+                  cache: 'pnpm' # 现在 pnpm 已安装，可以启用缓存
 
             # 设置 Python 环境
             - name: Set up Python
@@ -142,10 +152,6 @@ jobs:
               run: |
                   sudo apt-get update
                   sudo apt-get install -y make
-
-            # 安装 pnpm 全局
-            - name: Install pnpm globally
-              run: npm install -g pnpm
 
             # 缓存 pnpm 依赖
             - name: Cache pnpm dependencies
