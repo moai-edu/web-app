@@ -2,12 +2,13 @@
 
 ## BUGs
 
-- 学生上传过大屏幕截图时会提示失败，应该解除大小限制或者放大限制；Body exceeded 1 MB limit. To configure the body size limit for Server Actions, see: https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit
+- 学生上传过大屏幕截图时会提示失败，应该解除大小限制或者放大限制；Body exceeded 1 MB limit. To configure the body size limit for Server Actions, see: <https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit>
 
 ## Fixed
 
 ## Tasks
 
+- 允许关闭一个班级（课程结束关闭后，不再允许提交）
 - jump here课程跳转的链接错误；
 - 未登录用户访问登录用户的页面，跳转到登录页面；登录成功后，跳转到原页面；
 - 外链显示错误！如 [OpenWeatherMap](https://openweathermap.org/api)

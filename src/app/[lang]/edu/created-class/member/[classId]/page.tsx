@@ -12,32 +12,33 @@ type Props = Readonly<{
     params: Promise<{ lang: I18nLangKeys; classId: string }>
 }>
 
+function getStudentXlsxKey(classId: string): string {
+    return `created-class/${classId}/students.xlsx`
+}
+
+async function fetchAndParseExcel(key: string): Promise<unknown[]> {
+    const downloadUrl = await s3DataClient.getSignedUrl(key)
+    const response = await fetch(downloadUrl)
+    const arrayBuffer = await response.arrayBuffer()
+    const workbook = XLSX.read(arrayBuffer)
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
+    return XLSX.utils.sheet_to_json(firstSheet)
+}
+
 export default async function Page({ params }: Props) {
     const { lang, classId } = await params
 
     // 检查文件是否存在
-    const xlsxKey = `created-class/${classId}/students.xlsx`
-    const xlsKey = `created-class/${classId}/students.xls`
+    const xlsxKey = getStudentXlsxKey(classId)
     const xlsxExists = await s3DataClient.isFileExists(xlsxKey)
-    const xlsExists = await s3DataClient.isFileExists(xlsKey)
 
     // 获取下载链接和文件内容
     let downloadUrl = null
     let studentsData = null
 
-    async function fetchAndParseExcel(key: string): Promise<void> {
-        downloadUrl = await s3DataClient.getSignedUrl(key)
-        const response = await fetch(downloadUrl)
-        const arrayBuffer = await response.arrayBuffer()
-        const workbook = XLSX.read(arrayBuffer)
-        const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
-        studentsData = XLSX.utils.sheet_to_json(firstSheet)
-    }
-
     if (xlsxExists) {
-        await fetchAndParseExcel(xlsxKey)
-    } else if (xlsExists) {
-        await fetchAndParseExcel(xlsKey)
+        studentsData = await fetchAndParseExcel(xlsxKey)
+        downloadUrl = await s3DataClient.getSignedUrl(xlsxKey)
     }
 
     // 获取已加入班级的用户列表
@@ -65,26 +66,22 @@ export default async function Page({ params }: Props) {
         }
 
         // 检查文件类型
-        if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
-            throw new Error('Only Excel (.xlsx, .xls) files are allowed')
+        if (!file.name.endsWith('.xlsx')) {
+            throw new Error('Only Excel (.xlsx) files are allowed')
         }
 
         // 上传到S3
-        const key = `created-class/${classId}/students${file.name.substring(
-            file.name.lastIndexOf('.')
-        )}`
-        await s3DataClient.uploadFile(file, key)
-    }
+        const xlsxKey = getStudentXlsxKey(classId)
 
-    // 处理表头显示，删除'(文本)'
-    const formatHeader = (header: string) => {
-        return header.replace('(文本)', '').trim()
+        await s3DataClient.uploadFile(file, xlsxKey)
+        console.log(`File uploaded successfully: ${xlsxKey}`)
     }
 
     // 将数据转换为可序列化的格式
     const serializedStudentsData = studentsData
         ? JSON.parse(JSON.stringify(studentsData))
         : null
+    // console.log(serializedStudentsData)
 
     return (
         <div className="container mx-auto p-4">
@@ -95,7 +92,7 @@ export default async function Page({ params }: Props) {
                         <input
                             type="file"
                             name="file"
-                            accept=".xlsx, .xls"
+                            accept=".xlsx"
                             className="max-w-xs"
                         />
                         <Button type="submit">上传学生名单</Button>
@@ -118,7 +115,6 @@ export default async function Page({ params }: Props) {
                     <h2 className="text-xl font-semibold mb-4">学生名单</h2>
                     <StudentsTable
                         studentsData={serializedStudentsData}
-                        formatHeader={formatHeader}
                         joinedUserNames={joinedUserNames}
                     />
                 </div>

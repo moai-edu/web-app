@@ -10,13 +10,16 @@ type SortConfig = {
 
 type StudentsTableProps = {
     studentsData: Record<string, unknown>[]
-    formatHeader: (header: string) => string
     joinedUserNames: Record<string, boolean>
+}
+
+// 处理表头显示，删除'(文本)'
+const formatHeader = (header: string) => {
+    return header.replace('(文本)', '').trim()
 }
 
 export function StudentsTable({
     studentsData,
-    formatHeader,
     joinedUserNames
 }: StudentsTableProps) {
     const [sortConfig, setSortConfig] = useState<SortConfig | null>(null)
@@ -57,8 +60,8 @@ export function StudentsTable({
                     <Table.Row>
                         {Object.keys(studentsData[0]).map((header) => (
                             <Table.ColumnHeaderCell key={header}>
-                                {header === '平时成绩' ||
-                                header === '期末成绩' ? (
+                                {header === '平时成绩(文本)' ||
+                                header === '期末成绩(文本)' ? (
                                     <button
                                         onClick={() => handleSort(header)}
                                         className="flex items-center gap-1 hover:text-blue-600"
