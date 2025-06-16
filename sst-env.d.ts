@@ -5,31 +5,6 @@
 
 declare module "sst" {
   export interface Resource {
-    "DataBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "DbDynamo": {
-      "name": string
-      "type": "sst.aws.Dynamo"
-    }
-    "StaticSite": {
-      "type": "sst.aws.StaticSite"
-      "url": string
-    }
-    "UserPool": {
-      "id": string
-      "type": "sst.aws.CognitoUserPool"
-    }
-    "Web": {
-      "type": "sst.aws.Nextjs"
-      "url": string
-    }
-    "WebClient": {
-      "id": string
-      "secret": string
-      "type": "sst.aws.CognitoUserPoolClient"
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />

@@ -36,9 +36,15 @@ export default async function Page({ params }: Props) {
             <Table.Root>
                 <Table.Header>
                     <Table.Row>
-                        <Table.ColumnHeaderCell>{t('name')}</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>{t('invitationCode')}</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>{t('ops')}</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>
+                            {t('name')}
+                        </Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>
+                            {t('invitationCode')}
+                        </Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>
+                            {t('ops')}
+                        </Table.ColumnHeaderCell>
                     </Table.Row>
                 </Table.Header>
 
@@ -46,7 +52,10 @@ export default async function Page({ params }: Props) {
                     {classList.map((classItem) => (
                         <Table.Row key={classItem.id}>
                             <Table.RowHeaderCell>
-                                <Link href={`../c/created/${classItem.id}`} target="_blank">
+                                <Link
+                                    href={`../c/created/${classItem.id}`}
+                                    target="_blank"
+                                >
                                     {classItem.name}
                                 </Link>
                             </Table.RowHeaderCell>
@@ -55,14 +64,36 @@ export default async function Page({ params }: Props) {
                             </Table.Cell>
                             <Table.Cell>
                                 <Flex gap="3">
-                                    <Link href={`../c/created/${classItem.id}`} target="_blank">
-                                        <Button variant="soft">{t('routeHome.routeCreatedClass.members')}</Button>
+                                    <Link
+                                        href={`../created-class/member/${classItem.id}`}
+                                        target="_blank"
+                                    >
+                                        <Button variant="soft">
+                                            {t(
+                                                'routeHome.routeCreatedClass.members'
+                                            )}
+                                        </Button>
                                     </Link>
-                                    <Link href={`../c/created/${classItem.id}`} target="_blank">
-                                        <Button variant="soft">{t('routeHome.routeCreatedClass.submits')}</Button>
+                                    <Link
+                                        href={`../c/created/${classItem.id}`}
+                                        target="_blank"
+                                    >
+                                        <Button variant="soft">
+                                            {t(
+                                                'routeHome.routeCreatedClass.submits'
+                                            )}
+                                        </Button>
                                     </Link>
-                                    <EditNameButton id={classItem.id} name={classItem.name} lang={lang} />
-                                    <DeleteClassButton id={classItem.id} name={classItem.name} lang={lang} />
+                                    <EditNameButton
+                                        id={classItem.id}
+                                        name={classItem.name}
+                                        lang={lang}
+                                    />
+                                    <DeleteClassButton
+                                        id={classItem.id}
+                                        name={classItem.name}
+                                        lang={lang}
+                                    />
                                 </Flex>
                             </Table.Cell>
                         </Table.Row>
