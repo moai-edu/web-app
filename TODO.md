@@ -8,6 +8,8 @@
 
 ## Tasks
 
+- 班级: Flutter移动应用开发-软件技术2306班 标识: try-hot-reload，这个页面应该显示quiz_img_paster的title，而不是显示id
+- 考试材料归档导出保存；
 - jump here课程跳转的链接错误；
 - 未登录用户访问登录用户的页面，跳转到登录页面；登录成功后，跳转到原页面；
 - 外链显示错误！如 [OpenWeatherMap](https://openweathermap.org/api)
