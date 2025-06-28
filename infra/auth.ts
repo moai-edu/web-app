@@ -106,12 +106,12 @@ export const webClient = userPool.addClient('WebClient', {
             callbackUrls: [
                 $interpolate`https://${portalDomain}/api/auth/callback/cognito`,
                 'http://localhost:3000/api/auth/callback/cognito',
-                'http://192.168.10.1:3000/api/auth/callback/cognito'
+                'https://dev-server/api/auth/callback/cognito'
             ],
             logoutUrls: [
                 $interpolate`https://${portalDomain}`,
                 'http://localhost:3000',
-                'http://192.168.10.1:3000'
+                'https://dev-server'
             ],
             supportedIdentityProviders: ['COGNITO']
         }
