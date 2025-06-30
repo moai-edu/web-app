@@ -1,0 +1,17 @@
+/* Override Radix UI table cell styles for specific columns */
+.rt-TableRow .rt-TableCell:last-child {
+  background-color: hsl(142, 71%, 90%) !important; /* Light green for total score */
+}
+
+.rt-TableRow .rt-TableCell:nth-last-child(2) {
+  background-color: hsl(206, 94%, 90%) !important; /* Light blue for joined class */
+}
+
+/* Header styles */
+.rt-TableHeader .rt-TableCell:last-child {
+  background-color: hsl(142, 71%, 80%) !important; /* Darker green for header */
+}
+
+.rt-TableHeader .rt-TableCell:nth-last-child(2) {
+  background-color: hsl(206, 94%, 80%) !important; /* Darker blue for header */
+}

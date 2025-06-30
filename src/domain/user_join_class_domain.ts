@@ -17,7 +17,10 @@ export class UserJoinClassDomain {
         return joinedClass
     }
 
-    async userJoinClassByCode(userId: string, classCode: string): Promise<UserJoinClass | null> {
+    async userJoinClassByCode(
+        userId: string,
+        classCode: string
+    ): Promise<UserJoinClass | null> {
         const _class = await classDao.getByCode(classCode)
         if (!_class) {
             throw new Error('Class not found')
