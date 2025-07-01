@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 
 interface Props {
     classId: string
-    downloadUrl?: string
+    downloadUrl: string | null
 }
 
 type FormErrors = {
