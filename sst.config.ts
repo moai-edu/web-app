@@ -5,7 +5,8 @@ export default $config({
         return {
             name: 'portal-site',
             home: 'aws',
-            removal: input?.stage === 'prod' ? 'retain' : 'remove'
+            // removal: input?.stage === 'prod' ? 'retain' : 'remove'
+            removal: 'remove'
         }
     },
     async run() {
