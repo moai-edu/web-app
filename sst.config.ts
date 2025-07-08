@@ -3,7 +3,7 @@
 export default $config({
     app(input) {
         return {
-            name: 'portal-site',
+            name: 'MoaiEdu-WebApp',
             home: 'aws',
             removal: input?.stage === 'prod' ? 'retain' : 'remove'
             // removal: 'remove'

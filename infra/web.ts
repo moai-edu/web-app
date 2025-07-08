@@ -2,9 +2,11 @@
 
 import { table } from 'console'
 import { portalDomain, userPool, webClient } from './auth'
-import { secret } from './secret'
 import { dataBucket } from './bucket'
 import { dbDynamo } from './dynamodb'
+
+// Asserts API_KEY is a string
+const AUTH_SECRET: string = process.env.NEXT_AUTH_SECRET!
 
 const webConfig = {
     /**
@@ -33,7 +35,9 @@ const webConfig = {
         // AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID!,
         // AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
         // AWS_REGION: process.env.AWS_REGION!,
-        AUTH_SECRET: secret.nextAuthSecret.value, //next-auth 使用这个环境变量设置secret: https://authjs.dev/reference/core/errors#missingsecret
+
+        //next-auth 使用这个环境变量设置secret: https://authjs.dev/reference/core/errors#missingsecret
+        AUTH_SECRET,
         NEXT_PUBLIC_REGION: aws.getRegionOutput().name
     }
 }

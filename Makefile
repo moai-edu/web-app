@@ -19,17 +19,14 @@ STAGE?=dev
 dev:
 	npx sst dev --stage dev
 
-SECRET_NAME:=NextAuthSecret
 setup:
 	@echo "setup $(STAGE)"
-	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(NEXT_AUTH_SECRET)
 	-npx sst unlock --stage $(STAGE)
 	npx sst deploy --stage $(STAGE)
 teardown:
 	@echo "teardown $(STAGE)"
 	-npx sst unlock --stage $(STAGE)
 	npx sst remove --stage $(STAGE)
-	npx sst secret remove $(SECRET_NAME) --stage $(STAGE)
 
 
 .PHONY: localstack

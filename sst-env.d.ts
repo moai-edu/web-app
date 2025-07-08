@@ -13,10 +13,6 @@ declare module 'sst' {
             name: string
             type: 'sst.aws.Dynamo'
         }
-        NextAuthSecret: {
-            type: 'sst.sst.Secret'
-            value: string
-        }
         UserPool: {
             id: string
             type: 'sst.aws.CognitoUserPool'
