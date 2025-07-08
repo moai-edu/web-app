@@ -8,31 +8,25 @@ ifneq (,$(wildcard ./.env.local))
     export
 endif
 
-# 如果环境变量STAGE未定义，则使用dev作为默认值；否则，使用环境变量STAGE中的值
-STAGE?=dev
-SECRET_NAME:=NextAuthSecret
-SECRET_VALUE:=$(NEXT_AUTH_SECRET_$(shell echo $(STAGE) | tr '[:lower:]' '[:upper:]'))
-
 awslocal:=aws --profile localstack
 
-.PHONY: dev setup teardown
-
+# 如果环境变量STAGE未定义，则使用dev作为默认值；否则，使用环境变量STAGE中的值
 # 如果不指定stage，则stage=dev
 # 自动使用.env
+STAGE?=dev
+
+.PHONY: dev setup teardown
 dev:
 	npx sst dev --stage dev
 
-setup: _site/index.html
-	@echo "setup $(STAGE) $(SECRET_NAME)=$(SECRET_VALUE)"
-	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(SECRET_VALUE)
+SECRET_NAME:=NextAuthSecret
+setup:
+	@echo "setup $(STAGE)"
+	npx sst secret --stage $(STAGE) set $(SECRET_NAME) $(NEXT_AUTH_SECRET)
 	-npx sst unlock --stage $(STAGE)
 	npx sst deploy --stage $(STAGE)
-
-_site/index.html: index.html
-	mkdir -p _site
-	jinja2 -D portal_domain=$(shell if [ "$(STAGE)" = "prod" ]; then echo $(PORTAL_SUBDOMAIN).$(DOMAIN); else echo $(STAGE)-$(PORTAL_SUBDOMAIN).$(DOMAIN); fi) $< > $@
-
 teardown:
+	@echo "teardown $(STAGE)"
 	-npx sst unlock --stage $(STAGE)
 	npx sst remove --stage $(STAGE)
 	npx sst secret remove $(SECRET_NAME) --stage $(STAGE)

@@ -1,4 +1,3 @@
-// export * from "./static_site";
 // export * from "./secret";
 export * from './secret'
 export * from './auth'

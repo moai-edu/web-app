@@ -17,10 +17,6 @@ declare module 'sst' {
             type: 'sst.sst.Secret'
             value: string
         }
-        StaticSite: {
-            type: 'sst.aws.StaticSite'
-            url: string
-        }
         UserPool: {
             id: string
             type: 'sst.aws.CognitoUserPool'

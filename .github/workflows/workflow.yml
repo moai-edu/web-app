@@ -27,69 +27,48 @@ jobs:
                       echo "should_teardown=true" >> $GITHUB_OUTPUT
                   fi
 
-    setup:
+    # Job for setting up the Development environment
+    setup_development:
         needs: [prepare]
-        if: ${{ needs.prepare.outputs.should_setup == 'true' }}
+        # This job runs only if 'should_setup' is true and the branch is 'develop'
+        if:
+            ${{ needs.prepare.outputs.should_setup == 'true' && github.ref ==
+            'refs/heads/develop' }}
         runs-on: ubuntu-latest
+        environment: dev # Associate with the 'development' environment
         steps:
             - uses: actions/checkout@v4
 
-            # 安装 pnpm
             - uses: pnpm/action-setup@v4
               name: Install pnpm
               with:
                   version: 10
                   run_install: false
 
-            # 配置 Node.js 并启用 pnpm 缓存
             - name: Configure Node.js with pnpm cache
               uses: actions/setup-node@v4
               with:
                   node-version: '21'
-                  cache: 'pnpm' # 现在 pnpm 已安装，可以启用缓存
+                  cache: 'pnpm'
 
-            # 设置 Python 环境
-            - name: Set up Python
-              uses: actions/setup-python@v4
-              with:
-                  python-version: '3.12'
-                  cache: 'pip'
-
-            # 安装系统工具
             - name: Install system dependencies
               run: |
                   sudo apt-get update
                   sudo apt-get install -y make
 
-            # 安装Node.js项目依赖
             - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
 
-            # 安装 Python 依赖（如果有 requirements.txt）
-            - name: Install Python dependencies
-              run: |
-                  python -m pip install --upgrade pip
-                  if [ -f requirements.txt ]; then
-                      pip install -r requirements.txt
-                  fi
-
-            # 部署到 AWS
-            - name: Deploy to AWS (Development or Production)
+            - name: Deploy to AWS (Development)
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  AWS_REGION: 'us-east-1'
-                  NEXT_AUTH_SECRET_DEV: ${{ secrets.NEXT_AUTH_SECRET_DEV }}
-                  NEXT_AUTH_SECRET_PROD: ${{ secrets.NEXT_AUTH_SECRET_PROD }}
+                  AWS_REGION: ${{ vars.AWS_REGION }}
+                  # NEXT_AUTH_SECRET is now retrieved from the 'development' environment secrets
+                  NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
-                  if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
-                    echo "Deploying to Production environment..."
-                    source .env.prod.sh && make setup
-                  fi
-                  if [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
-                    echo "Deploying to Development environment..."
-                    source .env.dev.sh && make setup
-                  fi
+                  echo "Deploying to Development environment..."
+                  source .env.dev.sh && make setup
 
             - name: Always check the content of sst-env.d.ts
               if: always()
@@ -97,65 +76,137 @@ jobs:
                   echo "Checking content of sst-env.d.ts:"
                   cat ./sst-env.d.ts
 
-    teardown:
+    # Job for setting up the Production environment
+    setup_production:
         needs: [prepare]
-        if: ${{ needs.prepare.outputs.should_teardown == 'true' }}
+        # This job runs only if 'should_setup' is true and the branch is 'main'
+        if:
+            ${{ needs.prepare.outputs.should_setup == 'true' && github.ref ==
+            'refs/heads/main' }}
         runs-on: ubuntu-latest
+        environment: prod # Associate with the 'production' environment
         steps:
             - uses: actions/checkout@v4
 
-            # 安装 pnpm
             - uses: pnpm/action-setup@v4
               name: Install pnpm
               with:
                   version: 10
                   run_install: false
 
-            # 设置 Node.js 环境并启用 pnpm 缓存
-            - name: Set up Node.js
+            - name: Configure Node.js with pnpm cache
               uses: actions/setup-node@v4
               with:
                   node-version: '21'
-                  cache: 'pnpm' # 现在 pnpm 已安装，可以启用缓存
+                  cache: 'pnpm'
 
-            # 设置 Python 环境
-            - name: Set up Python
-              uses: actions/setup-python@v4
-              with:
-                  python-version: '3.12'
-                  cache: 'pip'
-
-            # 安装系统工具
             - name: Install system dependencies
               run: |
                   sudo apt-get update
                   sudo apt-get install -y make
 
-            # 安装Node.js项目依赖
             - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
 
-            # 安装 Python 依赖（如果有 requirements.txt）
-            - name: Install Python dependencies
-              run: |
-                  python -m pip install --upgrade pip
-                  if [ -f requirements.txt ]; then
-                      pip install -r requirements.txt
-                  fi
-
-            - name: Teardown from AWS (Development or Production)
+            - name: Deploy to AWS (Production)
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  AWS_REGION: 'us-east-1'
-                  NEXT_AUTH_SECRET_DEV: ${{ secrets.NEXT_AUTH_SECRET_DEV }}
-                  NEXT_AUTH_SECRET_PROD: ${{ secrets.NEXT_AUTH_SECRET_PROD }}
+                  AWS_REGION: ${{ vars.AWS_REGION }}
+                  # NEXT_AUTH_SECRET is now retrieved from the 'production' environment secrets
+                  NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
-                  if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
-                    echo "Tearing down the Production environment..."
-                    source .env.prod.sh && make teardown
-                  fi
-                  if [ "${GITHUB_REF}" == "refs/heads/develop" ]; then
-                    echo "Tearing down the Development environment..."
-                    source .env.dev.sh && make teardown
-                  fi
+                  echo "Deploying to Production environment..."
+                  source .env.prod.sh && make setup
+
+            - name: Always check the content of sst-env.d.ts
+              if: always()
+              run: |
+                  echo "Checking content of sst-env.d.ts:"
+                  cat ./sst-env.d.ts
+
+    # Job for tearing down the Development environment
+    teardown_development:
+        needs: [prepare]
+        # This job runs only if 'should_teardown' is true and the branch is 'develop'
+        if:
+            ${{ needs.prepare.outputs.should_teardown == 'true' && github.ref ==
+            'refs/heads/develop' }}
+        runs-on: ubuntu-latest
+        environment: dev # Associate with the 'development' environment
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: pnpm/action-setup@v4
+              name: Install pnpm
+              with:
+                  version: 10
+                  run_install: false
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '21'
+                  cache: 'pnpm'
+
+            - name: Install system dependencies
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y make
+
+            - name: Install Node.js dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Teardown from AWS (Development)
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_REGION: ${{ vars.AWS_REGION }}
+                  # NEXT_AUTH_SECRET is now retrieved from the 'development' environment secrets
+                  NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
+              run: |
+                  echo "Tearing down the Development environment..."
+                  source .env.dev.sh && make teardown
+
+    # Job for tearing down the Production environment
+    teardown_production:
+        needs: [prepare]
+        # This job runs only if 'should_teardown' is true and the branch is 'main'
+        if:
+            ${{ needs.prepare.outputs.should_teardown == 'true' && github.ref ==
+            'refs/heads/main' }}
+        runs-on: ubuntu-latest
+        environment: prod # Associate with the 'production' environment
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: pnpm/action-setup@v4
+              name: Install pnpm
+              with:
+                  version: 10
+                  run_install: false
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '21'
+                  cache: 'pnpm'
+
+            - name: Install system dependencies
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y make
+
+            - name: Install Node.js dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Teardown from AWS (Production)
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_REGION: ${{ vars.AWS_REGION }}
+                  # NEXT_AUTH_SECRET is now retrieved from the 'production' environment secrets
+                  NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
+              run: |
+                  echo "Tearing down the Production environment..."
+                  source .env.prod.sh && make teardown

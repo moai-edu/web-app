@@ -1,3 +1,2 @@
 terraform-local
 boto3
-jinja2-cli
