@@ -69,7 +69,7 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
                   echo "Deploying to Development environment..."
-                  source .env.dev.sh && make setup
+                  source .env.dev.sh && STAGE=dev make setup
 
             - name: Always check the content of sst-env.d.ts
               if: always()
@@ -119,7 +119,7 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
                   echo "Deploying to Production environment..."
-                  source .env.prod.sh && make setup
+                  source .env.prod.sh && STAGE=prod make setup
 
             - name: Always check the content of sst-env.d.ts
               if: always()
@@ -169,7 +169,7 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
                   echo "Tearing down the Development environment..."
-                  source .env.dev.sh && make teardown
+                  source .env.dev.sh && STAGE=dev make teardown
 
     # Job for tearing down the Production environment
     teardown_production:
@@ -213,4 +213,4 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
                   echo "Tearing down the Production environment..."
-                  source .env.prod.sh && make teardown
+                  source .env.prod.sh && STAGE=prod make teardown
