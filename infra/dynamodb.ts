@@ -1,6 +1,6 @@
 /// <reference path="../.sst/platform/config.d.ts" />
 
-import { customProvider } from './custom-provider'
+import { provider } from './custom-provider'
 
 // sst.Linkable.wrap(sst.aws.Dynamo, (table) => ({
 //     properties: { name: table.name },
@@ -33,5 +33,5 @@ export const dbDynamo = new sst.aws.Dynamo(
         },
         ttl: 'expires' // TTL 属性
     },
-    { provider: customProvider }
+    { provider }
 )
