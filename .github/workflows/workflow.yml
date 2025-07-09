@@ -63,7 +63,6 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  AWS_REGION: 'us-east-1'
                   SST_AWS_REGION: ${{ vars.SST_AWS_REGION }}
                   # NEXT_AUTH_SECRET is now retrieved from the 'development' environment secrets
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
@@ -113,7 +112,6 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  AWS_REGION: 'us-east-1'
                   SST_AWS_REGION: ${{ vars.SST_AWS_REGION }}
                   # NEXT_AUTH_SECRET is now retrieved from the 'production' environment secrets
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
@@ -163,7 +161,6 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  AWS_REGION: 'us-east-1'
                   SST_AWS_REGION: ${{ vars.SST_AWS_REGION }}
                   # NEXT_AUTH_SECRET is now retrieved from the 'development' environment secrets
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
@@ -207,7 +204,6 @@ jobs:
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  AWS_REGION: 'us-east-1'
                   SST_AWS_REGION: ${{ vars.SST_AWS_REGION }}
                   # NEXT_AUTH_SECRET is now retrieved from the 'production' environment secrets
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}

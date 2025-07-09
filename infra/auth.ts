@@ -1,5 +1,8 @@
 /// <reference path="../.sst/platform/config.d.ts" />
 
+// userpool必须位于us-east-1
+// operation error Cognito Identity Provider: CreateUserPoolDomain, https response error StatusCode: 400, RequestID: xxxxx, InvalidParameterException: The specified SSL certificate doesn't exist, isn't in us-east-1 region, isn't valid, or doesn't include a valid certificate chain. (Service: AmazonCloudFront; Status Code: 400; Error Code: InvalidViewerCertificate; Request ID: xxxx; Proxy: null): provider=aws@6.66.2
+
 export const userPool = new sst.aws.CognitoUserPool('UserPool', {
     transform: {
         userPool: {
