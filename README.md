@@ -1,6 +1,6 @@
-## Portal Site
+# Serverless Web Application
 
-### Dependencies
+## Dependencies
 
 - 使用 WSL2(Windows Subsystem for Linux 2)做为开发环境；
 - Prerequisites: `sudo apt update && sudo apt install zip unzip curl python3 python3-pip python3-venv nodejs npm`
