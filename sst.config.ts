@@ -1,10 +1,18 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
+// 必须在环境变量中指定sst部署到哪个AZ
+const region: string = process.env.SST_AWS_REGION!
+
 export default $config({
     app(input) {
         return {
             name: 'MoaiEdu-WebApp',
             home: 'aws',
+            providers: {
+                aws: {
+                    region
+                }
+            },
             removal: input?.stage === 'prod' ? 'retain' : 'remove'
             // removal: 'remove'
         }
