@@ -69,7 +69,7 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
                   echo "Deploying to Development environment..."
-                  source .env.dev.sh && STAGE=dev make setup
+                  env && source .env.dev.sh && STAGE=dev make setup
 
             - name: Always check the content of sst-env.d.ts
               if: always()
