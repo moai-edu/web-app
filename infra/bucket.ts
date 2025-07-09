@@ -1,3 +1,7 @@
 /// <reference path="../.sst/platform/config.d.ts" />
 
-export const dataBucket = new sst.aws.Bucket("DataBucket");
+import { customProvider } from './custom-provider'
+
+export const dataBucket = new sst.aws.Bucket('DataBucket', undefined, {
+    provider: customProvider
+})

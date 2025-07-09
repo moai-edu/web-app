@@ -9,11 +9,6 @@ export default $config({
         return {
             name: 'MoaiEdu-WebApp',
             home: 'aws',
-            providers: {
-                aws: {
-                    region
-                }
-            },
             removal: input?.stage === 'prod' ? 'retain' : 'remove'
             // removal: 'remove'
         }

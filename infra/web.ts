@@ -4,6 +4,7 @@ import { table } from 'console'
 import { portalDomain, userPool, webClient } from './auth'
 import { dataBucket } from './bucket'
 import { dbDynamo } from './dynamodb'
+import { customProvider } from './custom-provider'
 
 // Asserts API_KEY is a string
 const AUTH_SECRET: string = process.env.NEXT_AUTH_SECRET!
@@ -42,4 +43,6 @@ const webConfig = {
     }
 }
 
-export const web = new sst.aws.Nextjs('Web', webConfig)
+export const web = new sst.aws.Nextjs('Web', webConfig, {
+    provider: customProvider
+})

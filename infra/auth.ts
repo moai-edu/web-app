@@ -3,25 +3,20 @@
 // userpool必须位于us-east-1
 // operation error Cognito Identity Provider: CreateUserPoolDomain, https response error StatusCode: 400, RequestID: xxxxx, InvalidParameterException: The specified SSL certificate doesn't exist, isn't in us-east-1 region, isn't valid, or doesn't include a valid certificate chain. (Service: AmazonCloudFront; Status Code: 400; Error Code: InvalidViewerCertificate; Request ID: xxxx; Proxy: null): provider=aws@6.66.2
 
-// Create an AWS provider for the us-east-1 region.
-let useast1Provider = new aws.Provider('useast1', { region: 'us-east-1' })
-
-export const userPool = new sst.aws.CognitoUserPool(
-    'UserPool',
-    {
-        transform: {
-            userPool: {
-                usernameAttributes: ['email'],
-                accountRecoverySetting: {
-                    recoveryMechanisms: [
-                        {
-                            name: 'verified_email',
-                            priority: 1
-                        }
-                    ]
-                },
-                autoVerifiedAttributes: ['email']
-                /*
+export const userPool = new sst.aws.CognitoUserPool('UserPool', {
+    transform: {
+        userPool: {
+            usernameAttributes: ['email'],
+            accountRecoverySetting: {
+                recoveryMechanisms: [
+                    {
+                        name: 'verified_email',
+                        priority: 1
+                    }
+                ]
+            },
+            autoVerifiedAttributes: ['email']
+            /*
             emailConfiguration: {
                 configurationSet: 'ses-default-configuration-set',
                 emailSendingAccount: 'DEVELOPER',
@@ -30,11 +25,9 @@ export const userPool = new sst.aws.CognitoUserPool(
                 sourceArn: 'arn:aws:ses:us-east-1:147091117895:identity/sanyedu.org'
             }
             */
-            }
         }
-    },
-    { provider: useast1Provider }
-)
+    }
+})
 
 const hostedZone = aws.route53.getZone({
     name: `${process.env.DOMAIN}`
