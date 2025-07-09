@@ -11,7 +11,7 @@ export default $config({
             home: 'aws',
             providers: {
                 aws: {
-                    region: `${region}`
+                    region
                 }
             },
             removal: input?.stage === 'prod' ? 'retain' : 'remove'
