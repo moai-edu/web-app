@@ -25,7 +25,7 @@ setup:
 	@echo 复制.env.$(STAGE) 到 .env.production，因为sst deploy命令会读取.env.production文件中的环境变量
 	cp -f .env.$(STAGE) .env.production
 	@echo 启动sst deploy，部署serverless应用到 $(STAGE) 环境
-	npx sst deploy --stage $(STAGE)
+	npx sst deploy --print-logs --stage $(STAGE)
 teardown:
 	@echo "teardown $(STAGE)"
 	-npx sst unlock --stage $(STAGE)
