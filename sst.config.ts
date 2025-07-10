@@ -1,7 +1,5 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
-console.log(process.env)
-
 export default $config({
     app(input) {
         return {
