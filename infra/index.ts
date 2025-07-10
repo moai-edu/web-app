@@ -1,4 +1,3 @@
-export * from './custom-provider'
 export * from './auth'
 export * from './bucket'
 export * from './dynamodb'

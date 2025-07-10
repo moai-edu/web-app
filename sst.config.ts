@@ -16,11 +16,11 @@ export default $config({
     async run() {
         const infra = await import('./infra')
         return {
+            cognitoUserPoolClientId: infra.webClient.id,
+            authUrl: infra.authUrl,
             webUrl: infra.web.url,
             dataBucketName: infra.dataBucket.name,
-            dbDynamoName: infra.dbDynamo.name,
-            cognitoUserPoolClientId: infra.webClient.id,
-            authUrl: infra.authUrl
+            dbDynamoName: infra.dbDynamo.name
         }
         // 注意：这里一定记得同步更新sst-end.d.ts文件，否则编译可能失败。
     }
