@@ -1,5 +1,5 @@
 const region: string = process.env.CUSTOM_PROVIDER_AWS_REGION!
 console.log(`Custom Provider uses region: ${region}`)
 export const provider = new aws.Provider('CustomProvider', {
-    region: `${region}`
+    region: Input.value(region)
 })
