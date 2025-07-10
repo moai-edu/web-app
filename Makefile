@@ -22,7 +22,9 @@ dev:
 setup:
 	@echo "setup $(STAGE)"
 	-npx sst unlock --stage $(STAGE)
-	npx sst deploy --stage $(STAGE)
+	@echo 复制.env.$(STAGE) 到 .env.production，因为sst deploy命令会读取.env.production文件中的环境变量
+	cp -f .env.$(STAGE) .env.production
+	env && npx sst deploy --stage $(STAGE)
 teardown:
 	@echo "teardown $(STAGE)"
 	-npx sst unlock --stage $(STAGE)

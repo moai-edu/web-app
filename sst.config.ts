@@ -1,8 +1,6 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
-// 必须在环境变量中指定sst部署到哪个AZ
-const region: string = process.env.SST_AWS_REGION!
-console.log(`SST_AWS_REGION: ${region}`)
+console.log(process.env)
 
 export default $config({
     app(input) {
