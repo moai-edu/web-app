@@ -1,4 +1,6 @@
-console.log(`Custom Provider uses region: ap-east-1`)
+console.log(
+    'Custom Provider uses different region. prod => ap-southeast-1(Singapore), dev => ap-east-1(Hong Kong)'
+)
 export const provider = new aws.Provider('CustomProvider', {
-    region: 'ap-east-1'
+    region: $app.stage === 'prod' ? 'ap-southeast-1' : 'ap-east-1'
 })
