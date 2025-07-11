@@ -12,8 +12,8 @@ export default $config({
     async run() {
         const infra = await import('./infra')
         return {
-            cognitoUserPoolClientId: infra.webClient.id,
-            authUrl: infra.authUrl,
+            appDomain: infra.appDomain,
+            authDomain: infra.authDomain,
             webUrl: infra.web.url,
             dataBucketName: infra.dataBucket.name,
             dbDynamoName: infra.dbDynamo.name

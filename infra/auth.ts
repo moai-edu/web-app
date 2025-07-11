@@ -1,8 +1,9 @@
 /// <reference path="../.sst/platform/config.d.ts" />
 
+import { appDomain, authDomain } from './domain'
+
 // userpool必须位于us-east-1
 // operation error Cognito Identity Provider: CreateUserPoolDomain, https response error StatusCode: 400, RequestID: xxxxx, InvalidParameterException: The specified SSL certificate doesn't exist, isn't in us-east-1 region, isn't valid, or doesn't include a valid certificate chain. (Service: AmazonCloudFront; Status Code: 400; Error Code: InvalidViewerCertificate; Request ID: xxxx; Proxy: null): provider=aws@6.66.2
-
 export const userPool = new sst.aws.CognitoUserPool('UserPool', {
     transform: {
         userPool: {
@@ -32,11 +33,6 @@ export const userPool = new sst.aws.CognitoUserPool('UserPool', {
 const hostedZone = aws.route53.getZone({
     name: `${process.env.DOMAIN}`
 })
-
-const authDomain =
-    $app.stage === 'prod'
-        ? `${process.env.AUTH_SUBDOMAIN}.${process.env.DOMAIN}`
-        : `${$app.stage}-${process.env.AUTH_SUBDOMAIN}.${process.env.DOMAIN}`
 
 const certAuth = new aws.acm.Certificate('auth-cert', {
     domainName: authDomain,
@@ -87,19 +83,6 @@ const auth_cognito_A = new aws.route53.Record(
     { dependsOn: [userPoolDomain] }
 )
 
-// export const authUrl = $concat(
-//     userPoolDomain.domain,
-//     ".auth.",
-//     aws.getRegionOutput().name,
-//     ".amazoncognito.com"
-// );
-export const authUrl = userPoolDomain.domain
-
-export const portalDomain =
-    $app.stage === 'prod'
-        ? `${process.env.PORTAL_SUBDOMAIN}.${process.env.DOMAIN}`
-        : `${$app.stage}-${process.env.PORTAL_SUBDOMAIN}.${process.env.DOMAIN}`
-
 export const webClient = userPool.addClient('WebClient', {
     transform: {
         client: {
@@ -107,12 +90,12 @@ export const webClient = userPool.addClient('WebClient', {
             refreshTokenValidity: 1,
             generateSecret: true,
             callbackUrls: [
-                $interpolate`https://${portalDomain}/api/auth/callback/cognito`,
+                $interpolate`https://${appDomain}/api/auth/callback/cognito`,
                 'http://localhost:3000/api/auth/callback/cognito',
                 'https://dev-server:1443/api/auth/callback/cognito'
             ],
             logoutUrls: [
-                $interpolate`https://${portalDomain}`,
+                $interpolate`https://${appDomain}`,
                 'http://localhost:3000',
                 'https://dev-server:1443'
             ],

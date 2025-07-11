@@ -1,5 +1,5 @@
 def main():
-    print("Hello from portal-site!")
+    print("Hello from web-app!")
 
 
 if __name__ == "__main__":

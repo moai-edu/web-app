@@ -1,10 +1,11 @@
 /// <reference path="../.sst/platform/config.d.ts" />
 
 import { table } from 'console'
-import { portalDomain, userPool, webClient } from './auth'
+import { userPool, webClient } from './auth'
 import { dataBucket } from './bucket'
 import { dbDynamo } from './dynamodb'
 import { provider } from './custom-provider'
+import { appDomain, authDomain } from './domain'
 
 // Asserts API_KEY is a string
 const AUTH_SECRET: string = process.env.NEXT_AUTH_SECRET!
@@ -29,7 +30,7 @@ const webConfig = {
      *
      */
     link: [userPool, webClient, dataBucket, dbDynamo, table],
-    domain: portalDomain,
+    domain: appDomain,
     environment: {
         // 这3个环境变量是保留的，所以这里不能设置，否则会报错；
         //lambda was unable to configure your environment variables because the environment variables you have provided contains reserved keys that are currently not supported for modification. reserved keys used in this request: aws_region, aws_access_key_id, aws_secret_access_key: provider=aws@6.66.2
@@ -39,7 +40,9 @@ const webConfig = {
 
         //next-auth 使用这个环境变量设置secret: https://authjs.dev/reference/core/errors#missingsecret
         AUTH_SECRET,
-        NEXT_PUBLIC_REGION: aws.getRegionOutput().name
+        NEXT_PUBLIC_REGION: aws.getRegionOutput().name,
+        APP_DOMAIN: appDomain,
+        AUTH_DOMAIN: authDomain
     }
 }
 
