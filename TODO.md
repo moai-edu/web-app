@@ -33,8 +33,6 @@
     班级的统计信息
 - startup 门户网站的功能；
 - 不刷新直接加载新提交的截图；
-- 申请 ses 的 production 环境（移除 sandbox 环境），解除 cognito 注册发送验证
-    邮件有每天 50 封的限制；
 - 提交管理页面：针对一个班级课程中已提交的 quiz 的管理，id 重命名等等。注意：
     当 quiz 的 id 改变时，原来的 id 的 quiz 的结果应该被清除或者被 save 到新的
     id 的 quiz 中；
@@ -46,6 +44,10 @@
 
 ## DONE
 
+- 修改注册邮件的模板；
+- 注销只从web应用注销，没有从aws cognito注销；
+- 申请 ses 的 production 环境（移除 sandbox 环境），解除 cognito 注册发送验证
+    邮件有每天 50 封的限制；
 - md 文件显示错误信息
 - 课程的退出链接错误；
 - review 的大图预览界面中 pass/fail/unsubmit 增加快捷键；

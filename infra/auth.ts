@@ -25,7 +25,9 @@ export const userPool = new sst.aws.CognitoUserPool('UserPool', {
                 replyToEmailAddress: 'no-reply@moaiedu.com',
                 sourceArn:
                     'arn:aws:ses:us-east-1:147091117895:identity/moaiedu.com'
-            }
+            },
+            emailVerificationMessage: '您的验证码是： {####}',
+            emailVerificationSubject: 'MoaiEdu验证码'
         }
     }
 })
@@ -87,7 +89,8 @@ export const webClient = userPool.addClient('WebClient', {
     transform: {
         client: {
             allowedOauthFlows: ['code'],
-            refreshTokenValidity: 1,
+            // 设置刷新令牌的有效期为 90 天
+            refreshTokenValidity: 90,
             generateSecret: true,
             callbackUrls: [
                 $interpolate`https://${appDomain}/api/auth/callback/cognito`,
