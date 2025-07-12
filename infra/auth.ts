@@ -16,16 +16,16 @@ export const userPool = new sst.aws.CognitoUserPool('UserPool', {
                     }
                 ]
             },
-            autoVerifiedAttributes: ['email']
-            /*
+            autoVerifiedAttributes: ['email'],
+            // https://www.pulumi.com/registry/packages/aws/api-docs/cognito/userpool/#userpoolemailconfiguration
             emailConfiguration: {
                 configurationSet: 'ses-default-configuration-set',
                 emailSendingAccount: 'DEVELOPER',
-                fromEmailAddress: 'noreply@sanyedu.org',
-                replyToEmailAddress: 'noreply@sanyedu.org',
-                sourceArn: 'arn:aws:ses:us-east-1:147091117895:identity/sanyedu.org'
+                fromEmailAddress: 'no-reply@moaiedu.com',
+                replyToEmailAddress: 'no-reply@moaiedu.com',
+                sourceArn:
+                    'arn:aws:ses:us-east-1:147091117895:identity/moaiedu.com'
             }
-            */
         }
     }
 })
