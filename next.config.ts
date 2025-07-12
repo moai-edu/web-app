@@ -9,6 +9,11 @@ const withNextra = createWithNextra({
  * @type {import("next").NextConfig}
  */
 export default withNextra({
+    experimental: {
+        serverActions: {
+            bodySizeLimit: '4mb'
+        }
+    },
     images: {
         unoptimized: true
     },

@@ -1,11 +1,5 @@
 # TODO
 
-## BUGs
-
-- 学生上传过大屏幕截图时会提示失败，应该解除大小限制或者放大限制；Body exceeded 1 MB limit. To configure the body size limit for Server Actions, see: <https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit>
-
-## Fixed
-
 ## Tasks
 
 - 班级: Flutter移动应用开发-软件技术2306班 标识: try-hot-reload，这个页面应该显示quiz_img_paster的title，而不是显示id
@@ -20,10 +14,6 @@
 - review 截图的界面增加批量操作按键：提交的全部通过；
 - 数据的备份与恢复（s3,dynamodb）;
 - 使用验证码对新用户注册的邮件发送接口进行保护；
-- 在aws cognito界面中重置密码（用户邮箱中会收到一个 reset code，但是因为没有界面可以输入，无法完成密码重置）
-- 注销以后，在 cognito 界面仍然保存了密码信息，会自动登录
-- 增加一个静态网站 s3+cloudfront 的部署方式；把域名迁移为 www+apex 指向静态网
-    站，serverless 动态网站改为 portal 域名；
 - 把纯静态资源的发布和动态资源的发布分开；静态资源发布到 s3（同时 invalidate
     CF），彻底解决目前动态网站发布静态文档的整体布局存在问题；
 - review 页面中增加一个变成 unsubmit 的按钮，可以将该提交变成未提交状态，同时
@@ -31,7 +21,6 @@
     ；
 - 成员管理页面：查看班级成员页面，成员统计、排名、查看单个成员的作业页面；整个
     班级的统计信息
-- startup 门户网站的功能；
 - 不刷新直接加载新提交的截图；
 - 提交管理页面：针对一个班级课程中已提交的 quiz 的管理，id 重命名等等。注意：
     当 quiz 的 id 改变时，原来的 id 的 quiz 的结果应该被清除或者被 save 到新的
@@ -44,8 +33,12 @@
 
 ## DONE
 
+- 增加一个静态网站 s3+cloudfront 的部署方式；把域名迁移为 www+apex 指向静态网
+    站，serverless 动态网站改为 portal 域名；
+- startup 门户网站的功能；
+- 学生上传超大屏幕截图（4K屏）时会提示失败，应该解除大小限制或者放大限制；Body exceeded 1 MB limit. To configure the body size limit for Server Actions, see: <https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit>
 - 修改注册邮件的模板；
-- 注销只从web应用注销，没有从aws cognito注销；
+- 注销只从web应用注销，没有从aws cognito注销；注销以后，在 cognito 界面仍然保存了密码信息，会自动登录
 - 申请 ses 的 production 环境（移除 sandbox 环境），解除 cognito 注册发送验证
     邮件有每天 50 封的限制；
 - md 文件显示错误信息
