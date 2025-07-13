@@ -1,4 +1,4 @@
-# Serverless Web Application
+# MoaiEdu Serverless Web Application
 
 ## Dependencies
 
