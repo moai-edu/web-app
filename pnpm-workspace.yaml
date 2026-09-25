@@ -1,0 +1,9 @@
+# pnpm 11 起用 allowBuilds 取代 onlyBuiltDependencies/ignoredBuiltDependencies，
+# 且 pnpm 12 默认（strictDepBuilds: true）对未审核的依赖构建脚本直接报错
+# （ERR_PNPM_IGNORED_BUILDS）。下面这些包的 postinstall 在 pnpm 10 时代本来就被忽略，
+# 这里显式声明为 false，保持原有行为并让安装可以通过。
+allowBuilds:
+  '@parcel/watcher': false
+  '@tsparticles/engine': false
+  esbuild: false
+  sharp: false

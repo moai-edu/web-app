@@ -62,11 +62,14 @@ const CustomNavbar = async ({ lang }: I18nLangAsyncProps) => {
 
 interface Props {
     children: ReactNode
-    params: Promise<{ lang: I18nLangKeys }>
+    // Next.js 16 生成的 LayoutProps 会把 [lang] 段推导为 string，
+    // 这里按 string 接收后再收窄成项目支持的语言
+    params: Promise<{ lang: string }>
 }
 
 export default async function RootLayout({ children, params }: Props) {
-    const { lang } = await params
+    const { lang: rawLang } = await params
+    const lang = rawLang as I18nLangKeys
     // const dictionary = await getDictionary(lang)
     const pageMap = await getPageMap(lang)
 

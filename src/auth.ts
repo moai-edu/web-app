@@ -20,14 +20,17 @@ const COGNITO_WEB_CLIENT_SECRET =
     process.env.COGNITO_WEB_CLIENT_SECRET || Resource.WebClient.secret
 const NEXT_PUBLIC_REGION = process.env.NEXT_PUBLIC_REGION || 'us-east-1' // 默认值，确保匹配你的实际区域
 
-const COGNITO_LOGOUT_ENDPOINT =
-    process.env.NODE_ENV === 'development'
-        ? `https://dev-${process.env.AUTH_SUBDOMAIN}.${process.env.DOMAIN}/logout`
-        : `https://${process.env.AUTH_DOMAIN}/logout`
-const COGNITO_LOGOUT_REDIRECT_URI =
-    process.env.NODE_ENV === 'development'
-        ? `http://localhost:3000`
-        : `https://${process.env.APP_DOMAIN}`
+// 统一规则（不再按 NODE_ENV 分支）：云端由 SST 在 infra/web.ts 里注入 APP_DOMAIN / AUTH_DOMAIN；
+// 本地开发没有这两个变量，就回落到本地约定（localhost + dev-<auth 子域>）。
+const APP_BASE_URL = process.env.APP_DOMAIN
+    ? `https://${process.env.APP_DOMAIN}`
+    : 'http://localhost:3000'
+const AUTH_BASE_URL = process.env.AUTH_DOMAIN
+    ? `https://${process.env.AUTH_DOMAIN}`
+    : `https://dev-${process.env.AUTH_SUBDOMAIN}.${process.env.DOMAIN}`
+
+const COGNITO_LOGOUT_ENDPOINT = `${AUTH_BASE_URL}/logout`
+const COGNITO_LOGOUT_REDIRECT_URI = APP_BASE_URL
 
 const cognitoOptions = {
     allowDangerousEmailAccountLinking: true, // 在生产环境中请谨慎使用此选项

@@ -74,25 +74,18 @@ export default class S3DataClient {
         })
 
         // console.log('Signed url:', url)
-        if (['test', 'development'].includes(process.env.NODE_ENV)) {
-            // 在本地测试和本地开发环境中，返回真实 s3 URL
+        // 统一规则（不再按 NODE_ENV 分支）：
+        // 设置了 PROXY_NGX_SERVER 就把签名 URL 的域名替换成它，由它把客户端访问代理到 S3
+        // （用来解决 S3 域名被墙的问题，云端 dev/prod 分别设置不同的值）；
+        // 没设置就直接返回原始 URL（本地 / LocalStack 场景）。
+        const proxyServer = process.env.PROXY_NGX_SERVER
+        if (!proxyServer) {
             // console.log('Returning real url', url)
             return url
-        } else {
-            // 注意：这个domain域名是用来代理s3访问的。
-            // 在getSignedUrl方法中，所有生成的aws的域名都全部用这个域名替换掉，再由后者将客户端访问代理到s3的aws域名。
-            // 目前使用这种办法解决aws s3域名被墙的问题。
-            // 在云端dev和prod环境中部署的时候，这个环境变量的取值是不一样的，分别设置在.env.dev.sh和.env.prod.sh中，在ci-cd.yaml中加载
-            if (process.env.PROXY_NGX_SERVER) {
-                const domainRegex = /^https?:\/\/([^\/]+)/
-                const proxy_url = url.replace(domainRegex, process.env.PROXY_NGX_SERVER)
-                // console.log('Returning proxy url', proxy_url)
-                return proxy_url
-            } else {
-                // console.error('Error: No proxy is set.', url)
-                return url
-            }
         }
+        const proxyUrl = url.replace(/^https?:\/\/([^/]+)/, proxyServer)
+        // console.log('Returning proxy url', proxyUrl)
+        return proxyUrl
     }
 
     async isFileExists(key: string): Promise<boolean> {

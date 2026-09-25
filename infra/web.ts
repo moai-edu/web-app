@@ -40,7 +40,8 @@ const webConfig = {
 
         //next-auth 使用这个环境变量设置secret: https://authjs.dev/reference/core/errors#missingsecret
         AUTH_SECRET,
-        NEXT_PUBLIC_REGION: aws.getRegionOutput().name,
+        // Pulumi AWS provider v7 起 getRegionOutput().name 已废弃，改用 region
+        NEXT_PUBLIC_REGION: aws.getRegionOutput().region,
         APP_DOMAIN: appDomain,
         AUTH_DOMAIN: authDomain
     }

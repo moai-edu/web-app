@@ -1,8 +1,9 @@
-// src/middleware.ts
+// src/proxy.ts
+// Next.js 16 起 middleware 更名为 proxy（middleware 仍可用但已废弃）
 import { NextRequest } from 'next/server'
 import { middleware as nextraMiddleware } from 'nextra/locales'
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     const response = nextraMiddleware(request)
     // if (response) {
     //     response.headers.set('Access-Control-Allow-Origin', '*')

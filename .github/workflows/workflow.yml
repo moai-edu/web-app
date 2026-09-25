@@ -42,7 +42,6 @@ jobs:
             - uses: pnpm/action-setup@v4
               name: Install pnpm
               with:
-                  version: 10
                   run_install: false
 
             - name: Configure Node.js with pnpm cache
@@ -51,10 +50,8 @@ jobs:
                   node-version: '21'
                   cache: 'pnpm'
 
-            - name: Install system dependencies
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y make
+            - name: Install just
+              uses: extractions/setup-just@v2
 
             - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
@@ -67,7 +64,7 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
                   echo "Deploying to Development environment..."
-                  STAGE=dev make setup
+                  STAGE=dev just setup
 
             - name: Always check the content of sst-env.d.ts
               if: always()
@@ -90,7 +87,6 @@ jobs:
             - uses: pnpm/action-setup@v4
               name: Install pnpm
               with:
-                  version: 10
                   run_install: false
 
             - name: Configure Node.js with pnpm cache
@@ -99,10 +95,8 @@ jobs:
                   node-version: '21'
                   cache: 'pnpm'
 
-            - name: Install system dependencies
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y make
+            - name: Install just
+              uses: extractions/setup-just@v2
 
             - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
@@ -115,7 +109,7 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
                   echo "Deploying to Production environment..."
-                  STAGE=prod make setup
+                  STAGE=prod just setup
 
             - name: Always check the content of sst-env.d.ts
               if: always()
@@ -138,7 +132,6 @@ jobs:
             - uses: pnpm/action-setup@v4
               name: Install pnpm
               with:
-                  version: 10
                   run_install: false
 
             - name: Set up Node.js
@@ -147,10 +140,8 @@ jobs:
                   node-version: '21'
                   cache: 'pnpm'
 
-            - name: Install system dependencies
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y make
+            - name: Install just
+              uses: extractions/setup-just@v2
 
             - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
@@ -163,7 +154,7 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
                   echo "Tearing down the Development environment..."
-                  STAGE=dev make teardown
+                  STAGE=dev just teardown
 
     # Job for tearing down the Production environment
     teardown_production:
@@ -180,7 +171,6 @@ jobs:
             - uses: pnpm/action-setup@v4
               name: Install pnpm
               with:
-                  version: 10
                   run_install: false
 
             - name: Set up Node.js
@@ -189,10 +179,8 @@ jobs:
                   node-version: '21'
                   cache: 'pnpm'
 
-            - name: Install system dependencies
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y make
+            - name: Install just
+              uses: extractions/setup-just@v2
 
             - name: Install Node.js dependencies
               run: pnpm install --frozen-lockfile
@@ -205,4 +193,4 @@ jobs:
                   NEXT_AUTH_SECRET: ${{ secrets.NEXT_AUTH_SECRET }}
               run: |
                   echo "Tearing down the Production environment..."
-                  STAGE=prod make teardown
+                  STAGE=prod just teardown
